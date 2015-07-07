@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">OneLevelGame</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="attack">Attack</string>
+    <string name="item">Item</string>
+    <string name="special">Special</string>
+    <string name="wait">Wait</string>
+    <string name="endTurn">End Turn</string>
+    <string name="cancel">Cancel Move</string>
+    <string name="unit_name">unit name</string>
+    <string name="unit_action"></string>
+</resources>

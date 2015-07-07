@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhang3r.onelevelgame.views.MapUiView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/uiView"
+    android:layout_width="0dp"
+    android:layout_height="fill_parent"
+    android:layout_weight=".3"
+    android:orientation="vertical">
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/tableLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <!-- first row -->
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip">
+
+            <Button
+                android:id="@+id/attack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/attack" />
+
+            <Button
+                android:id="@+id/item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/item" />
+        </TableRow>
+        <!-- second row -->
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip">
+
+            <Button
+                android:id="@+id/special"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/special" />
+
+            <Button
+                android:id="@+id/wait"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wait" />
+        </TableRow>
+        <!-- third row -->
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip">
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/endTurn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/endTurn" />
+        </TableRow>
+        <!-- just draw a red line -->
+        <View
+            android:layout_height="2dip"
+            android:background="#FF0000" />
+
+        <ImageView
+            android:id="@+id/image1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name" />
+
+        <TextView
+            android:id="@+id/unitName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/hitPoints"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/manaPoints"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/unitAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/terrainName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/terrainMovement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/terrainDefenseBonus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </TableLayout>
+</com.zhang3r.onelevelgame.views.MapUiView>
