@@ -4,7 +4,8 @@ import android.content.res.Resources;
 
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
 import com.zhang3r.onelevelgame.constants.IAppConstants;
-import com.zhang3r.onelevelgame.constants.IGameConstants;
+import com.zhang3r.onelevelgame.constants.IGameConstants.UnitType;
+import com.zhang3r.onelevelgame.constants.IGameConstants.UnitState;
 import com.zhang3r.onelevelgame.model.army.Army;
 import com.zhang3r.onelevelgame.model.sprite.Tile;
 import com.zhang3r.onelevelgame.model.tiles.units.Impl.BasicMoveImpl;
@@ -29,11 +30,15 @@ public abstract class BaseUnit extends Tile {
     private int y;
     // unit attributes
     private boolean unitSelected;
-    private IGameConstants.UnitState state;
+    private UnitState state;
     private AnimatedSprite sprite;
     //utility
     private Attack attackUtil;
     private Move moveUtil;
+
+
+
+    private UnitType unitType;
 
 
     public BaseUnit() {
@@ -45,7 +50,7 @@ public abstract class BaseUnit extends Tile {
         maxAttackRange = 0;
         minAttackRange = 0;
         name = "Basic Unit " + unitId;
-        state = IGameConstants.UnitState.NORMAL;
+        state = UnitState.NORMAL;
         attackUtil = new MeleeAttackImpl();
         moveUtil = new BasicMoveImpl();
     }
@@ -170,11 +175,11 @@ public abstract class BaseUnit extends Tile {
         this.unitSelected = unitSelected;
     }
 
-    public IGameConstants.UnitState getState() {
+    public UnitState getState() {
         return state;
     }
 
-    public void setState(IGameConstants.UnitState state) {
+    public void setState(UnitState state) {
         this.state = state;
     }
 
@@ -202,5 +207,13 @@ public abstract class BaseUnit extends Tile {
 
     public void setMoveUtil(Move moveUtil) {
         this.moveUtil = moveUtil;
+    }
+
+    public UnitType getUnitType() {
+        return unitType;
+    }
+
+    public void setUnitType(UnitType unitType) {
+        this.unitType = unitType;
     }
 }

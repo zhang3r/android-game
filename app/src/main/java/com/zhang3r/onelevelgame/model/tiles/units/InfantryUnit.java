@@ -1,6 +1,7 @@
 package com.zhang3r.onelevelgame.model.tiles.units;
 
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
+import com.zhang3r.onelevelgame.constants.IGameConstants;
 import com.zhang3r.onelevelgame.model.tiles.units.Impl.BasicMoveImpl;
 import com.zhang3r.onelevelgame.model.tiles.units.Impl.MeleeAttackImpl;
 
@@ -11,8 +12,9 @@ public class InfantryUnit extends BaseUnit{
 
     public InfantryUnit(){
         super();
-        setName("Basic Infantry Unit"+getUnitId());
+        setName("Basic Infantry Unit" + getUnitId());
         setAttackUtil(new MeleeAttackImpl());
+        setUnitType(IGameConstants.UnitType.FOOT);
         setMoveUtil(new BasicMoveImpl());
     }
 

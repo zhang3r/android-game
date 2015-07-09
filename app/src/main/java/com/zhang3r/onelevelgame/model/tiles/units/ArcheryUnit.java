@@ -1,6 +1,7 @@
 package com.zhang3r.onelevelgame.model.tiles.units;
 
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
+import com.zhang3r.onelevelgame.constants.IGameConstants;
 import com.zhang3r.onelevelgame.model.tiles.units.Impl.BasicMoveImpl;
 import com.zhang3r.onelevelgame.model.tiles.units.Impl.RangedAttackImpl;
 
@@ -14,6 +15,7 @@ public class ArcheryUnit extends BaseUnit{
         super();
         //TODO: import stats elsewhere
         setName("Basic Archery Unit" + getUnitId());
+        setUnitType(IGameConstants.UnitType.ARCHER);
         setAttackUtil(new RangedAttackImpl());
         setMoveUtil(new BasicMoveImpl());
     }

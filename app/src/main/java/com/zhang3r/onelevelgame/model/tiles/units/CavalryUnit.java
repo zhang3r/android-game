@@ -1,6 +1,7 @@
 package com.zhang3r.onelevelgame.model.tiles.units;
 
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
+import com.zhang3r.onelevelgame.constants.IGameConstants;
 import com.zhang3r.onelevelgame.model.tiles.units.Impl.BasicMoveImpl;
 import com.zhang3r.onelevelgame.model.tiles.units.Impl.MeleeAttackImpl;
 
@@ -11,7 +12,8 @@ public class CavalryUnit extends BaseUnit {
 
     public CavalryUnit(){
         super();
-        setName("Basic Cavalry Unit"+getUnitId());
+        setName("Basic Cavalry Unit" + getUnitId());
+        setUnitType(IGameConstants.UnitType.CAV);
         setAttackUtil(new MeleeAttackImpl());
         setMoveUtil(new BasicMoveImpl());
     }

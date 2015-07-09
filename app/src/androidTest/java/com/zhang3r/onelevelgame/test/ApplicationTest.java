@@ -1,4 +1,4 @@
-package com.zhang3r.onelevelgame;
+package com.zhang3r.onelevelgame.test;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

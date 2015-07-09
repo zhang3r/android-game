@@ -5,16 +5,18 @@ public interface IGameConstants {
     public final static String PLAYER = "player";
     public final static String ENEMY = "enemy";
 
+    public enum UnitType {
+        CAV, FOOT, ARCHER
+    }
+
     public enum UnitState {
         NORMAL, MOVED, DEAD, WAIT
     }
 
-    ;
 
     public enum TurnState {
         PLAYER, ENEMY
     }
 
-    ;
 
 }
