@@ -15,11 +15,15 @@ import junit.framework.TestCase;
 public class BaseUnitTest extends TestCase {
     UnitFactory factory;
 
+
+    public BaseUnitTest() {
+        super();
+    }
     protected void setUp() {
         factory = UnitFactoryImpl.getInstance();
     }
 
-    public void unitCreationTest() {
+    public void testUnitCreation() {
         BaseUnit unit = factory.createUnit(UnitType.ARCHER);
         //TESTS
         /*
@@ -35,7 +39,6 @@ public class BaseUnitTest extends TestCase {
         assertNotNull(unit.getMoveUtil());
 
     }
-
 
 
 }
