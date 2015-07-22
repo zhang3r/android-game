@@ -25,6 +25,7 @@ public class PlainTerrain extends BaseTerrain{
         AnimatedSprite a = new AnimatedSprite();
         Bitmap unitBitmap = BitmapFactory.decodeResource(resources,
                 R.drawable.base_land_tile);
+        unitBitmap = Bitmap.createScaledBitmap(unitBitmap, 100, 50, false);
         a.Initialize( unitBitmap, IAppConstants.SPRITE_HEIGHT,
                 IAppConstants.SPRITE_WIDTH, 2, 2, true);
         a.setXPos(x * IAppConstants.SPRITE_WIDTH);

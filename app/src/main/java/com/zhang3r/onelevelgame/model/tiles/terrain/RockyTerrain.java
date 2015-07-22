@@ -25,6 +25,7 @@ public class RockyTerrain extends BaseTerrain {
         AnimatedSprite a = new AnimatedSprite();
         Bitmap unitBitmap = BitmapFactory.decodeResource(resources,
                 R.drawable.uncrossable_land_tile);
+        unitBitmap = Bitmap.createScaledBitmap(unitBitmap, 50, 50, false);
         a.Initialize( unitBitmap, IAppConstants.SPRITE_HEIGHT,
                 IAppConstants.SPRITE_WIDTH, 1, 1, true);
         a.setXPos(x * IAppConstants.SPRITE_WIDTH);

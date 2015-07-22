@@ -37,7 +37,7 @@ public class BasicMoveImpl implements Move {
 
         Bitmap moveTile = BitmapFactory
                 .decodeResource(resources, R.drawable.base_move_tile);
-
+        moveTile = Bitmap.createScaledBitmap(moveTile, 50, 50, false);
         // upper half
         synchronized (army) {
             synchronized (enemyArmy) {

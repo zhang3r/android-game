@@ -127,8 +127,10 @@ public class AnimationThread extends Thread {
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap infantryBitMap = BitmapFactory.decodeResource(resources,
                 R.drawable.sword);
+        infantryBitMap = Bitmap.createScaledBitmap(infantryBitMap, 50, 50, false);
         Bitmap cavBitMap = BitmapFactory.decodeResource(resources,
                 R.drawable.cavalry);
+        cavBitMap = Bitmap.createScaledBitmap(cavBitMap, 50, 50, false);
 
         BaseUnit unit = InfantryUnit.create(1, "player Infantry unit 1", x, y);
         unit.setSprite(AnimatedSprite.create(infantryBitMap,
@@ -154,8 +156,10 @@ public class AnimationThread extends Thread {
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap baseBitMap = BitmapFactory.decodeResource(resources,
                 R.drawable.base_enemy_tile);
+        baseBitMap = Bitmap.createScaledBitmap(baseBitMap, 50, 50, false);
         Bitmap archBitMap = BitmapFactory.decodeResource(resources,
                 R.drawable.bow);
+        archBitMap = Bitmap.createScaledBitmap(archBitMap, 50, 50, false);
         BaseUnit unit = InfantryUnit.create(1, "enemy Infantry unit 1", x, y);
         unit.setSprite(AnimatedSprite.create(baseBitMap,
                 IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 1, 1,
