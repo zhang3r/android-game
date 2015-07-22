@@ -26,12 +26,12 @@ public class BasicMoveImpl implements Move {
     }
 
 
-    public List<AnimatedSprite> getMoveTiles(int xLength, int yLength, int x, int y, Army army, Army enemyArmy, Resources resources, int unitId, int movePoints) {
+    public List<AnimatedSprite> getMoveTiles(int mapLengthX, int mapLengthY, int x, int y, Army army, Army enemyArmy, Resources resources, int unitId, int movePoints) {
         List<AnimatedSprite> spriteList = new ArrayList<>();
         int lowerX = x - movePoints > 0 ? x - movePoints : 0;
-        int upperX = x + movePoints > xLength ? xLength : x + movePoints;
+        int upperX = x + movePoints > mapLengthX ? mapLengthX : x + movePoints;
         int lowerY = y - movePoints > 0 ? y - movePoints : 0;
-        int upperY = y + movePoints > yLength - 1 ? yLength - 1 : y
+        int upperY = y + movePoints > mapLengthY - 1 ? mapLengthY - 1 : y
                 + movePoints;
         //make a grid of possible moves
 
@@ -45,8 +45,8 @@ public class BasicMoveImpl implements Move {
                     for (int b = 0; b <= movePoints - (y - z); b++) {
                         int upper = x + b;
                         int lower = x - b;
-                        if (x + b >= xLength) {
-                            upper = xLength - 1;
+                        if (x + b >= mapLengthX) {
+                            upper = mapLengthX - 1;
                         }
                         if (x - b < 0) {
                             lower = 0;

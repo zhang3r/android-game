@@ -57,7 +57,7 @@ public class Army {
         } else {
             for (BaseUnit unit : units) {
                 if (unit.getUnitId() == (removal.getUnitId())) {
-                    Log.d(ILogConstants.DEBUG_TAG, "removing unit " + unit.getUnitId());
+                    Log.d(ILogConstants.DEBUG_TAG, "removing unit " + unit.getName());
                     unit.setState(UnitState.DEAD);
                     getUnits().remove(unit);
                     return;
