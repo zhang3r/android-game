@@ -29,6 +29,7 @@ import com.zhang3r.onelevelgame.model.AI.AI;
 import com.zhang3r.onelevelgame.model.AI.ShittyAI;
 import com.zhang3r.onelevelgame.model.AttackEvent;
 import com.zhang3r.onelevelgame.model.army.Army;
+import com.zhang3r.onelevelgame.model.maps.Map;
 import com.zhang3r.onelevelgame.model.tiles.terrain.BaseTerrain;
 import com.zhang3r.onelevelgame.model.tiles.terrain.PlainTerrain;
 import com.zhang3r.onelevelgame.model.tiles.terrain.RockyTerrain;
@@ -56,16 +57,13 @@ public class AnimationThread extends Thread {
     // Used to figure out elapsed time between frames
     private long lastTime;
     private String message;
-    private int frameSamplesCollected;
     private float mScaleFactor;
     private int unitOrigPosX;
     private int unitOrigPosY;
-    private List<AnimatedSprite> spritesToRemove;
     private List<AnimatedSprite> moveSprites;
     private List<AnimatedSprite> attackSprites;
     private List<BaseTerrain> terrains;
     private MediaPlayer song;
-    // private List<BaseUnit> units;// = new ArrayList<BaseUnit>();
     private boolean isAttack;
     private Army enemyArmy;
     private Army playerArmy;
@@ -74,7 +72,7 @@ public class AnimationThread extends Thread {
     private int tileSelected;
     private AI shittyAi;
 
-    private int[][] map;
+
     private TurnState state;
     private RectF currViewport;
 
@@ -87,11 +85,10 @@ public class AnimationThread extends Thread {
                            int screenWidth, int screenHeight, View view) {
         this.surfaceHolder = surfaceHolder;
         this.mScaleFactor = 1.f;
-        this.spritesToRemove = new LinkedList<AnimatedSprite>();
-        this.moveSprites = new LinkedList<AnimatedSprite>();
-        this.attackSprites = new LinkedList<AnimatedSprite>();
-        this.terrains = new LinkedList<BaseTerrain>();
-        this.map = mapFactory.initialize(1);
+        this.moveSprites = new LinkedList<>();
+        this.attackSprites = new LinkedList<>();
+        this.terrains = new LinkedList<>();
+        Map.getMap().setGrid(mapFactory.initialize(1));
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.resources = view.getResources();
@@ -113,7 +110,7 @@ public class AnimationThread extends Thread {
                 IAppConstants.AXIS_Y_MIN, -screenWidth, -screenHeight);
         state = TurnState.PLAYER;
 
-        initializeMap(map, playerArmy, enemyArmy);
+        initializeMap(playerArmy, enemyArmy);
         // music thank to Arkane
         song = MediaPlayer.create(context, R.raw.attack_on_titan_theme);
         song.setLooping(true);
@@ -176,13 +173,13 @@ public class AnimationThread extends Thread {
 
     // TODO: temp initialize: idealy this would load bitmap based on number in
     // the 2d array
-    private void initializeMap(int[][] map, Army player, Army enemy) {
+    private void initializeMap(Army player, Army enemy) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
 
-        for (int y = 0; y < map.length; y++) {
-            for (int x = 0; x < map[y].length; x++) {
+        for (int y = 0; y < Map.getMap().getGrid().length; y++) {
+            for (int x = 0; x < Map.getMap().getGrid()[y].length; x++) {
                 // TODO:
                 // if not in terrrain
                 BaseTerrain tile = null;
@@ -241,19 +238,6 @@ public class AnimationThread extends Thread {
         long now = System.currentTimeMillis();
         if (lastTime > now)
             return;
-        if (lastTime != 0) {
-            int time = (int) (now - lastTime);
-            // frameSampleTime += time;
-            frameSamplesCollected++;
-            // after 10 frames
-            if (frameSamplesCollected >= 10) {
-                // update fps
-                // fps = (int) (10000 / frameSampleTime);
-                // Reset the sampleTime
-                // frameSampleTime = 0;
-                frameSamplesCollected = 0;
-            }
-        }
         synchronized (terrains) {
             for (BaseTerrain terrain : terrains) {
                 AnimatedSprite animatedSprite = terrain.getSprite();
@@ -271,7 +255,7 @@ public class AnimationThread extends Thread {
                     playerArmy.resetUnitState();
                 }
                 /************************************************* END OF AI ********************************************/
-                List<BaseUnit> units = new LinkedList<BaseUnit>();
+                List<BaseUnit> units = new LinkedList<>();
                 units.addAll(playerArmy.getUnits());
                 units.addAll(enemyArmy.getUnits());
                 for (BaseUnit unit : units) {
@@ -280,21 +264,6 @@ public class AnimationThread extends Thread {
                 }
             }
         }
-
-
-//        synchronized (unitSprites) {
-//            for (AnimatedSprite a : unitSprites) {
-//                a.Update(now);
-//                if (a.dispose) {
-//                    spritesToRemove.add(a);
-//                }
-//            }
-//            synchronized (spritesToRemove) {
-//                unitSprites.removeAll(spritesToRemove);
-//                spritesToRemove.clear();
-//            }
-//        }
-        // numSprites = sprites.size();
         lastTime = now;
     }
 
@@ -326,9 +295,9 @@ public class AnimationThread extends Thread {
         if (currViewport.left - distanceX > 0) {
             currViewport.left = 0;
             currViewport.right = -screenWidth;
-        } else if (((currViewport.right - distanceX) * mScaleFactor) < (-1 * (map[0].length
+        } else if (((currViewport.right - distanceX) * mScaleFactor) < (-1 * (Map.getMap().getGrid()[0].length
                 * IAppConstants.SPRITE_WIDTH + 10))) {
-            currViewport.right = (-1 * (map[0].length
+            currViewport.right = (-1 * (Map.getMap().getGrid()[0].length
                     * IAppConstants.SPRITE_WIDTH + 10));
             currViewport.left = currViewport.right + screenWidth;
         } else {
@@ -339,9 +308,9 @@ public class AnimationThread extends Thread {
         if (currViewport.top - distanceY > 0) {
             currViewport.top = 0;
             currViewport.bottom = -screenHeight;
-        } else if (((currViewport.bottom - distanceY) * mScaleFactor) < (-1 * (map.length
+        } else if (((currViewport.bottom - distanceY) * mScaleFactor) < (-1 * (Map.getMap().getGrid().length
                 * IAppConstants.SPRITE_HEIGHT + 10))) {
-            currViewport.bottom = (-1 * (map.length
+            currViewport.bottom = (-1 * (Map.getMap().getGrid().length
                     * IAppConstants.SPRITE_HEIGHT + 10));
             currViewport.top = currViewport.bottom + screenHeight;
         } else {
@@ -468,7 +437,7 @@ public class AnimationThread extends Thread {
     private int getTile(double xPos, double yPos) {
         int x = (int) (xPos / IAppConstants.SPRITE_WIDTH);
         int y = (int) (yPos / IAppConstants.SPRITE_HEIGHT);
-        return map[y][x];
+        return Map.getMap().getGrid()[y][x];
     }
 
     private Army getArmy(boolean reverse) {
@@ -501,7 +470,7 @@ public class AnimationThread extends Thread {
                 synchronized (moveSprites) {
                     moveSprites.clear();
                     moveSprites.addAll(unitToMove.getUnitMoveTiles(
-                            map[0].length, map.length, resources));
+                            Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, playerArmy,enemyArmy, resources));
                 }
             } else {
                 // if unit has already been clicked on previously
@@ -626,7 +595,7 @@ public class AnimationThread extends Thread {
                 synchronized (attackSprites) {
                     attackSprites.clear();
                     attackSprites.addAll(unitToMove.getUnitAttackTiles(
-                            map[0].length, map.length, resources));
+                            Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, resources));
                 }
 
             }
@@ -647,7 +616,7 @@ public class AnimationThread extends Thread {
         } else if (s.equals(IButtonConstants.wait)) {
             // wait logic
 
-            if (unitToMove != null && unitToMove.getState() == UnitState.MOVED){
+            if (unitToMove != null && unitToMove.getState() == UnitState.MOVED) {
                 synchronized (unitToMove) {
 
                     unitToMove.setState(UnitState.WAIT);

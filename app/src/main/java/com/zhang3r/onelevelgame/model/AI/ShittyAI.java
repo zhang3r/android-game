@@ -4,10 +4,16 @@ package com.zhang3r.onelevelgame.model.AI;
  * Created by Zhang3r on 5/6/2015.
  */
 
+import android.content.res.Resources;
+
+import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
 import com.zhang3r.onelevelgame.constants.IGameConstants;
 import com.zhang3r.onelevelgame.model.AttackEvent;
 import com.zhang3r.onelevelgame.model.army.Army;
 import com.zhang3r.onelevelgame.model.tiles.units.BaseUnit;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShittyAI implements AI {
     public ShittyAI(){
@@ -15,15 +21,17 @@ public class ShittyAI implements AI {
     }
     public void AiMove(Army army, Army enemyArmy){
         for(BaseUnit unit: army.getUnits()){
-            //find closest unit using A* and manhattan distance as heuristic
+            //find closest unit using manhattan distance
             BaseUnit shortestUnit = pathFinding(unit, enemyArmy);
             int shortestDistance =calcDistance(unit, shortestUnit);
             //if closet unit is outside of attack range, move
             if(shortestDistance>unit.getMaxAttackRange()){
                 int dX = (((shortestUnit.getX()-unit.getX())>>31)&1)*Math.min(unit.getMovePoints()/2 ,(shortestDistance - unit.getMaxAttackRange()));
                 int dY = (((shortestUnit.getY()-unit.getY())>>31)&1)*unit.getMovePoints()-dX;
-                //unit.unitMoveUpdate()
-                //unit.unitMoveUpdate(dX, dY);
+                // get valid moves
+                List<AnimatedSprite> moveTiles = unit.getUnitMoveTiles(dX, dY, army, enemyArmy,Resources.getSystem());
+
+
                 //update shortest distance
                 shortestDistance -= Math.abs(dX)+Math.abs(dY);
             }
@@ -38,6 +46,8 @@ public class ShittyAI implements AI {
         //end turn;
 
     }
+
+
 
     /**
      * returns the closest enemyUnit to current unit

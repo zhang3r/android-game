@@ -55,10 +55,10 @@ public abstract class BaseUnit extends Tile {
         moveUtil = new BasicMoveImpl();
     }
 
-    public List<AnimatedSprite> getUnitMoveTiles(int xLength, int yLength,
+    public List<AnimatedSprite> getUnitMoveTiles(int xLength, int yLength,Army army, Army enemyArmy,
                                                  Resources resources) {
         setUnitSelected(true);
-        return moveUtil.getMoveTiles(xLength, yLength, x, y, resources, getUnitId(), getMovePoints());
+        return moveUtil.getMoveTiles(xLength, yLength, x, y, army, enemyArmy, resources, getUnitId(), getMovePoints());
 
     }
 

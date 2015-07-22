@@ -35,9 +35,18 @@ public class Army {
         this.units = units;
     }
 
+    public boolean hasUnitAtLocation(int x, int y){
+        for(BaseUnit unit:units){
+            if(unit.getX()==x&&unit.getY()==y){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void add(BaseUnit unit) {
         if (units == null) {
-            units = new ArrayList<BaseUnit>();
+            units = new ArrayList<>();
         }
         units.add(unit);
     }
