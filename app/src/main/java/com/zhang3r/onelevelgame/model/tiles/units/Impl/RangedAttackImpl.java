@@ -22,11 +22,12 @@ public class RangedAttackImpl implements Attack {
 
     public List<AnimatedSprite> getUnitAttackTiles(int unitId, int xLength, int yLength, Resources resources, int x, int y, int maxAttackRange, int minAttackRange) {
 
-        int attackRange = maxAttackRange;
-        List<AnimatedSprite> spriteList = new ArrayList<AnimatedSprite>();
+        int attackRange = maxAttackRange+1;
+        List<AnimatedSprite> spriteList = new ArrayList<>();
 
         Bitmap attackSprite= BitmapFactory
                 .decodeResource(resources, R.drawable.base_move_tile);
+        attackSprite = Bitmap.createScaledBitmap(attackSprite, 50, 50, false);
         int lowerY = y - attackRange > 0 ? y - attackRange : 0;
         int upperY = y + attackRange > yLength - 1 ? yLength - 1 : y
                 + attackRange;
