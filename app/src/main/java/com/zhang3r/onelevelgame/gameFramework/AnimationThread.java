@@ -450,7 +450,7 @@ public class AnimationThread extends Thread {
         for (BaseUnit unit : unitList) {
             if ((int) (xPos / IAppConstants.SPRITE_WIDTH) == unit.getX()
                     && (int) (yPos / IAppConstants.SPRITE_HEIGHT) == unit.getY()) {
-                Log.d(ILogConstants.DEBUG_TAG, "unit found! unit is " + unit.getUnitId());
+                Log.d(ILogConstants.DEBUG_TAG, "unit found! unit is " + unit.getName());
                 return unit;
             }
         }
@@ -495,10 +495,11 @@ public class AnimationThread extends Thread {
                     moveSprites.addAll(unitToMove.getUnitMoveTiles(
                             Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, playerArmy,enemyArmy, resources));
                 }
+                unitToMove.setState(UnitState.SELECTED);
             } else {
                 // if unit has already been clicked on previously
                 if (unitToMove != null
-                        && (unitToMove.getState() == UnitState.NORMAL)) {
+                        && (unitToMove.getState() == UnitState.SELECTED)) {
                     boolean unitMoved = false;
                     unitOrigPosX = unitToMove.getX();
                     unitOrigPosY = unitToMove.getY();
@@ -507,6 +508,7 @@ public class AnimationThread extends Thread {
                                 playerArmy, enemyArmy, x, y);
                         if (unitMoved) {
                             unitToMove.setState(UnitState.MOVED);
+                            Log.d(ILogConstants.DEBUG_TAG, "unitToMove state " + unitToMove.getState());
                         }
                     }
 
@@ -611,8 +613,9 @@ public class AnimationThread extends Thread {
 
     public void buttonEventHandler(String s) {
         if (s.equals(IButtonConstants.attack)) {
-
+            Log.d(ILogConstants.DEBUG_TAG, "attack button pressed" + unitToMove.getState());
             if (unitToMove != null && unitToMove.getState() == UnitState.MOVED) {
+
                 // 1. display unit attack range;
                 isAttack = true;
                 synchronized (attackSprites) {
