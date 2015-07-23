@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-
 import com.zhang3r.onelevelgame.R;
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
 import com.zhang3r.onelevelgame.constants.IAppConstants;
@@ -23,13 +22,13 @@ public class MeleeAttackImpl implements Attack {
 
 
     public List<AnimatedSprite> getUnitAttackTiles(int unitId, int xLength, int yLength, Resources resources, int x, int y, int maxAttackRange, int minAttackRange) {
-        int attackRange = maxAttackRange+1;
+        int attackRange = maxAttackRange + 1;
         List<AnimatedSprite> spriteList = new ArrayList<>();
         int lowerY = y - attackRange > 0 ? y - attackRange : 0;
         int upperY = y + attackRange > yLength - 1 ? yLength - 1 : y
                 + attackRange;
         // upper half
-        Bitmap attackSprite= BitmapFactory
+        Bitmap attackSprite = BitmapFactory
                 .decodeResource(resources, R.drawable.base_move_tile);
         attackSprite = Bitmap.createScaledBitmap(attackSprite, 50, 50, false);
         for (int z = lowerY, a = 0; z <= y && a <= attackRange; z++, a++) {
@@ -41,12 +40,12 @@ public class MeleeAttackImpl implements Attack {
                 if (x - b < 0) {
                     lower = 0;
                 }
-                if (upper != 0 && lower != 0) {
-                    spriteList.add(AnimatedSprite.create( attackSprite,
+                if (upper != 0 && lower != 0 && (z != y || upper != x || lower != x)) {
+                    spriteList.add(AnimatedSprite.create(attackSprite,
                             IAppConstants.SPRITE_HEIGHT,
                             IAppConstants.SPRITE_WIDTH, 1, 1, true, upper, z));
 
-                    spriteList.add(AnimatedSprite.create( attackSprite,
+                    spriteList.add(AnimatedSprite.create(attackSprite,
                             IAppConstants.SPRITE_HEIGHT,
                             IAppConstants.SPRITE_WIDTH, 1, 1, true, lower, z));
                 }
@@ -63,12 +62,12 @@ public class MeleeAttackImpl implements Attack {
                 if (x - b < 0) {
                     lower = 0;
                 }
-                if (upper != 0 && lower != 0) {
+                if (upper != 0 && lower != 0 && (z != y || upper != x || lower != x)) {
                     spriteList.add(AnimatedSprite.create(attackSprite,
                             IAppConstants.SPRITE_HEIGHT,
                             IAppConstants.SPRITE_WIDTH, 1, 1, true, upper, z));
 
-                    spriteList.add(AnimatedSprite.create( attackSprite,
+                    spriteList.add(AnimatedSprite.create(attackSprite,
                             IAppConstants.SPRITE_HEIGHT,
                             IAppConstants.SPRITE_WIDTH, 1, 1, true, lower, z));
                 }
