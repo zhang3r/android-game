@@ -34,4 +34,9 @@ public class PlainTerrain extends BaseTerrain{
         this.setX(x);
         this.setY(y);
     }
+
+    @Override
+    public String toString(){
+        return "plain: no special effects. I wonder if I can build a house here";
+    }
 }

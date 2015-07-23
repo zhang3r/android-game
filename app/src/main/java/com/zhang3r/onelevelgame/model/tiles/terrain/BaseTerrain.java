@@ -69,5 +69,10 @@ public class BaseTerrain extends Tile {
         this.y = y;
     }
 
+    @Override
+    public String toString(){
+        return "base terrain, provides no special abilities";
+    }
+
 
 }

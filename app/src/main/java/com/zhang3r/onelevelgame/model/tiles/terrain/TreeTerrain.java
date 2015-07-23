@@ -17,7 +17,6 @@ public class TreeTerrain extends BaseTerrain {
     public TreeTerrain(Resources resources, int x, int y){
         super();
         this.setDefense(2);
-        this.setEvasion(2);
         this.setMovement(1);
         this.setName("tree");
         this.setTerrainId(2);
@@ -33,5 +32,9 @@ public class TreeTerrain extends BaseTerrain {
         this.setSprite(a);
         this.setX(x);
         this.setY(y);
+    }
+    @Override
+    public String toString(){
+        return "forest: increase defense. cool off in the shade";
     }
 }

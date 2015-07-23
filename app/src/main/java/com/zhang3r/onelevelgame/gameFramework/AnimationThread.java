@@ -33,6 +33,7 @@ import com.zhang3r.onelevelgame.model.maps.Map;
 import com.zhang3r.onelevelgame.model.tiles.terrain.BaseTerrain;
 import com.zhang3r.onelevelgame.model.tiles.terrain.PlainTerrain;
 import com.zhang3r.onelevelgame.model.tiles.terrain.RockyTerrain;
+import com.zhang3r.onelevelgame.model.tiles.terrain.TerrainFactory;
 import com.zhang3r.onelevelgame.model.tiles.terrain.TreeTerrain;
 import com.zhang3r.onelevelgame.model.tiles.units.BaseUnit;
 import com.zhang3r.onelevelgame.model.tiles.units.CavalryUnit;
@@ -62,7 +63,6 @@ public class AnimationThread extends Thread {
     private int unitOrigPosY;
     private List<AnimatedSprite> moveSprites;
     private List<AnimatedSprite> attackSprites;
-    private List<BaseTerrain> terrains;
     private MediaPlayer song;
     private boolean isAttack;
     private Army enemyArmy;
@@ -71,7 +71,7 @@ public class AnimationThread extends Thread {
     private BaseUnit unitSelected;
     private int tileSelected;
     private AI shittyAi;
-
+    private TerrainFactory terrainFactory;
 
     private TurnState state;
     private RectF currViewport;
@@ -87,7 +87,7 @@ public class AnimationThread extends Thread {
         this.mScaleFactor = 1.f;
         this.moveSprites = new LinkedList<>();
         this.attackSprites = new LinkedList<>();
-        this.terrains = new LinkedList<>();
+
         Map.getMap().setGrid(mapFactory.initialize(1));
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -109,7 +109,7 @@ public class AnimationThread extends Thread {
         currViewport = new RectF(IAppConstants.AXIS_X_MIN,
                 IAppConstants.AXIS_Y_MIN, -screenWidth, -screenHeight);
         state = TurnState.PLAYER;
-
+        terrainFactory = new TerrainFactory();
         initializeMap(playerArmy, enemyArmy);
         // music thank to Arkane
         song = MediaPlayer.create(context, R.raw.attack_on_titan_theme);
@@ -186,20 +186,26 @@ public class AnimationThread extends Thread {
             for (int x = 0; x < Map.getMap().getGrid()[y].length; x++) {
                 // TODO:
                 // if not in terrrain
-                BaseTerrain tile = null;
+                int tile = 0;
                 int random = (int) (15 * Math.random());
                 if (random == 1) {
-                    tile = new RockyTerrain(resources, x, y);
+                    tile = 1;
+                    //tile = new RockyTerrain(resources, x, y);
                 } else if (random <= 3) {
-                    tile = new TreeTerrain(resources, x, y);
+                    tile =2;
+                    //tile = new TreeTerrain(resources, x, y);
                 } else {
-                    tile = new PlainTerrain(resources, x, y);
+                    tile =0;
+                    //tile = new PlainTerrain(resources, x, y);
                 }
-                synchronized (terrains) {
-                    terrains.add(tile);
-                }
+                //initialize the map
+                Map.getMap().getGrid()[y][x] = tile;
             }
         }
+        terrainFactory.addTerrain(new PlainTerrain(resources, 0, 0));
+        terrainFactory.addTerrain(new TreeTerrain(resources, 0, 0));
+        terrainFactory.addTerrain(new RockyTerrain(resources, 0, 0));
+
 
     }
 
@@ -242,10 +248,16 @@ public class AnimationThread extends Thread {
         long now = System.currentTimeMillis();
         if (lastTime > now)
             return;
-        synchronized (terrains) {
-            for (BaseTerrain terrain : terrains) {
-                AnimatedSprite animatedSprite = terrain.getSprite();
-                animatedSprite.Update(now);
+        synchronized (Map.getMap().getGrid()) {
+            synchronized (terrainFactory) {
+                for (int y = 0; y < Map.getMap().getGrid().length; y++) {
+                    for (int x = 0; x < Map.getMap().getGrid()[y].length; x++) {
+
+                            AnimatedSprite animatedSprite = terrainFactory.getTerrain(Map.getMap().getGrid()[y][x]).getSprite();
+                            animatedSprite.Update(now);
+
+                    }
+                }
             }
         }
         synchronized (playerArmy) {
@@ -345,12 +357,20 @@ public class AnimationThread extends Thread {
         canvas.save();
         canvas.scale(mScaleFactor, mScaleFactor);
         // terrain
-        synchronized (terrains) {
-            for (BaseTerrain terrain : terrains) {
-                AnimatedSprite animatedSprite = terrain.getSprite();
-                animatedSprite.draw(canvas, currViewport.left,
-                        currViewport.top, currViewport.right,
-                        currViewport.bottom);
+        synchronized (Map.getMap().getGrid()) {
+            synchronized (terrainFactory) {
+                for (int y = 0; y < Map.getMap().getGrid().length; y++) {
+                    for (int x = 0; x < Map.getMap().getGrid()[y].length; x++) {
+
+                        AnimatedSprite animatedSprite = terrainFactory.getTerrain(Map.getMap().getGrid()[y][x]).getSprite();
+                        animatedSprite.setYPos(y * IAppConstants.SPRITE_HEIGHT);
+                        animatedSprite.setXPos(x * IAppConstants.SPRITE_WIDTH);
+                        animatedSprite.draw(canvas, currViewport.left,
+                                currViewport.top, currViewport.right,
+                                currViewport.bottom);
+
+                    }
+                }
             }
         }
 
@@ -404,12 +424,11 @@ public class AnimationThread extends Thread {
             MapFragment.getMessageToUi(message);
         }
         // TODO send tile info to ui panel
-        if (tileSelected > 0) {
-            for (BaseTerrain terrain : terrains) {
-                if (terrain.getTerrainId() == tileSelected) {
-                    MapFragment.getTerrainSelected(terrain);
-                    break;
-                }
+        if (tileSelected >= 0) {
+            {
+            MapFragment.getTerrainSelected(terrainFactory.getTerrain(tileSelected));
+
+
             }
         }
 

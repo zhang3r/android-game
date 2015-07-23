@@ -34,4 +34,9 @@ public class RockyTerrain extends BaseTerrain {
         this.setX(x);
         this.setY(y);
     }
+
+    @Override
+    public String toString(){
+        return "rock: decrease defense. watch for rock slides!";
+    }
 }
