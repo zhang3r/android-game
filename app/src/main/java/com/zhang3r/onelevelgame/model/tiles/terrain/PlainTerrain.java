@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 
 import com.zhang3r.onelevelgame.R;
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
+import com.zhang3r.onelevelgame.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.onelevelgame.constants.IAppConstants;
 
 /**
@@ -23,9 +24,10 @@ public class PlainTerrain extends BaseTerrain{
         this.setTerrainId(1);
         // int bitmapNum=map[y][x];
         AnimatedSprite a = new AnimatedSprite();
-        Bitmap unitBitmap = BitmapFactory.decodeResource(resources,
-                R.drawable.base_land_tile);
-        unitBitmap = Bitmap.createScaledBitmap(unitBitmap, 100, 50, false);
+        Bitmap unitBitmap =  SpriteFactory.getInstance(null).getTerrain(0);
+//                BitmapFactory.decodeResource(resources,
+//                R.drawable.base_land_tile);
+//        unitBitmap = Bitmap.createScaledBitmap(unitBitmap, 100, 50, false);
         a.Initialize( unitBitmap, IAppConstants.SPRITE_HEIGHT,
                 IAppConstants.SPRITE_WIDTH, 2, 2, true);
         a.setXPos(x * IAppConstants.SPRITE_WIDTH);

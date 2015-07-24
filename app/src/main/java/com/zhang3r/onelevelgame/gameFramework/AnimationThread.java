@@ -16,6 +16,7 @@ import android.view.View;
 
 import com.zhang3r.onelevelgame.R;
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
+import com.zhang3r.onelevelgame.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.onelevelgame.constants.IAppConstants;
 import com.zhang3r.onelevelgame.constants.IButtonConstants;
 import com.zhang3r.onelevelgame.constants.IGameConstants;
@@ -125,12 +126,9 @@ public class AnimationThread extends Thread {
         int y = 5;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap infantryBitMap = BitmapFactory.decodeResource(resources,
-                R.drawable.sword);
-        infantryBitMap = Bitmap.createScaledBitmap(infantryBitMap, 50, 50, false);
-        Bitmap cavBitMap = BitmapFactory.decodeResource(resources,
-                R.drawable.cavalry);
-        cavBitMap = Bitmap.createScaledBitmap(cavBitMap, 50, 50, false);
+        Bitmap infantryBitMap = SpriteFactory.getInstance(resources).getUnit(IGameConstants.UnitType.FOOT, false);
+        Bitmap cavBitMap = SpriteFactory.getInstance(resources).getUnit(IGameConstants.UnitType.CAV, false);
+
 
         BaseUnit unit = InfantryUnit.create(1, "player Infantry unit 1", x, y);
         unit.setSprite(AnimatedSprite.create(infantryBitMap,
@@ -154,11 +152,8 @@ public class AnimationThread extends Thread {
         int y = 2;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap baseBitMap = BitmapFactory.decodeResource(resources,
-                R.drawable.base_enemy_tile);
-        baseBitMap = Bitmap.createScaledBitmap(baseBitMap, 50, 50, false);
-        Bitmap archBitMap = BitmapFactory.decodeResource(resources,
-                R.drawable.bow);
+        Bitmap baseBitMap = SpriteFactory.getInstance(resources).getUnit(IGameConstants.UnitType.CAV, true);
+        Bitmap archBitMap = SpriteFactory.getInstance(resources).getUnit(IGameConstants.UnitType.ARCHER,true);
         archBitMap = Bitmap.createScaledBitmap(archBitMap, 50, 50, false);
         BaseUnit unit = InfantryUnit.create(1, "enemy Infantry unit 1", x, y);
         unit.setSprite(AnimatedSprite.create(baseBitMap,

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.zhang3r.onelevelgame.R;
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
+import com.zhang3r.onelevelgame.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.onelevelgame.constants.IAppConstants;
 import com.zhang3r.onelevelgame.constants.ILogConstants;
 import com.zhang3r.onelevelgame.model.army.Army;
@@ -35,9 +36,7 @@ public class BasicMoveImpl implements Move {
                 + movePoints;
         //make a grid of possible moves
 
-        Bitmap moveTile = BitmapFactory
-                .decodeResource(resources, R.drawable.base_move_tile);
-        moveTile = Bitmap.createScaledBitmap(moveTile, 50, 50, false);
+        Bitmap moveTile = SpriteFactory.getInstance(null).getTiles(false);
         // upper half
         synchronized (army) {
             synchronized (enemyArmy) {

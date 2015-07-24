@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 
 import com.zhang3r.onelevelgame.R;
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
+import com.zhang3r.onelevelgame.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.onelevelgame.constants.IAppConstants;
 import com.zhang3r.onelevelgame.model.tiles.units.Interface.Attack;
 
@@ -28,9 +29,7 @@ public class MeleeAttackImpl implements Attack {
         int upperY = y + attackRange > yLength - 1 ? yLength - 1 : y
                 + attackRange;
         // upper half
-        Bitmap attackSprite = BitmapFactory
-                .decodeResource(resources, R.drawable.base_move_tile);
-        attackSprite = Bitmap.createScaledBitmap(attackSprite, 50, 50, false);
+        Bitmap attackSprite = SpriteFactory.getInstance(null).getTiles(false);
         for (int z = lowerY, a = 0; z <= y && a <= attackRange; z++, a++) {
             for (int b = 0; b <= attackRange - (y - z); b++) {
                 int upper = x + b, lower = x - b;

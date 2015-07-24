@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 
 import com.zhang3r.onelevelgame.R;
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
+import com.zhang3r.onelevelgame.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.onelevelgame.constants.IAppConstants;
 
 /**
@@ -23,9 +24,7 @@ public class RockyTerrain extends BaseTerrain {
         this.setTerrainId(3);
 
         AnimatedSprite a = new AnimatedSprite();
-        Bitmap unitBitmap = BitmapFactory.decodeResource(resources,
-                R.drawable.uncrossable_land_tile);
-        unitBitmap = Bitmap.createScaledBitmap(unitBitmap, 50, 50, false);
+        Bitmap unitBitmap = SpriteFactory.getInstance(null).getTerrain(2);
         a.Initialize( unitBitmap, IAppConstants.SPRITE_HEIGHT,
                 IAppConstants.SPRITE_WIDTH, 1, 1, true);
         a.setXPos(x * IAppConstants.SPRITE_WIDTH);
