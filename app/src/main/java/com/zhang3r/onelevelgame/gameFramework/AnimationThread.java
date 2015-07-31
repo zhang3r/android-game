@@ -23,6 +23,7 @@ import com.zhang3r.onelevelgame.constants.IGameConstants;
 import com.zhang3r.onelevelgame.constants.IGameConstants.TurnState;
 import com.zhang3r.onelevelgame.constants.IGameConstants.UnitState;
 import com.zhang3r.onelevelgame.constants.ILogConstants;
+import com.zhang3r.onelevelgame.constants.ResourceConstant;
 import com.zhang3r.onelevelgame.fragments.MapFragment;
 import com.zhang3r.onelevelgame.mapFactory.MapFactory;
 import com.zhang3r.onelevelgame.mapFactory.MapFactoryImpl;
@@ -84,6 +85,7 @@ public class AnimationThread extends Thread {
 
     public AnimationThread(SurfaceHolder surfaceHolder, Context context,
                            int screenWidth, int screenHeight, View view) {
+
         this.surfaceHolder = surfaceHolder;
         this.mScaleFactor = 1.f;
         this.moveSprites = new LinkedList<>();
@@ -92,7 +94,7 @@ public class AnimationThread extends Thread {
         Map.getMap().setGrid(mapFactory.initialize(1));
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        this.resources = view.getResources();
+        ResourceConstant.resources = view.getResources();
         this.viewWidth = view.getWidth();
         this.viewHeight = view.getHeight();
         this.view = view;
@@ -126,8 +128,8 @@ public class AnimationThread extends Thread {
         int y = 5;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap infantryBitMap = SpriteFactory.getInstance(resources).getUnit(IGameConstants.UnitType.FOOT, false);
-        Bitmap cavBitMap = SpriteFactory.getInstance(resources).getUnit(IGameConstants.UnitType.CAV, false);
+        Bitmap infantryBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, false);
+        Bitmap cavBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.CAV, false);
 
 
         BaseUnit unit = InfantryUnit.create(1, "player Infantry unit 1", x, y);
@@ -152,8 +154,8 @@ public class AnimationThread extends Thread {
         int y = 2;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap baseBitMap = SpriteFactory.getInstance(resources).getUnit(IGameConstants.UnitType.CAV, true);
-        Bitmap archBitMap = SpriteFactory.getInstance(resources).getUnit(IGameConstants.UnitType.ARCHER,true);
+        Bitmap baseBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.CAV, true);
+        Bitmap archBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.ARCHER,true);
         archBitMap = Bitmap.createScaledBitmap(archBitMap, 50, 50, false);
         BaseUnit unit = InfantryUnit.create(1, "enemy Infantry unit 1", x, y);
         unit.setSprite(AnimatedSprite.create(baseBitMap,

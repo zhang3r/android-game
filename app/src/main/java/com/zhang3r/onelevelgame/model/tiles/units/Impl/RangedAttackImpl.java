@@ -26,7 +26,7 @@ public class RangedAttackImpl implements Attack {
         int attackRange = maxAttackRange+1;
         List<AnimatedSprite> spriteList = new ArrayList<>();
 
-        Bitmap attackSprite= SpriteFactory.getInstance(null).getTiles(false);
+        Bitmap attackSprite= SpriteFactory.getInstance().getTiles(false);
         int lowerY = y - attackRange > 0 ? y - attackRange : 0;
         int upperY = y + attackRange > yLength - 1 ? yLength - 1 : y
                 + attackRange;

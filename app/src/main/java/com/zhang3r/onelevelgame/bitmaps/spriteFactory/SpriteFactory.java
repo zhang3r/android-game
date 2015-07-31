@@ -8,19 +8,20 @@ import com.zhang3r.onelevelgame.R;
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
 import com.zhang3r.onelevelgame.constants.IAppConstants;
 import com.zhang3r.onelevelgame.constants.IGameConstants;
+import com.zhang3r.onelevelgame.constants.ResourceConstant;
 
 /**
  * Created by Zhang3r on 7/23/2015.
  */
 public class SpriteFactory {
     private static SpriteFactory factory;
-    private Resources resources;
+
     private SpriteFactory(){}
 
-    public static SpriteFactory getInstance(Resources resources){
+    public static SpriteFactory getInstance(){
         if(factory==null){
             factory= new SpriteFactory();
-            factory.resources=resources;
+
         }
         return factory;
     }
@@ -66,8 +67,10 @@ public class SpriteFactory {
 
     private Bitmap getSprite(int path){
         Bitmap pic= BitmapFactory
-                .decodeResource(resources, path);
-        pic = Bitmap.createScaledBitmap(pic, IAppConstants.SPRITE_WIDTH, IAppConstants.SPRITE_HEIGHT, false);
+                .decodeResource(ResourceConstant.resources, path);
+        //TODO change
+        int width = path==R.drawable.base_land_tile?IAppConstants.SPRITE_WIDTH*2:IAppConstants.SPRITE_WIDTH;
+        pic = Bitmap.createScaledBitmap(pic, width, IAppConstants.SPRITE_HEIGHT, false);
         return pic;
     }
 

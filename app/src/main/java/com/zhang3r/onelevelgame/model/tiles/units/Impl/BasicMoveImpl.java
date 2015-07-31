@@ -36,7 +36,7 @@ public class BasicMoveImpl implements Move {
                 + movePoints;
         //make a grid of possible moves
 
-        Bitmap moveTile = SpriteFactory.getInstance(null).getTiles(false);
+        Bitmap moveTile = SpriteFactory.getInstance().getTiles(false);
         // upper half
         synchronized (army) {
             synchronized (enemyArmy) {

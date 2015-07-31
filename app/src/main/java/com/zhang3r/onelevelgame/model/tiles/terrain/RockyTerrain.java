@@ -24,7 +24,7 @@ public class RockyTerrain extends BaseTerrain {
         this.setTerrainId(3);
 
         AnimatedSprite a = new AnimatedSprite();
-        Bitmap unitBitmap = SpriteFactory.getInstance(null).getTerrain(2);
+        Bitmap unitBitmap = SpriteFactory.getInstance().getTerrain(2);
         a.Initialize( unitBitmap, IAppConstants.SPRITE_HEIGHT,
                 IAppConstants.SPRITE_WIDTH, 1, 1, true);
         a.setXPos(x * IAppConstants.SPRITE_WIDTH);

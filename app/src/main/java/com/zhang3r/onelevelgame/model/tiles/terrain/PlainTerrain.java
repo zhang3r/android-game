@@ -24,7 +24,7 @@ public class PlainTerrain extends BaseTerrain{
         this.setTerrainId(1);
         // int bitmapNum=map[y][x];
         AnimatedSprite a = new AnimatedSprite();
-        Bitmap unitBitmap =  SpriteFactory.getInstance(null).getTerrain(0);
+        Bitmap unitBitmap =  SpriteFactory.getInstance().getTerrain(0);
 //                BitmapFactory.decodeResource(resources,
 //                R.drawable.base_land_tile);
 //        unitBitmap = Bitmap.createScaledBitmap(unitBitmap, 100, 50, false);

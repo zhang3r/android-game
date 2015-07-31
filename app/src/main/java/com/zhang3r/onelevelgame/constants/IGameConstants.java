@@ -1,5 +1,7 @@
 package com.zhang3r.onelevelgame.constants;
 
+import android.content.res.Resources;
+
 public interface IGameConstants {
     public final static String FRIENDLY = "friendly";
     public final static String PLAYER = "player";

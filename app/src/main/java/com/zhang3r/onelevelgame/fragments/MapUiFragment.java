@@ -23,10 +23,7 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
         View view = inflator.inflate(R.layout.fragment_map_ui, container, false);
         Button attack = (Button) view.findViewById(R.id.attack);
         attack.setOnClickListener(this);
-        Button item = (Button) view.findViewById(R.id.item);
-        item.setOnClickListener(this);
-        Button special = (Button) view.findViewById(R.id.special);
-        special.setOnClickListener(this);
+
         Button wait = (Button) view.findViewById(R.id.wait);
         wait.setOnClickListener(this);
         Button cancel = (Button) view.findViewById(R.id.cancel);
@@ -43,14 +40,7 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
 
                 mCallback.onButtonClicked(IButtonConstants.attack);
                 break;
-            case R.id.item:
 
-                mCallback.onButtonClicked(IButtonConstants.item);
-                break;
-            case R.id.special:
-
-                mCallback.onButtonClicked(IButtonConstants.special);
-                break;
             case R.id.wait:
 
                 mCallback.onButtonClicked(IButtonConstants.wait);
@@ -89,10 +79,10 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
                 // to modify UI elements.
                 MapUiView view = (MapUiView) getView()
                         .findViewById(R.id.uiView);
-                TextView name = (TextView) view.findViewById(R.id.unitName);
-                name.setText("Name: " + unit.getName());
-                TextView hp = (TextView) view.findViewById(R.id.hitPoints);
-                hp.setText("HP: " + unit.getHitPoints());
+//                TextView name = (TextView) view.findViewById(R.id.unitName);
+//                name.setText("Name: " + unit.getName());
+//                TextView hp = (TextView) view.findViewById(R.id.hitPoints);
+//                hp.setText("HP: " + unit.getHitPoints());
 
 
             }
@@ -108,9 +98,9 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
                 // to modify UI elements.
                 MapUiView view = (MapUiView) getView()
                         .findViewById(R.id.uiView);
-                TextView actionText = (TextView) view
-                        .findViewById(R.id.unitAction);
-                actionText.setText(message);
+//                TextView actionText = (TextView) view
+//                        .findViewById(R.id.unitAction);
+//                actionText.setText(message);
             }
         });
     }
@@ -124,15 +114,15 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
                 // to modify UI elements.
                 MapUiView view = (MapUiView) getView()
                         .findViewById(R.id.uiView);
-                TextView name = (TextView) view.findViewById(R.id.terrainName);
-                name.setText("terrain Name: " + terrain.getName());
-                TextView hp = (TextView) view
-                        .findViewById(R.id.terrainMovement);
-                hp.setText("Movement hinderance: " + terrain.getMovement());
-
-                TextView mp = (TextView) view
-                        .findViewById(R.id.terrainDefenseBonus);
-                mp.setText("defensive bonus: " + terrain.getDefense());
+//                TextView name = (TextView) view.findViewById(R.id.terrainName);
+//                name.setText("terrain Name: " + terrain.getName());
+//                TextView hp = (TextView) view
+//                        .findViewById(R.id.terrainMovement);
+//                hp.setText("Movement hinderance: " + terrain.getMovement());
+//
+//                TextView mp = (TextView) view
+//                        .findViewById(R.id.terrainDefenseBonus);
+//                mp.setText("defensive bonus: " + terrain.getDefense());
             }
         });
 

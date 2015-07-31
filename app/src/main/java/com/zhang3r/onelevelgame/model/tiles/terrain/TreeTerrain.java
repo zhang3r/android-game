@@ -23,7 +23,7 @@ public class TreeTerrain extends BaseTerrain {
         this.setTerrainId(2);
 
         AnimatedSprite a = new AnimatedSprite();
-        Bitmap unitBitmap = SpriteFactory.getInstance(null).getTerrain(1);
+        Bitmap unitBitmap = SpriteFactory.getInstance().getTerrain(1);
         a.Initialize(unitBitmap, IAppConstants.SPRITE_HEIGHT,
                 IAppConstants.SPRITE_WIDTH, 1, 1, true);
         a.setXPos(x * IAppConstants.SPRITE_WIDTH);

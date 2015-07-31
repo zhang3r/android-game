@@ -29,7 +29,7 @@ public class MeleeAttackImpl implements Attack {
         int upperY = y + attackRange > yLength - 1 ? yLength - 1 : y
                 + attackRange;
         // upper half
-        Bitmap attackSprite = SpriteFactory.getInstance(null).getTiles(false);
+        Bitmap attackSprite = SpriteFactory.getInstance().getTiles(false);
         for (int z = lowerY, a = 0; z <= y && a <= attackRange; z++, a++) {
             for (int b = 0; b <= attackRange - (y - z); b++) {
                 int upper = x + b, lower = x - b;
