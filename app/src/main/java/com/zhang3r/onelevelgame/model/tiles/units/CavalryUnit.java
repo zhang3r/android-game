@@ -22,8 +22,14 @@ public class CavalryUnit extends BaseUnit {
                               String name, int x, int y){
         BaseUnit unit = new CavalryUnit();
         unit.setName(name);
+        unit.setMaxAttackRange(1);
         unit.setX(x);
         unit.setY(y);
         return unit;
+    }
+
+    @Override
+    public String toString(){
+        return "Cavalry are an essential unit to any army. That is one fine horse.";
     }
 }

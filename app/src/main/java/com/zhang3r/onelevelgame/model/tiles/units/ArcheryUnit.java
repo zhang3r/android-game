@@ -23,9 +23,16 @@ public class ArcheryUnit extends BaseUnit{
                            String name, int x, int y){
         BaseUnit unit = new ArcheryUnit();
         unit.setName(name);
+        unit.setMaxAttackRange(3);
+        unit.setMinAttackRange(1);
         unit.setX(x);
         unit.setY(y);
         return unit;
+    }
+
+    @Override
+    public String toString(){
+        return "Archers can do damage at a distance. Legend has it: with enough archers you can blockage the Sun";
     }
 
 
