@@ -1,6 +1,8 @@
 package com.zhang3r.onelevelgame.gameFramework;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.MediaPlayer;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -40,6 +43,8 @@ import com.zhang3r.onelevelgame.model.tiles.terrain.TreeTerrain;
 import com.zhang3r.onelevelgame.model.tiles.units.BaseUnit;
 import com.zhang3r.onelevelgame.model.tiles.units.CavalryUnit;
 import com.zhang3r.onelevelgame.model.tiles.units.InfantryUnit;
+import com.zhang3r.onelevelgame.terminate.AllUnitsDestroyed;
+import com.zhang3r.onelevelgame.terminate.TerminateCondition;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -74,7 +79,8 @@ public class AnimationThread extends Thread {
     private int tileSelected;
     private AI shittyAi;
     private TerrainFactory terrainFactory;
-
+    private TerminateCondition terminateCondition;
+    private Context context;
     private TurnState state;
     private RectF currViewport;
 
@@ -90,7 +96,7 @@ public class AnimationThread extends Thread {
         this.mScaleFactor = 1.f;
         this.moveSprites = new LinkedList<>();
         this.attackSprites = new LinkedList<>();
-
+        this.terminateCondition = new AllUnitsDestroyed();
         Map.getMap().setGrid(mapFactory.initialize(1));
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -98,7 +104,7 @@ public class AnimationThread extends Thread {
         this.viewWidth = view.getWidth();
         this.viewHeight = view.getHeight();
         this.view = view;
-
+        this.context= context;
         this.unitToMove = null;
         this.unitSelected = null;
         this.tileSelected = 0;
@@ -219,8 +225,9 @@ public class AnimationThread extends Thread {
                 c = surfaceHolder.lockCanvas();
                 if (c != null) {
                     synchronized (surfaceHolder) {
-                        updatePhysics();
                         doDraw(c);
+                        updatePhysics();
+
                     }
                 } else {
                     break;
@@ -245,18 +252,13 @@ public class AnimationThread extends Thread {
         long now = System.currentTimeMillis();
         if (lastTime > now)
             return;
-        synchronized (Map.getMap().getGrid()) {
-            synchronized (terrainFactory) {
-                for (int y = 0; y < Map.getMap().getGrid().length; y++) {
-                    for (int x = 0; x < Map.getMap().getGrid()[y].length; x++) {
 
-                            AnimatedSprite animatedSprite = terrainFactory.getTerrain(Map.getMap().getGrid()[y][x]).getSprite();
-                            animatedSprite.Update(now);
-
-                    }
-                }
+        synchronized (terrainFactory) {
+            for(int i =0; i<terrainFactory.getSize(); i++){
+            terrainFactory.getTerrain(i).getSprite().Update(now);
             }
         }
+
         synchronized (playerArmy) {
             synchronized (enemyArmy) {
                 /************************************************* AI HOOK UP *******************************************/
@@ -275,8 +277,61 @@ public class AnimationThread extends Thread {
                     AnimatedSprite animatedSprite = unit.getSprite();
                     animatedSprite.Update(now);
                 }
+
+
+
             }
         }
+        /*******************************************  END LEVEL CONDITION **************************************/
+        synchronized (enemyArmy) {
+
+            if(terminateCondition.isWin(enemyArmy)){
+                Looper.prepare();
+                new AlertDialog.Builder(context)
+                        .setTitle("You win")
+                        .setMessage(terminateCondition.getTerminateString())
+                        .setPositiveButton("Main Menu", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // main menu
+                            }
+                        })
+                        .setNegativeButton("Play Again?", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // play again
+                                dialog.dismiss();
+
+                            }
+                        })
+
+                        .show();
+                Looper.loop();
+            }
+        }
+        synchronized (playerArmy) {
+
+            if(terminateCondition.isLose(playerArmy)){
+                Looper.prepare();
+                new AlertDialog.Builder(context)
+                        .setTitle("You Lose")
+                        .setMessage(terminateCondition.getTerminateString())
+                        .setPositiveButton("Main Menu", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // go back to main menu
+                            }
+                        })
+                        .setNegativeButton("Play Again?", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // play again
+                                dialog.dismiss();
+
+                            }
+                        })
+
+                        .show();
+                Looper.loop();
+            }
+        }
+
         lastTime = now;
     }
 

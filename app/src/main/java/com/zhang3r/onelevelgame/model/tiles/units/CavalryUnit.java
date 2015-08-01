@@ -30,6 +30,6 @@ public class CavalryUnit extends BaseUnit {
 
     @Override
     public String toString(){
-        return "Cavalry are an essential unit to any army. That is one fine horse.";
+        return "Cavalry is a man on a horse; a fine looking horse.";
     }
 }

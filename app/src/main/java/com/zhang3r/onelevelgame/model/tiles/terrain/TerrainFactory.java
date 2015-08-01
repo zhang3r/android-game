@@ -20,6 +20,9 @@ public class TerrainFactory {
     public BaseTerrain getTerrain(int index){
         return terrains.get(index);
     }
+    public int getSize(){
+        return terrains.size();
+    }
 
 
 
