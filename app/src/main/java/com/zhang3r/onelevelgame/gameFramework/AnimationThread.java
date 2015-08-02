@@ -286,7 +286,7 @@ public class AnimationThread extends Thread {
         synchronized (enemyArmy) {
 
             if(terminateCondition.isWin(enemyArmy)){
-                Looper.prepare();
+                Looper.myLooper().prepare();
                 new AlertDialog.Builder(context)
                         .setTitle("You win")
                         .setMessage(terminateCondition.getTerminateString())
@@ -299,6 +299,7 @@ public class AnimationThread extends Thread {
                             public void onClick(DialogInterface dialog, int which) {
                                 // play again
                                 dialog.dismiss();
+
 
                             }
                         })

@@ -2,14 +2,20 @@ package com.zhang3r.onelevelgame.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
+import com.zhang3r.onelevelgame.Gesture.OnSwipeTouchListener;
 import com.zhang3r.onelevelgame.R;
 import com.zhang3r.onelevelgame.constants.IButtonConstants;
+import com.zhang3r.onelevelgame.constants.ILogConstants;
 import com.zhang3r.onelevelgame.model.tiles.terrain.BaseTerrain;
 import com.zhang3r.onelevelgame.model.tiles.units.BaseUnit;
 import com.zhang3r.onelevelgame.views.MapUiView;
@@ -30,6 +36,30 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
         cancel.setOnClickListener(this);
         Button endTurn = (Button) view.findViewById(R.id.endTurn);
         endTurn.setOnClickListener(this);
+
+        final ViewFlipper vf = (ViewFlipper) view.findViewById(R.id.viewFlipper);
+        vf.setOnTouchListener(new OnSwipeTouchListener(view.getContext()) {
+            public void onSwipeTop() {
+                Log.d(ILogConstants.GESTURE_TAG, "SWIP TOP");
+            }
+
+            public void onSwipeRight() {
+                Log.d(ILogConstants.GESTURE_TAG, "SWIP RIGHT");
+                vf.showNext();
+            }
+
+            public void onSwipeLeft() {
+                Log.d(ILogConstants.GESTURE_TAG, "SWIP Left");
+                vf.showPrevious();
+            }
+
+            public void onSwipeBottom() {
+                Log.d(ILogConstants.GESTURE_TAG, "SWIP DOWN");
+
+            }
+
+        });
+
         return view;
     }
 
@@ -127,6 +157,8 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
         });
 
     }
+
+
 
     // Container Activity must implement this interface
     public interface OnButtonClickListener {

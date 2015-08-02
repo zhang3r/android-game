@@ -6,97 +6,139 @@
     android:layout_weight=".7"
     android:orientation="vertical">
 
-    <GridLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_column="4"
-        android:layout_weight=".3"
-        android:id="@+id/unitInfo">
+    <ViewFlipper
+        android:id="@+id/viewFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#513F33"
+        android:layout_weight=".3">
+
+        <GridLayout
+            android:id="@+id/unitInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_column="4"
+            >
 
 
-        <TextView
-            android:layout_width="225dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Unit Name"
-            android:id="@+id/unitName"
-            android:layout_row="0"
-            android:layout_column="0" />
-        <!-- TODO get profile image -->
-        <ImageView
-            android:id="@+id/unitImage"
-            android:layout_width="78dp"
-            android:layout_height="117dp"
-            android:contentDescription="@string/app_name"
-            android:background="#000"
-            android:layout_row="1"
-            android:layout_column="0"
-            android:layout_gravity="left"
-            android:layout_margin="5dp" />
+            <TextView
+                android:id="@+id/unitName"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_row="0"
+                android:text="Unit Name"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <!-- TODO get profile image -->
+            <ImageView
+                android:id="@+id/unitImage"
+                android:layout_width="78dp"
+                android:layout_height="117dp"
+                android:layout_column="0"
+                android:layout_gravity="left"
+                android:layout_margin="5dp"
+                android:layout_row="1"
+                android:background="#000"
+                android:contentDescription="@string/app_name" />
 
-        <TextView
-            android:layout_width="282dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Description blah blah blah"
-            android:id="@+id/description"
-            android:layout_row="1"
-            android:layout_column="1" />
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="282dp"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_row="1"
+                android:text="Description blah blah blah"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <TextView
-            android:layout_width="99dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Attack: 5"
-            android:id="@+id/attackStat"
-            android:layout_row="3"
-            android:layout_column="0" />
+            <TextView
+                android:id="@+id/attackStat"
+                android:layout_width="99dp"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_row="3"
+                android:text="Attack: 5"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:layout_width="114dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Defense: 5"
-            android:id="@+id/defenseStat"
-            android:layout_row="3"
-            android:layout_column="1" />
+            <TextView
+                android:id="@+id/defenseStat"
+                android:layout_width="114dp"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_row="3"
+                android:text="Defense: 5"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Attack Range:1"
-            android:id="@+id/attackRangeStat"
-            android:layout_row="4"
-            android:layout_column="0" />
+            <TextView
+                android:id="@+id/attackRangeStat"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_row="4"
+                android:text="Attack Range:1"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:layout_width="133dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/textView4"
-            android:layout_row="4"
-            android:layout_column="1" />
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="133dp"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_row="4"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:layout_width="148dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Move Points: 5"
-            android:id="@+id/movePointStat"
-            android:layout_row="4"
-            android:layout_column="1" />
+            <TextView
+                android:id="@+id/movePointStat"
+                android:layout_width="148dp"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_row="4"
+                android:text="Move Points: 5"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-       <!-- Add more stats here -->
+            <!-- Add more stats here -->
 
-    </GridLayout>
+        </GridLayout>
+
+        <GridLayout
+            android:id="@+id/logs"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_column="4"
+            android:layout_weight=".3">
+
+
+            <TextView
+                android:id="@+id/logText"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_row="0"
+                android:text="Unit Name"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <!-- TODO get profile image -->
+            <ImageView
+                android:id="@+id/unitStuff"
+                android:layout_width="78dp"
+                android:layout_height="117dp"
+                android:layout_column="0"
+                android:layout_gravity="left"
+                android:layout_margin="5dp"
+                android:layout_row="1"
+                android:background="#000"
+                android:contentDescription="@string/app_name" />
+
+
+            <!-- Add more stats here -->
+
+        </GridLayout>
+    </ViewFlipper>
 
     <View
-        android:layout_height="2dip"
-        android:background="#FF0000"
         android:layout_width="wrap_content"
-        android:layout_column="0" />
+        android:layout_height="2dip"
+        android:layout_column="0"
+        android:background="#FF0000" />
+
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/tableLayout1"
         android:layout_width="fill_parent"
@@ -120,16 +162,15 @@
                 android:id="@+id/attack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/attack"
-                android:layout_column="1" />
+                android:layout_column="1"
+                android:text="@string/attack" />
 
             <Button
                 android:id="@+id/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cancel"
-                android:layout_column="2" />
-
+                android:layout_column="2"
+                android:text="@string/cancel" />
 
 
         </TableRow>
@@ -152,19 +193,18 @@
                 android:id="@+id/wait"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/wait"
-                android:layout_column="1" />
+                android:layout_column="1"
+                android:text="@string/wait" />
 
             <Button
                 android:id="@+id/endTurn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/endTurn"
-                android:layout_column="2" />
+                android:layout_column="2"
+                android:text="@string/endTurn" />
 
         </TableRow>
         <!-- just draw a red line -->
-
 
 
     </TableLayout>
