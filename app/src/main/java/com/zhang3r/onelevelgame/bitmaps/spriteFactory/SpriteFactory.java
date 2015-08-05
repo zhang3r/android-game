@@ -38,7 +38,7 @@ public class SpriteFactory {
                 if(isEnemy){
 
                 }
-                return getSprite(R.drawable.sword);
+                return getSprite(R.drawable.infantry_tile);
             case CAV:
                 if(isEnemy){
 
@@ -51,12 +51,12 @@ public class SpriteFactory {
     public Bitmap getTerrain(int terrain){
         switch(terrain){
             case 0:
-                return getSprite(R.drawable.base_land_tile);
+                return getSprite(R.drawable.grass_tile);
 
             case 1:
-                return getSprite(R.drawable.tree_land_tile);
+                return getSprite(R.drawable.tree_tile);
             case 2:
-                return getSprite(R.drawable.uncrossable_land_tile);
+                return getSprite(R.drawable.rock_tile);
         }
 
         return null;
@@ -69,8 +69,9 @@ public class SpriteFactory {
         Bitmap pic= BitmapFactory
                 .decodeResource(ResourceConstant.resources, path);
         //TODO change
-        int width = path==R.drawable.base_land_tile?IAppConstants.SPRITE_WIDTH*2:IAppConstants.SPRITE_WIDTH;
-        pic = Bitmap.createScaledBitmap(pic, width, IAppConstants.SPRITE_HEIGHT, false);
+
+        pic = Bitmap.createScaledBitmap(pic, IAppConstants.BITMAP_WIDTH, IAppConstants.BITMAP_HEIGHT, false);
+        
         return pic;
     }
 

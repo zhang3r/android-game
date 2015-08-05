@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
+import com.zhang3r.onelevelgame.constants.IAppConstants;
+
 public class AnimatedSprite {
     public boolean dispose;
     private Bitmap animation;
@@ -43,7 +45,7 @@ public class AnimatedSprite {
         this.spriteHeight = height;
         this.spriteWidth = width;
         this.sRectangle.top = 0;
-        this.sRectangle.bottom = spriteHeight;
+        this.sRectangle.bottom = IAppConstants.BITMAP_HEIGHT;
         this.sRectangle.left = 0;
         this.sRectangle.right = spriteWidth;
         this.fps = 1000 / fps;
@@ -68,7 +70,7 @@ public class AnimatedSprite {
 
     public void draw(Canvas canvas, float left, float top, float right,
                      float bottom) {
-        Rect dest = new Rect((int) (getXPos() + left), (int) (getYPos() + top),
+        Rect dest = new Rect((int) (getXPos() + left), (int) (getYPos() + top-25),
                 (int) (getXPos() + spriteWidth + left), (int) (getYPos()
                 + spriteHeight + top));
         if ((dest.left >= 0 - spriteWidth && dest.right >= right)
