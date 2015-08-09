@@ -262,6 +262,7 @@ public class AnimationThread extends Thread {
         image.setImageResource(R.mipmap.ic_launcher);
 
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
