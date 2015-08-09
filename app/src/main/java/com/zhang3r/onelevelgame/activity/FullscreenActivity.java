@@ -193,6 +193,7 @@ public class FullscreenActivity extends FragmentActivity implements
         // TODO Auto-generated method stub
         MapFragment map = (MapFragment) getSupportFragmentManager()
                 .findFragmentByTag("mapFragment");
+
         if (map != null) {
             map.update(buttonId);
         } else {
@@ -249,8 +250,11 @@ public class FullscreenActivity extends FragmentActivity implements
     protected void onPause() {
         MapFragment map = (MapFragment) getSupportFragmentManager()
                 .findFragmentByTag("mapFragment");
-        if (map != null) {
+        MapUiFragment ui = (MapUiFragment) getSupportFragmentManager()
+                .findFragmentByTag("mapUiFragment");
+        if (map != null&&ui!=null) {
             map.onPause();
+            ui.onPause();
         } else {
             Log.d(ILogConstants.SYSTEM_ERROR_TAG,
                     "fragment not found we are fucked");
@@ -261,15 +265,19 @@ public class FullscreenActivity extends FragmentActivity implements
 
     @Override
     protected void onResume() {
+        super.onResume();
         MapFragment map = (MapFragment) getSupportFragmentManager()
                 .findFragmentByTag("mapFragment");
-        if (map != null) {
+        MapUiFragment ui = (MapUiFragment) getSupportFragmentManager()
+                .findFragmentByTag("mapUiFragment");
+        if (map != null&&ui!=null) {
             map.onResume();
+            ui.onResume();
         } else {
             Log.d(ILogConstants.SYSTEM_ERROR_TAG,
                     "fragment not found we are fucked");
         }
-        super.onResume();
+
     }
 
 }
