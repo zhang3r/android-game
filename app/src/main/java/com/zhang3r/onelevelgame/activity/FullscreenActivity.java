@@ -102,25 +102,7 @@ public class FullscreenActivity extends FragmentActivity implements
         // findViewById(R.id.fullscreen_content_controls);
         final View contentView = findViewById(R.id.fullscreen_content);
         //DIALOG
-        final Dialog dialog = new Dialog(this);
-        dialog.setTitle("WELCOME");
-        dialog.setContentView(R.layout.custom_dialog);
-        // set the custom dialog components - text, image and button
-        TextView text = (TextView) dialog.findViewById(R.id.text);
-        text.setText("Android custom dialog example!");
-        ImageView image = (ImageView) dialog.findViewById(R.id.image);
-        image.setImageResource(R.mipmap.ic_launcher);
 
-        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-        // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
 
 
         // Set up an instance of SystemUiHider to control the system UI for

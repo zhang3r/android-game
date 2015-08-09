@@ -1,8 +1,10 @@
 package com.zhang3r.onelevelgame.gameFramework;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +18,9 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.zhang3r.onelevelgame.R;
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
@@ -40,6 +45,7 @@ import com.zhang3r.onelevelgame.model.tiles.terrain.PlainTerrain;
 import com.zhang3r.onelevelgame.model.tiles.terrain.RockyTerrain;
 import com.zhang3r.onelevelgame.model.tiles.terrain.TerrainFactory;
 import com.zhang3r.onelevelgame.model.tiles.terrain.TreeTerrain;
+import com.zhang3r.onelevelgame.model.tiles.units.ArcheryUnit;
 import com.zhang3r.onelevelgame.model.tiles.units.BaseUnit;
 import com.zhang3r.onelevelgame.model.tiles.units.CavalryUnit;
 import com.zhang3r.onelevelgame.model.tiles.units.InfantryUnit;
@@ -125,6 +131,8 @@ public class AnimationThread extends Thread {
         song.setLooping(true);
         song.start();
 
+
+
     }
 
     // TODO: temp initalization: idealy this would vary by level
@@ -140,12 +148,12 @@ public class AnimationThread extends Thread {
 
         BaseUnit unit = InfantryUnit.create(1, "player Infantry unit 1", x, y);
         unit.setSprite(AnimatedSprite.create(infantryBitMap,
-                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 1, 1,
+                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH,2, 2,
                 true, x, y));
         army.add(unit);
         BaseUnit unit2 = CavalryUnit.create(1, "player cavalry unit 1", x + 3, y + 2);
         unit2.setSprite(AnimatedSprite.create(cavBitMap,
-                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 1, 1,
+                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
                 true, x + 3, y + 2));
         army.add(unit2);
 
@@ -162,15 +170,14 @@ public class AnimationThread extends Thread {
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap baseBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.CAV, true);
         Bitmap archBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.ARCHER,true);
-        archBitMap = Bitmap.createScaledBitmap(archBitMap, 50, 50, false);
-        BaseUnit unit = InfantryUnit.create(1, "enemy Infantry unit 1", x, y);
+        BaseUnit unit = CavalryUnit.create(1, "enemy Cavalry unit 1", x, y);
         unit.setSprite(AnimatedSprite.create(baseBitMap,
-                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 1, 1,
+                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
                 true, x, y));
         army.add(unit);
-        BaseUnit unit2 = CavalryUnit.create(1, "enemy cavalry unit 1", x + 3, y + 2);
+        BaseUnit unit2 = ArcheryUnit.create(1, "enemy Archer unit 1", x + 3, y + 2);
         unit2.setSprite(AnimatedSprite.create(archBitMap,
-                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 1, 1,
+                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
                 true, x + 3, y + 2));
         army.add(unit2);
 
@@ -242,6 +249,30 @@ public class AnimationThread extends Thread {
         }
         song.stop();
     }
+    @Override
+    public void start(){
+        super.start();
+        final Dialog dialog = new Dialog(context);
+        dialog.setTitle("WELCOME");
+        dialog.setContentView(R.layout.custom_dialog);
+        // set the custom dialog components - text, image and button
+        TextView text = (TextView) dialog.findViewById(R.id.text);
+        text.setText("Android custom dialog example!");
+        ImageView image = (ImageView) dialog.findViewById(R.id.image);
+        image.setImageResource(R.mipmap.ic_launcher);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+    }
 
     /**
      * ******************************************************************
@@ -293,43 +324,67 @@ public class AnimationThread extends Thread {
                         .setPositiveButton("Main Menu", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // main menu
+                                dialog.dismiss();
+                                run=false;
+                                Looper.myLooper().quitSafely();
+                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINMENU");
+                                context.startActivity(i);
+
                             }
                         })
                         .setNegativeButton("Play Again?", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // play again
                                 dialog.dismiss();
+                                run=false;
+
+                                Looper.myLooper().quit();
+                                AnimationThread newThread =new AnimationThread(surfaceHolder,context,screenWidth,screenHeight,view);
+                                newThread.setRunning(true);
+                                newThread.start();
 
 
                             }
                         })
 
                         .show();
-                Looper.loop();
+                Looper.myLooper().loop();
             }
         }
         synchronized (playerArmy) {
 
             if(terminateCondition.isLose(playerArmy)){
-                Looper.prepare();
+                Looper.myLooper().prepare();
                 new AlertDialog.Builder(context)
                         .setTitle("You Lose")
                         .setMessage(terminateCondition.getTerminateString())
                         .setPositiveButton("Main Menu", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                // go back to main menu
+                                run=false;
+                                dialog.dismiss();
+                                Looper.myLooper().quitSafely();
+                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINMENU");
+                                context.startActivity(i);
+
+
                             }
                         })
                         .setNegativeButton("Play Again?", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // play again
+                                run=false;
                                 dialog.dismiss();
+
+                                Looper.myLooper().quitSafely();
+
+                                new AnimationThread(surfaceHolder,context,screenWidth,screenHeight,view).run();
+
 
                             }
                         })
 
                         .show();
-                Looper.loop();
+                Looper.myLooper().loop();
             }
         }
 
@@ -503,7 +558,7 @@ public class AnimationThread extends Thread {
         for (BaseUnit unit : unitList) {
             if ((int) (xPos / IAppConstants.SPRITE_WIDTH) == unit.getX()
                     && (int) (yPos / IAppConstants.SPRITE_HEIGHT) == unit.getY()) {
-                Log.d(ILogConstants.DEBUG_TAG, "unit found! unit is " + unit.getName());
+                Log.d(ILogConstants.DEBUG_TAG, "xpos "+xPos+" ypos "+yPos+" unit found! unit is " + unit.getName()+" at x: "+unit.getX()+" y: "+unit.getY());
                 return unit;
             }
         }
@@ -591,6 +646,9 @@ public class AnimationThread extends Thread {
                         // unit cancelled the move
                         synchronized (unitToMove) {
                             unitToMove.setState(UnitState.NORMAL);
+                            synchronized (moveSprites) {
+                                moveSprites.clear();
+                            }
 
                         }
                     }

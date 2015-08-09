@@ -78,8 +78,8 @@ public abstract class BaseUnit extends Tile {
             setX((int) eventX / IAppConstants.SPRITE_WIDTH);
             setY((int) eventY / IAppConstants.SPRITE_HEIGHT);
 
-            getSprite().setXPos((int) eventX);
-            getSprite().setYPos((int) eventY);
+            getSprite().setXPos( getX()*IAppConstants.SPRITE_HEIGHT);
+            getSprite().setYPos( getY()*IAppConstants.SPRITE_WIDTH);
             setUnitSelected(false);
             return true;
         }

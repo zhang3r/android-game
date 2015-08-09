@@ -40,7 +40,7 @@ public class BasicMoveImpl implements Move {
         // upper half
         synchronized (army) {
             synchronized (enemyArmy) {
-                for (int z = lowerY, a = 0; z <= y && a <= movePoints; z++, a++) {
+                for (int z = lowerY, a = 0; z < y && a <= movePoints; z++, a++) {
                     for (int b = 0; b <= movePoints - (y - z); b++) {
                         int upper = x + b;
                         int lower = x - b;
@@ -56,7 +56,7 @@ public class BasicMoveImpl implements Move {
                                             IAppConstants.SPRITE_HEIGHT,
                                         IAppConstants.SPRITE_WIDTH, 1, 1, true, upper, z));
                             }
-                            if(!army.hasUnitAtLocation(lower,z)&&!enemyArmy.hasUnitAtLocation(lower,z)) {
+                            if(upper!=lower&&!army.hasUnitAtLocation(lower,z)&&!enemyArmy.hasUnitAtLocation(lower,z)) {
                                 spriteList.add(AnimatedSprite.create(moveTile,
                                         IAppConstants.SPRITE_HEIGHT,
                                         IAppConstants.SPRITE_WIDTH, 1, 1, true, lower, z));
@@ -79,7 +79,7 @@ public class BasicMoveImpl implements Move {
                                         IAppConstants.SPRITE_HEIGHT,
                                         IAppConstants.SPRITE_WIDTH, 1, 1, true, upper, z));
                             }
-                            if(!army.hasUnitAtLocation(lower,z)&&!enemyArmy.hasUnitAtLocation(lower,z)) {
+                            if(upper!=lower&&!army.hasUnitAtLocation(lower,z)&&!enemyArmy.hasUnitAtLocation(lower,z)) {
                                 spriteList.add(AnimatedSprite.create(moveTile,
                                         IAppConstants.SPRITE_HEIGHT,
                                         IAppConstants.SPRITE_WIDTH, 1, 1, true, lower, z));
