@@ -8,8 +8,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Game Name"
+        android:text="Autumn Wars: Battles Of The First Emperor"
+        android:textAlignment="center"
         android:id="@+id/title"
+        android:paddingBottom="25dp"
         android:layout_gravity="center_horizontal" />
 
     <Button
