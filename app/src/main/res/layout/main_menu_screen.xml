@@ -22,13 +22,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Contact"
-        android:id="@+id/button2"
+        android:id="@+id/contact"
         android:layout_gravity="center_horizontal" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Quit"
-        android:id="@+id/button3"
+        android:id="@+id/quit"
         android:layout_gravity="center_horizontal" />
 </LinearLayout>

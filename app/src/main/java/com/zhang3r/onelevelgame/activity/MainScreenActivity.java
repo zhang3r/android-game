@@ -26,6 +26,15 @@ public class MainScreenActivity extends Activity{
             }
         });
 
+        Button quit = (Button) findViewById(R.id.quit);
+        quit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+
+            }
+        });
+
 
     }
 
