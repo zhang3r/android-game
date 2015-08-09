@@ -13,93 +13,161 @@
         android:background="#513F33"
         android:layout_weight=".3">
 
-        <GridLayout
+        <RelativeLayout
             android:id="@+id/unitInfo"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_column="4"
             >
 
 
             <TextView
                 android:id="@+id/unitName"
-                android:layout_width="225dp"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_row="0"
+
                 android:text="Unit Name"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                />
             <!-- TODO get profile image -->
             <ImageView
                 android:id="@+id/unitImage"
-                android:layout_width="78dp"
-                android:layout_height="117dp"
-                android:layout_column="0"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="left"
-                android:layout_margin="5dp"
-                android:layout_row="1"
+                android:padding="5dp"
                 android:background="#000"
-                android:contentDescription="@string/app_name" />
+                android:contentDescription="@string/app_name"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_below="@+id/unitName"
+                android:layout_alignParentStart="true" />
 
             <TextView
-                android:id="@+id/description"
-                android:layout_width="282dp"
+                android:id="@+id/unitTypeText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_row="1"
-                android:text="Description blah blah blah"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:text="Unit Type: "
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_below="@+id/unitName"
+                android:layout_toRightOf="@+id/unitImage" />
+            <TextView
+                android:id="@+id/unitType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_below="@+id/unitName"
+                android:layout_toRightOf="@+id/unitTypeText" />
+            <TextView
+                android:id="@+id/hp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HP: "
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_below="@+id/unitType"
+                android:layout_toRightOf="@+id/unitImage"
+                android:paddingTop="10dp"/>
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:layout_below="@+id/unitType"
+                android:layout_toRightOf="@+id/hp"
+                android:paddingTop="15dp"
+                android:paddingLeft="2dp"/>
+            <TextView
+                android:id="@+id/progressBarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="1000/1000"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_below="@+id/progressBar"
+                android:layout_toRightOf="@+id/hp"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="&lt;"
+                android:id="@+id/buttonLeft"
+                android:layout_below="@+id/progressBarText"
+                android:layout_centerVertical="true" />
 
             <TextView
                 android:id="@+id/attackStat"
-                android:layout_width="99dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_row="3"
-                android:text="Attack: 5"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:text="Attack: 20"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_below="@+id/unitImage"
+                android:layout_toRightOf="@+id/buttonLeft"
+                android:paddingLeft="5dp"
+                android:paddingTop="20dp"
+                />
 
             <TextView
                 android:id="@+id/defenseStat"
-                android:layout_width="114dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_row="3"
+
                 android:text="Defense: 5"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_below="@+id/attackStat"
+
+                android:layout_toRightOf="@+id/buttonLeft"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"/>
 
             <TextView
                 android:id="@+id/attackRangeStat"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_row="4"
-                android:text="Attack Range:1"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="133dp"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_row="4"
-                android:text="Medium Text"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:text="Attack Range:1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_below="@+id/defenseStat"
+                android:layout_toRightOf="@+id/buttonLeft"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp" />
+
+
 
             <TextView
                 android:id="@+id/movePointStat"
                 android:layout_width="148dp"
                 android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_row="4"
-                android:text="Move Points: 5"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
 
+                android:text="Move Points: 5"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_below="@+id/attackRangeStat"
+                android:layout_toRightOf="@+id/buttonLeft"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"/>
+
+
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="&gt;"
+                android:id="@+id/buttonRight"
+                android:layout_below="@+id/progressBarText"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                />
             <!-- Add more stats here -->
 
-        </GridLayout>
+        </RelativeLayout>
 
-        <GridLayout
+        <RelativeLayout
             android:id="@+id/logs"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -113,24 +181,14 @@
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_row="0"
-                android:text="Unit Name"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-            <!-- TODO get profile image -->
-            <ImageView
-                android:id="@+id/unitStuff"
-                android:layout_width="78dp"
-                android:layout_height="117dp"
-                android:layout_column="0"
-                android:layout_gravity="left"
-                android:layout_margin="5dp"
-                android:layout_row="1"
-                android:background="#000"
-                android:contentDescription="@string/app_name" />
+                android:text="Description: blah blah blah"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
 
 
             <!-- Add more stats here -->
 
-        </GridLayout>
+        </RelativeLayout>
     </ViewFlipper>
 
     <View
