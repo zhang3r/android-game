@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Autumn Wars: Battles Of The First Emperor"
+        android:text="@string/gameTitle"
         android:textAlignment="center"
         android:id="@+id/title"
         android:paddingBottom="25dp"
@@ -17,7 +17,7 @@
     <Button
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="New Game"
+        android:text="@string/newGame"
         android:id="@+id/new_game"
         android:layout_gravity="center_horizontal" />
 
@@ -31,7 +31,7 @@
     <Button
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="Quit"
+        android:text="@string/quit"
         android:id="@+id/quit"
         android:layout_gravity="center_horizontal" />
 </LinearLayout>

@@ -43,36 +43,53 @@
                 android:layout_alignParentStart="true" />
 
             <TextView
-                android:id="@+id/unitTypeText"
+                android:id="@+id/unitStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Unit Type: "
+                android:text="@string/unitStatus"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_below="@+id/unitName"
                 android:layout_toRightOf="@+id/unitImage" />
             <TextView
-                android:id="@+id/unitType"
+                android:id="@+id/unitStatusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_below="@+id/unitName"
-                android:layout_toRightOf="@+id/unitTypeText" />
+                android:layout_toRightOf="@+id/unitType" />
+
+            <TextView
+                android:id="@+id/unitType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/unitType"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_below="@+id/unitStatus"
+                android:layout_toRightOf="@+id/unitImage" />
+            <TextView
+                android:id="@+id/unitTypeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_below="@+id/unitStatus"
+                android:layout_toRightOf="@+id/unitType" />
             <TextView
                 android:id="@+id/hp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="HP: "
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_below="@+id/unitType"
+                android:layout_below="@+id/unitTypeText"
                 android:layout_toRightOf="@+id/unitImage"
                 android:paddingTop="10dp"/>
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/progressBar"
-                android:layout_below="@+id/unitType"
+                android:id="@+id/HPBar"
+                android:layout_below="@+id/unitTypeText"
                 android:layout_toRightOf="@+id/hp"
                 android:paddingTop="15dp"
                 android:paddingLeft="2dp"/>
@@ -80,12 +97,11 @@
                 android:id="@+id/progressBarText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:text="1000/1000"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/progressBar"
+                android:layout_below="@+id/unitTypeText"
                 android:layout_toRightOf="@+id/hp"
-                android:paddingLeft="5dp"
+                android:layout_centerHorizontal="true"
+                android:paddingLeft="15dp"
                 android:paddingTop="5dp"
                 />
 
@@ -102,38 +118,67 @@
                 android:id="@+id/attackStat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_row="3"
-                android:text="Attack: 20"
+                android:text="@string/attackStatLabel"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_below="@+id/unitImage"
                 android:layout_toRightOf="@+id/buttonLeft"
                 android:paddingLeft="5dp"
                 android:paddingTop="20dp"
                 />
+            <TextView
+                android:id="@+id/attackStatText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_below="@+id/unitImage"
+                android:layout_toRightOf="@+id/attackStat"
+                android:paddingLeft="5dp"
+                android:paddingTop="20dp"
+                />
+
 
             <TextView
                 android:id="@+id/defenseStat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:text="Defense: 5"
+                android:text="@string/defenseStatLabel"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_below="@+id/attackStat"
-
                 android:layout_toRightOf="@+id/buttonLeft"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp"/>
 
             <TextView
-                android:id="@+id/attackRangeStat"
-                android:layout_width="150dp"
+                android:id="@+id/defenseStatText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_below="@+id/attackStat"
+                android:layout_toRightOf="@+id/defenseStat"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"/>
 
-                android:text="Attack Range:1"
+            <TextView
+                android:id="@+id/attackRangeStat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/attackRangeStatLabel"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_below="@+id/defenseStat"
                 android:layout_toRightOf="@+id/buttonLeft"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp" />
+
+            <TextView
+                android:id="@+id/attackRangeStatText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_below="@+id/defenseStat"
+                android:layout_toRightOf="@+id/attackRangeStat"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp" />
 
@@ -141,15 +186,28 @@
 
             <TextView
                 android:id="@+id/movePointStat"
-                android:layout_width="148dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:text="Move Points: 5"
+                android:text="@string/moveStatLabel"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_below="@+id/attackRangeStat"
                 android:layout_toRightOf="@+id/buttonLeft"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp"/>
+            <TextView
+                android:id="@+id/movePointStatText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_below="@+id/attackRangeStat"
+                android:layout_toRightOf="@+id/movePointStat"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"/>
+
+
+
+
 
 
 
@@ -176,13 +234,19 @@
 
 
             <TextView
-                android:id="@+id/logText"
-                android:layout_width="225dp"
+                android:id="@+id/descriptionLabel"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_row="0"
-                android:text="Description: blah blah blah"
+                android:text="@string/descriptionLabel"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/descriptionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_toEndOf="@id/descriptionLabel"/>
 
 
 

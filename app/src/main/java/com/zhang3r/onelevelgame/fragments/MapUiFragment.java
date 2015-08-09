@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -37,7 +38,23 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
         Button endTurn = (Button) view.findViewById(R.id.endTurn);
         endTurn.setOnClickListener(this);
 
+
         final ViewFlipper vf = (ViewFlipper) view.findViewById(R.id.viewFlipper);
+        Button left = (Button) view.findViewById(R.id.buttonLeft);
+        Button right = (Button) view.findViewById(R.id.buttonRight);
+        left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vf.showPrevious();
+            }
+        });
+        right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vf.showNext();
+            }
+        });
+
         vf.setOnTouchListener(new OnSwipeTouchListener(view.getContext()) {
             public void onSwipeTop() {
                 Log.d(ILogConstants.GESTURE_TAG, "SWIP TOP");
@@ -59,8 +76,7 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
             }
 
         });
-
-        return view;
+           return view;
     }
 
     @Override
@@ -113,6 +129,30 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
 //                name.setText("Name: " + unit.getName());
 //                TextView hp = (TextView) view.findViewById(R.id.hitPoints);
 //                hp.setText("HP: " + unit.getHitPoints());
+                /************************************ LABEL POPULATION **************************************/
+                TextView attackStatText = (TextView) view.findViewById(R.id.attackStatText);
+                TextView attackRangeStatText = (TextView) view.findViewById(R.id.attackRangeStatText);
+                TextView defenseStatText = (TextView) view.findViewById(R.id.defenseStatText);
+                TextView moveStatText = (TextView) view.findViewById(R.id.movePointStatText);
+                TextView hpBarText = (TextView) view.findViewById(R.id.progressBarText);
+                TextView unitName = (TextView) view.findViewById(R.id.unitName);
+                TextView unitStatus = (TextView) view.findViewById(R.id.unitStatusText);
+                TextView unitType = (TextView) view.findViewById(R.id.unitTypeText);
+
+                ProgressBar hpBar = (ProgressBar) view.findViewById(R.id.HPBar);
+                TextView description = (TextView) view.findViewById(R.id.descriptionText);
+
+
+                attackStatText.setText(""+unit.getAttack());
+                attackRangeStatText.setText(""+unit.getMaxAttackRange());
+                defenseStatText.setText(""+unit.getDefense());
+                moveStatText.setText(""+unit.getMovePoints());
+                hpBarText.setText(""+unit.getHitPoints() +"/"+unit.getMaxHP());
+                hpBar.setProgress((unit.getHitPoints() * 100) / unit.getMaxHP());
+                unitName.setText(unit.getName());
+                unitType.setText(unit.getUnitType().toString());
+                unitStatus.setText(unit.getState().toString());
+                description.setText(unit.toString());
 
 
             }
@@ -153,6 +193,7 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
 //                TextView mp = (TextView) view
 //                        .findViewById(R.id.terrainDefenseBonus);
 //                mp.setText("defensive bonus: " + terrain.getDefense());
+
             }
         });
 
@@ -163,6 +204,12 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
     // Container Activity must implement this interface
     public interface OnButtonClickListener {
         public void onButtonClicked(String buttonId);
+    }
+
+
+    public void update(final BaseUnit unit, View view){
+
+
     }
 }
 

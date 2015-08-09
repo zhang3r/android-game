@@ -19,6 +19,7 @@ public abstract class BaseUnit extends Tile {
     //unit stats
     private int unitId;
     private int hitPoints;
+    private int maxHP;
     private int attack;
     private int defense;
     private int movePoints;
@@ -44,6 +45,7 @@ public abstract class BaseUnit extends Tile {
     public BaseUnit() {
         unitId = (int) Math.random() * 100;
         hitPoints = 20;
+        maxHP=20;
         attack = 0;
         defense = 0;
         movePoints = 5;
@@ -216,5 +218,13 @@ public abstract class BaseUnit extends Tile {
 
     public void setUnitType(UnitType unitType) {
         this.unitType = unitType;
+    }
+
+    public int getMaxHP() {
+        return maxHP;
+    }
+
+    public void setMaxHP(int maxHP) {
+        this.maxHP = maxHP;
     }
 }

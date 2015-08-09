@@ -10,6 +10,7 @@ import com.zhang3r.onelevelgame.model.tiles.units.BaseUnit;
 public class AttackEvent {
     private int damageDelt;
     private int recoil;
+    private StringBuilder details;
 
     public int getDamageDelt() {
         return damageDelt;
@@ -27,26 +28,34 @@ public class AttackEvent {
         this.recoil = recoil;
     }
 
-    public static AttackEvent attack(BaseUnit attacker, BaseUnit defender, Army army, Army enemyUnits) {
+    public AttackEvent(){
+        details= new StringBuilder();
+    }
 
+    public static AttackEvent attack(BaseUnit attacker, BaseUnit defender, Army army, Army enemyUnits) {
         defender.setHitPoints(defender.getHitPoints() - 20);
         attacker.setHitPoints(attacker.getHitPoints() - 5);
         AttackEvent ae = new AttackEvent();
         ae.setDamageDelt(20);
         ae.setRecoil(5);
-        Log.d(ILogConstants.DEBUG_TAG,attacker.getName()+" attacked "+defender.getName());
+        Log.d(ILogConstants.DEBUG_TAG, attacker.getName() + " attacked " + defender.getName());
+        ae.details.append(attacker.getName()+" dealt 20 damage to "+defender.getName()+" and took "+5+"damage in recoil");
         if (defender.getHitPoints() <= 0
                 || attacker.getHitPoints() <= 0) {
             synchronized (army) {
                 synchronized (enemyUnits) {
                     if (defender.getHitPoints() <= 0) {
                         defender.setState(IGameConstants.UnitState.DEAD);
-                        Log.d(ILogConstants.DEBUG_TAG,  defender.getName()+" died in battle");
+                        Log.d(ILogConstants.DEBUG_TAG, defender.getName() + " died in battle");
+                        ae.details.append("\n");
+                        ae.details.append( defender.getName() + " died in battle");
                         enemyUnits.remove(defender);
                     }
                     if (attacker.getHitPoints() <= 0) {
                         //army.remove(this);
                         Log.d(ILogConstants.DEBUG_TAG,  attacker.getName()+" died in battle");
+                        ae.details.append("\n");
+                        ae.details.append( defender.getName() + " died in battle");
                         attacker.setState(IGameConstants.UnitState.DEAD);
                     }
                 }
@@ -55,6 +64,10 @@ public class AttackEvent {
 
         }
         return ae;
+    }
+    @Override
+    public String toString(){
+        return details.toString();
     }
 
 }

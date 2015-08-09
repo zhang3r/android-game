@@ -253,15 +253,16 @@ public class AnimationThread extends Thread {
     public void start(){
         super.start();
         final Dialog dialog = new Dialog(context);
-        dialog.setTitle("WELCOME");
+        dialog.setTitle(context.getString(R.string.dialogIntroTitle));
         dialog.setContentView(R.layout.custom_dialog);
         // set the custom dialog components - text, image and button
         TextView text = (TextView) dialog.findViewById(R.id.text);
-        text.setText("Android custom dialog example!");
+        text.setText(context.getString(R.string.dialogIntro));
         ImageView image = (ImageView) dialog.findViewById(R.id.image);
         image.setImageResource(R.mipmap.ic_launcher);
 
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+        dialogButton.setText(context.getString(R.string.dialogOK));
 
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
@@ -320,9 +321,9 @@ public class AnimationThread extends Thread {
             if(terminateCondition.isWin(enemyArmy)){
                 Looper.myLooper().prepare();
                 new AlertDialog.Builder(context)
-                        .setTitle("You win")
+                        .setTitle(context.getString(R.string.winTitle))
                         .setMessage(terminateCondition.getTerminateString())
-                        .setPositiveButton("Main Menu", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // main menu
                                 dialog.dismiss();
@@ -333,7 +334,7 @@ public class AnimationThread extends Thread {
 
                             }
                         })
-                        .setNegativeButton("Play Again?", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // play again
                                 dialog.dismiss();
@@ -357,9 +358,9 @@ public class AnimationThread extends Thread {
             if(terminateCondition.isLose(playerArmy)){
                 Looper.myLooper().prepare();
                 new AlertDialog.Builder(context)
-                        .setTitle("You Lose")
+                        .setTitle(context.getString(R.string.loseTitle))
                         .setMessage(terminateCondition.getTerminateString())
-                        .setPositiveButton("Main Menu", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 run=false;
                                 dialog.dismiss();
@@ -370,7 +371,7 @@ public class AnimationThread extends Thread {
 
                             }
                         })
-                        .setNegativeButton("Play Again?", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // play again
                                 run=false;
@@ -449,7 +450,7 @@ public class AnimationThread extends Thread {
         mScaleFactor *= scaleGestureDetector.getScaleFactor();
 
         // Don't let the object get too small or too large.
-        mScaleFactor = Math.max(0.9f, Math.min(mScaleFactor, 1.1f));
+        mScaleFactor = Math.max(0.7f, Math.min(mScaleFactor, 1.2f));
         Log.d(ILogConstants.DEBUG_TAG, "Scale Factor: " + mScaleFactor);
         view.invalidate();
 
@@ -699,10 +700,7 @@ public class AnimationThread extends Thread {
                 synchronized (unitToMove) {
                     unitToMove.setState(UnitState.WAIT);
                 }
-                // TODO: update messaging
-                message = unitToMove.getName() + " dealt " + ae.getDamageDelt()
-                        + " damage and took " + ae.getRecoil() + " from "
-                        + defender.getName();
+                message = ae.toString();
 
 
                 unitSelected = unitToMove;
