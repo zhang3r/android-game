@@ -36,7 +36,7 @@ public class SpriteFactory {
 
             case FOOT:
                 if(isEnemy){
-
+                    return getSprite(R.drawable.beet_infantry_tile,2);
                 }
                 return getSprite(R.drawable.infantry,2);
             case CAV:

@@ -19,6 +19,7 @@ import com.zhang3r.onelevelgame.constants.IButtonConstants;
 import com.zhang3r.onelevelgame.constants.ILogConstants;
 import com.zhang3r.onelevelgame.model.tiles.terrain.BaseTerrain;
 import com.zhang3r.onelevelgame.model.tiles.units.BaseUnit;
+import com.zhang3r.onelevelgame.model.tiles.units.InfantryUnit;
 import com.zhang3r.onelevelgame.views.MapUiView;
 
 public class MapUiFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
@@ -42,6 +43,8 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
         final ViewFlipper vf = (ViewFlipper) view.findViewById(R.id.viewFlipper);
         Button left = (Button) view.findViewById(R.id.buttonLeft);
         Button right = (Button) view.findViewById(R.id.buttonRight);
+        Button left2 = (Button) view.findViewById(R.id.buttonLeft2);
+        Button right2 = (Button) view.findViewById(R.id.buttonRight2);
         left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,6 +57,19 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
                 vf.showNext();
             }
         });
+        left2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vf.showPrevious();
+            }
+        });
+        right2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vf.showNext();
+            }
+        });
+
 
         vf.setOnTouchListener(new OnSwipeTouchListener(view.getContext()) {
             public void onSwipeTop() {
@@ -129,31 +145,8 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
 //                name.setText("Name: " + unit.getName());
 //                TextView hp = (TextView) view.findViewById(R.id.hitPoints);
 //                hp.setText("HP: " + unit.getHitPoints());
-                /************************************ LABEL POPULATION **************************************/
-                TextView attackStatText = (TextView) view.findViewById(R.id.attackStatText);
-                TextView attackRangeStatText = (TextView) view.findViewById(R.id.attackRangeStatText);
-                TextView defenseStatText = (TextView) view.findViewById(R.id.defenseStatText);
-                TextView moveStatText = (TextView) view.findViewById(R.id.movePointStatText);
-                TextView hpBarText = (TextView) view.findViewById(R.id.progressBarText);
-                TextView unitName = (TextView) view.findViewById(R.id.unitName);
-                TextView unitStatus = (TextView) view.findViewById(R.id.unitStatusText);
-                TextView unitType = (TextView) view.findViewById(R.id.unitTypeText);
 
-                ProgressBar hpBar = (ProgressBar) view.findViewById(R.id.HPBar);
-                TextView description = (TextView) view.findViewById(R.id.descriptionText);
-
-
-                attackStatText.setText(""+unit.getAttack());
-                attackRangeStatText.setText(""+unit.getMaxAttackRange());
-                defenseStatText.setText(""+unit.getDefense());
-                moveStatText.setText(""+unit.getMovePoints());
-                hpBarText.setText(""+unit.getHitPoints() +"/"+unit.getMaxHP());
-                hpBar.setProgress((unit.getHitPoints() * 100) / unit.getMaxHP());
-                unitName.setText(unit.getName());
-                unitType.setText(unit.getUnitType().toString());
-                unitStatus.setText(unit.getState().toString());
-                description.setText(unit.toString());
-
+                update(unit, view);
 
             }
         });
@@ -193,6 +186,7 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
 //                TextView mp = (TextView) view
 //                        .findViewById(R.id.terrainDefenseBonus);
 //                mp.setText("defensive bonus: " + terrain.getDefense());
+                //update(null, view);
 
             }
         });
@@ -208,7 +202,42 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
 
 
     public void update(final BaseUnit unit, View view){
+        /************************************ LABEL POPULATION **************************************/
+        TextView attackStatText = (TextView) view.findViewById(R.id.attackStatText);
+        TextView attackRangeStatText = (TextView) view.findViewById(R.id.attackRangeStatText);
+        TextView defenseStatText = (TextView) view.findViewById(R.id.defenseStatText);
+        TextView moveStatText = (TextView) view.findViewById(R.id.movePointStatText);
+        TextView hpBarText = (TextView) view.findViewById(R.id.progressBarText);
+        TextView unitName = (TextView) view.findViewById(R.id.unitName);
+        TextView unitStatus = (TextView) view.findViewById(R.id.unitStatusText);
+        TextView unitType = (TextView) view.findViewById(R.id.unitTypeText);
 
+        ProgressBar hpBar = (ProgressBar) view.findViewById(R.id.HPBar);
+        TextView description = (TextView) view.findViewById(R.id.descriptionText);
+
+        if (unit == null){
+            attackStatText.setText("");
+            attackRangeStatText.setText("");
+            defenseStatText.setText("");
+            moveStatText.setText("");
+            hpBarText.setText("");
+            hpBar.setProgress(0);
+            unitName.setText("");
+            unitType.setText("");
+            unitStatus.setText("");
+            description.setText("");
+        }else {
+            attackStatText.setText("" + unit.getAttack());
+            attackRangeStatText.setText("" + unit.getMaxAttackRange());
+            defenseStatText.setText("" + unit.getDefense());
+            moveStatText.setText("" + unit.getMovePoints());
+            hpBarText.setText("" + unit.getHitPoints() + "/" + unit.getMaxHP());
+            hpBar.setProgress((unit.getHitPoints() * 100) / unit.getMaxHP());
+            unitName.setText(unit.getName());
+            unitType.setText(unit.getUnitType().toString().toLowerCase());
+            unitStatus.setText(unit.getState().toString().toLowerCase());
+            description.setText(unit.toString());
+        }
 
     }
 }

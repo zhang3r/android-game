@@ -29,16 +29,22 @@ public class MapFragment extends Fragment {
     private static OnMapListener mCallback;
 
     public static void getUnitSelected(BaseUnit unit) {
-        mCallback.onUnitSelected(unit);
+        if(unit!=null&&mCallback!=null) {
+            mCallback.onUnitSelected(unit);
+        }
 
     }
 
     public static void getTerrainSelected(BaseTerrain terrain) {
-        mCallback.onTerrainSelected(terrain);
+        if(terrain!=null&&mCallback!=null) {
+            mCallback.onTerrainSelected(terrain);
+        }
     }
 
     public static void getMessageToUi(String message) {
-        mCallback.getMessageToUi(message);
+        if(message!=null&&mCallback!=null) {
+            mCallback.getMessageToUi(message);
+        }
     }
 
     @Override
@@ -46,6 +52,7 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
 //        View view = inflator.inflate(R.layout.map_view_group, container, false);
         View view = inflator.inflate(R.layout.fragment_map, container, false);
+
         return view;
     }
 
@@ -114,5 +121,7 @@ public class MapFragment extends Fragment {
 
         void onTerrainSelected(BaseTerrain terrain);
     }
+
+
 
 }

@@ -1,5 +1,6 @@
 package com.zhang3r.onelevelgame.gameFramework;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -168,18 +169,14 @@ public class AnimationThread extends Thread {
         int y = 2;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap baseBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.CAV, true);
-        Bitmap archBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.ARCHER,true);
-        BaseUnit unit = CavalryUnit.create(1, "enemy Cavalry unit 1", x, y);
+        Bitmap baseBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, true);
+
+        BaseUnit unit = CavalryUnit.create(1, "enemy Infantry unit 1", x, y);
         unit.setSprite(AnimatedSprite.create(baseBitMap,
                 IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
                 true, x, y));
         army.add(unit);
-        BaseUnit unit2 = ArcheryUnit.create(1, "enemy Archer unit 1", x + 3, y + 2);
-        unit2.setSprite(AnimatedSprite.create(archBitMap,
-                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-                true, x + 3, y + 2));
-        army.add(unit2);
+
 
         return army;
 
@@ -328,9 +325,9 @@ public class AnimationThread extends Thread {
                                 // main menu
                                 dialog.dismiss();
                                 run=false;
+
+                                ((Activity)context).finish();
                                 Looper.myLooper().quitSafely();
-                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINMENU");
-                                context.startActivity(i);
 
                             }
                         })
@@ -339,11 +336,11 @@ public class AnimationThread extends Thread {
                                 // play again
                                 dialog.dismiss();
                                 run=false;
-
+                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
+                                context.startActivity(i);
+                                ((Activity)context).finish();
                                 Looper.myLooper().quit();
-                                AnimationThread newThread =new AnimationThread(surfaceHolder,context,screenWidth,screenHeight,view);
-                                newThread.setRunning(true);
-                                newThread.start();
+
 
 
                             }

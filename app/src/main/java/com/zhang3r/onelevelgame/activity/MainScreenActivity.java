@@ -3,10 +3,12 @@ package com.zhang3r.onelevelgame.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.zhang3r.onelevelgame.R;
+import com.zhang3r.onelevelgame.constants.ILogConstants;
 
 /**
  * Created by Zhang3r on 8/2/2015.
@@ -26,14 +28,8 @@ public class MainScreenActivity extends Activity{
             }
         });
 
-        Button quit = (Button) findViewById(R.id.quit);
-        quit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
 
-            }
-        });
+
 
 
     }
@@ -42,6 +38,10 @@ public class MainScreenActivity extends Activity{
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
+
+    }
+
+    public void destroy(View view){
         finish();
     }
 }

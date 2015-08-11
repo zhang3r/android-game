@@ -83,7 +83,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_below="@+id/unitTypeText"
                 android:layout_toRightOf="@+id/unitImage"
-                android:paddingTop="10dp"/>
+                android:paddingTop="0dp"/>
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="100dp"
@@ -91,7 +91,7 @@
                 android:id="@+id/HPBar"
                 android:layout_below="@+id/unitTypeText"
                 android:layout_toRightOf="@+id/hp"
-                android:paddingTop="15dp"
+                android:paddingTop="5dp"
                 android:paddingLeft="2dp"/>
             <TextView
                 android:id="@+id/progressBarText"
@@ -231,22 +231,38 @@
             android:layout_height="fill_parent"
             android:layout_column="4"
             android:layout_weight=".3">
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="&lt;"
+                android:id="@+id/buttonLeft2"
+                android:layout_centerVertical="true" />
 
 
             <TextView
                 android:id="@+id/descriptionLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_row="0"
                 android:text="@string/descriptionLabel"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:padding="5dp" />
             <TextView
                 android:id="@+id/descriptionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_toEndOf="@id/descriptionLabel"/>
+                android:layout_below="@id/descriptionLabel"
+                android:padding="5dp"/>
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="&gt;"
+                android:id="@+id/buttonRight2"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                />
 
 
 
