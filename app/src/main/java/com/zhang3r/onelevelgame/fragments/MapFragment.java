@@ -2,7 +2,7 @@ package com.zhang3r.onelevelgame.fragments;
 
 import android.app.Activity;
 
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -32,6 +32,11 @@ public class MapFragment extends Fragment {
         if(unit!=null&&mCallback!=null) {
             mCallback.onUnitSelected(unit);
         }
+        if(mCallback==null){
+
+            Log.d(ILogConstants.SYSTEM_ERROR_TAG, "mCallback is null");
+        }
+
 
     }
 
@@ -63,7 +68,9 @@ public class MapFragment extends Fragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
+
             mCallback = (OnMapListener) activity;
+
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement MapListener");
@@ -71,24 +78,8 @@ public class MapFragment extends Fragment {
     }
 
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment MapFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MapFragment newInstance() {
-        MapFragment fragment = new MapFragment();
-        Bundle args = new Bundle();
 
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-    public MapFragment() {
-        // Required empty public constructor
-    }
 
 
 
@@ -100,7 +91,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mCallback = null;
+
     }
 
 
