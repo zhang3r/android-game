@@ -1,8 +1,6 @@
 package com.zhang3r.onelevelgame.fragments;
 
 import android.app.Activity;
-
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,7 +17,7 @@ import com.zhang3r.onelevelgame.views.MapView;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
-
+ * <p/>
  * to handle interaction events.
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -29,25 +27,17 @@ public class MapFragment extends Fragment {
     private static OnMapListener mCallback;
 
     public static void getUnitSelected(BaseUnit unit) {
-        if(unit!=null&&mCallback!=null) {
-            mCallback.onUnitSelected(unit);
-        }
-        if(mCallback==null){
-
-            Log.d(ILogConstants.SYSTEM_ERROR_TAG, "mCallback is null");
-        }
-
-
+        mCallback.onUnitSelected(unit);
     }
 
     public static void getTerrainSelected(BaseTerrain terrain) {
-        if(terrain!=null&&mCallback!=null) {
+        if (terrain != null && mCallback != null) {
             mCallback.onTerrainSelected(terrain);
         }
     }
 
     public static void getMessageToUi(String message) {
-        if(message!=null&&mCallback!=null) {
+        if (message != null && mCallback != null) {
             mCallback.getMessageToUi(message);
         }
     }
@@ -77,17 +67,6 @@ public class MapFragment extends Fragment {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -112,7 +91,6 @@ public class MapFragment extends Fragment {
 
         void onTerrainSelected(BaseTerrain terrain);
     }
-
 
 
 }

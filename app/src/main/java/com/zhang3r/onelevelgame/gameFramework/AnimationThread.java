@@ -523,9 +523,8 @@ public class AnimationThread extends Thread {
         }
 
         // sending Unit to ui panel
-        if (unitSelected != null) {
-            MapFragment.getUnitSelected(unitSelected);
-        }
+        MapFragment.getUnitSelected(unitSelected);
+
         // sending message to ui panel
         if (message != null) {
             MapFragment.getMessageToUi(message);
