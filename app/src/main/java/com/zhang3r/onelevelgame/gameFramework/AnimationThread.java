@@ -139,24 +139,43 @@ public class AnimationThread extends Thread {
     // TODO: temp initalization: idealy this would vary by level
     private Army initializePlayerArmies(int level) {
         Army army = Army.create(IGameConstants.PLAYER);
-        int x = 6;
-        int y = 5;
+
+        int xUpper = Map.getMap().getGrid().length/5;
+        int yUpper =Map.getMap().getGrid().length;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap infantryBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, false);
         Bitmap cavBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.CAV, false);
+        Bitmap archerBitMap= SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.ARCHER, false);
 
+        //1 cav
+        //1 archer
+        //2 infantry
 
-        BaseUnit unit = InfantryUnit.create(1, "player Infantry unit 1", x, y);
+        BaseUnit unit = InfantryUnit.create(1, "player unit 1", (int)(Math.random()*xUpper), (int)(Math.random()*yUpper));
         unit.setSprite(AnimatedSprite.create(infantryBitMap,
                 IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH,2, 2,
-                true, x, y));
+                true, unit.getX(),unit.getY()));
+        Log.d(ILogConstants.DEBUG_TAG,"unit created At: "+unit.getX()+" ,"+unit.getY());
         army.add(unit);
-        BaseUnit unit2 = CavalryUnit.create(1, "player cavalry unit 1", x + 3, y + 2);
+        BaseUnit unit2 = CavalryUnit.create(2, "player unit 2",(int)(Math.random()*xUpper), (int)(Math.random()*yUpper));
         unit2.setSprite(AnimatedSprite.create(cavBitMap,
                 IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-                true, x + 3, y + 2));
+                true,  unit2.getX(),unit2.getY()));
+        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit2.getX() + " ," + unit2.getY());
         army.add(unit2);
+        BaseUnit unit3 = ArcheryUnit.create(3, "player unit 3", (int)(Math.random()*xUpper), (int)(Math.random()*yUpper));
+        unit3.setSprite(AnimatedSprite.create(archerBitMap,
+                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH,2, 2,
+                true,  unit3.getX(),unit3.getY()));
+        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit3.getX() + " ," + unit3.getY());
+        army.add(unit3);
+        BaseUnit unit4 = InfantryUnit.create(4, "player unit 4", (int)(Math.random()*xUpper), (int)(Math.random()*yUpper));
+        unit4.setSprite(AnimatedSprite.create(infantryBitMap,
+                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
+                true,  unit4.getX(),unit4.getY()));
+        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit4.getX() + " ," + unit4.getY());
+        army.add(unit4);
 
         return army;
 
@@ -164,18 +183,22 @@ public class AnimationThread extends Thread {
 
     // TODO: temp initailization: idealy this would vary by level
     private Army initializeEnemyArmies(int level) {
+        //7 infantry
         Army army = Army.create(IGameConstants.ENEMY);
-        int x = 7;
-        int y = 2;
+        int xUpper = Map.getMap().getGrid().length/5;
+        int xLower= Map.getMap().getGrid().length - xUpper;
+        int yUpper =Map.getMap().getGrid().length;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap baseBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, true);
 
-        BaseUnit unit = CavalryUnit.create(1, "enemy Infantry unit 1", x, y);
-        unit.setSprite(AnimatedSprite.create(baseBitMap,
-                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-                true, x, y));
-        army.add(unit);
+        for (int i=0; i<=7; i++){
+            BaseUnit unit = CavalryUnit.create(i, "enemy Infantry unit "+i, ((int)(Math.random()*xUpper)+xLower),(int)(Math.random()*yUpper));
+            unit.setSprite(AnimatedSprite.create(baseBitMap,
+                    IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
+                    true,  unit.getX(),unit.getY()));
+            army.add(unit);
+        }
 
 
         return army;

@@ -22,6 +22,7 @@ public class ArcheryUnit extends BaseUnit{
     public static BaseUnit create(int unitId,
                            String name, int x, int y){
         BaseUnit unit = new ArcheryUnit();
+        unit.setUnitId(unitId);
         unit.setName(name);
         unit.setMaxAttackRange(3);
         unit.setMinAttackRange(1);
