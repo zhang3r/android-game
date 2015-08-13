@@ -124,12 +124,13 @@ public class AnimationThread extends Thread {
         playerArmy = initializePlayerArmies(1);
         enemyArmy = initializeEnemyArmies(1);
         currViewport = new RectF(IAppConstants.AXIS_X_MIN,
-                IAppConstants.AXIS_Y_MIN, -screenWidth, -screenHeight);
+                IAppConstants.AXIS_Y_MIN, -viewWidth, -viewHeight);
         state = TurnState.PLAYER;
         terrainFactory = new TerrainFactory();
         initializeMap(playerArmy, enemyArmy);
         // music thank to Arkane
         song = MediaPlayer.create(context, R.raw.attack_on_titan_theme);
+        song.setVolume(.25f,.25f);
         song.setLooping(true);
         song.start();
 
