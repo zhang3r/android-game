@@ -41,7 +41,6 @@ import com.zhang3r.onelevelgame.model.AI.ShittyAI;
 import com.zhang3r.onelevelgame.model.AttackEvent;
 import com.zhang3r.onelevelgame.model.army.Army;
 import com.zhang3r.onelevelgame.model.maps.Map;
-import com.zhang3r.onelevelgame.model.tiles.terrain.BaseTerrain;
 import com.zhang3r.onelevelgame.model.tiles.terrain.PlainTerrain;
 import com.zhang3r.onelevelgame.model.tiles.terrain.RockyTerrain;
 import com.zhang3r.onelevelgame.model.tiles.terrain.TerrainFactory;
@@ -55,7 +54,6 @@ import com.zhang3r.onelevelgame.model.tiles.units.decorator.FriendlyUnit;
 import com.zhang3r.onelevelgame.terminate.AllUnitsDestroyed;
 import com.zhang3r.onelevelgame.terminate.TerminateCondition;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -114,7 +112,7 @@ public class AnimationThread extends Thread {
         this.viewWidth = view.getWidth();
         this.viewHeight = view.getHeight();
         this.view = view;
-        this.context= context;
+        this.context = context;
         this.unitToMove = null;
         this.unitSelected = null;
         this.tileSelected = 0;
@@ -136,39 +134,38 @@ public class AnimationThread extends Thread {
         song.start();
 
 
-
     }
 
     // TODO: temp initalization: idealy this would vary by level
     private Army initializePlayerArmies(int level) {
         Army army = Army.create(IGameConstants.PLAYER);
 
-        int xUpper = Map.getMap().getGrid().length/5;
-        int yUpper =Map.getMap().getGrid().length;
+        int xUpper = Map.getMap().getGrid().length / 5;
+        int yUpper = Map.getMap().getGrid().length;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap infantryBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, false);
         Bitmap cavBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.CAV, false);
-        Bitmap archerBitMap= SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.ARCHER, false);
+        Bitmap archerBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.ARCHER, false);
 
         //1 cav
         //1 archer
         //2 infantry
-        BaseUnit unit = InfantryUnit.create(1, "player unit 1", (int)(Math.random()*xUpper), (int)(Math.random()*yUpper));
+        BaseUnit unit = InfantryUnit.create(1, "player unit 1", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
         unit = new FriendlyUnit(unit);
         unit.setSprite(AnimatedSprite.create(infantryBitMap,
                 IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
                 true, unit.getX(), unit.getY()));
         Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit.getX() + " ," + unit.getY());
         army.add(unit);
-        BaseUnit unit2 = CavalryUnit.create(2, "player unit 2",(int)(Math.random()*xUpper), (int)(Math.random()*yUpper));
+        BaseUnit unit2 = CavalryUnit.create(2, "player unit 2", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
         unit2 = new FriendlyUnit(unit2);
         unit2.setSprite(AnimatedSprite.create(cavBitMap,
                 IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
                 true, unit2.getX(), unit2.getY()));
         Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit2.getX() + " ," + unit2.getY());
         army.add(unit2);
-        BaseUnit unit3 = ArcheryUnit.create(3, "player unit 3", (int)(Math.random()*xUpper), (int)(Math.random()*yUpper));
+        BaseUnit unit3 = ArcheryUnit.create(3, "player unit 3", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
         unit3 = new FriendlyUnit(unit3);
         unit3.setSprite(AnimatedSprite.create(archerBitMap,
                 IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
@@ -176,11 +173,11 @@ public class AnimationThread extends Thread {
         Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit3.getX() + " ," + unit3.getY());
         army.add(unit3);
 
-        BaseUnit unit4 = InfantryUnit.create(4, "player unit 4", (int)(Math.random()*xUpper), (int)(Math.random()*yUpper));
+        BaseUnit unit4 = InfantryUnit.create(4, "player unit 4", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
         unit4 = new FriendlyUnit(unit4);
         unit4.setSprite(AnimatedSprite.create(infantryBitMap,
                 IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-                true,  unit4.getX(),unit4.getY()));
+                true, unit4.getX(), unit4.getY()));
         Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit4.getX() + " ," + unit4.getY());
         army.add(unit4);
 
@@ -192,19 +189,19 @@ public class AnimationThread extends Thread {
     private Army initializeEnemyArmies(int level) {
         //7 infantry
         Army army = Army.create(IGameConstants.ENEMY);
-        int xUpper = Map.getMap().getGrid().length/5;
-        int xLower= Map.getMap().getGrid().length - xUpper;
-        int yUpper =Map.getMap().getGrid().length;
+        int xUpper = Map.getMap().getGrid().length / 5;
+        int xLower = Map.getMap().getGrid().length - xUpper;
+        int yUpper = Map.getMap().getGrid().length;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap baseBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, true);
 
-        for (int i=0; i<=7; i++){
-            BaseUnit unit = InfantryUnit.create(i, "enemy Infantry unit "+i, ((int)(Math.random()*xUpper)+xLower),(int)(Math.random()*yUpper));
-            unit=new EnemyUnit(unit);
+        for (int i = 0; i <= 7; i++) {
+            BaseUnit unit = InfantryUnit.create(i, "enemy Infantry unit " + i, ((int) (Math.random() * xUpper) + xLower), (int) (Math.random() * yUpper));
+            unit = new EnemyUnit(unit);
             unit.setSprite(AnimatedSprite.create(baseBitMap,
                     IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-                    true,  unit.getX(),unit.getY()));
+                    true, unit.getX(), unit.getY()));
             army.add(unit);
         }
 
@@ -230,10 +227,10 @@ public class AnimationThread extends Thread {
                     tile = 1;
                     //tile = new RockyTerrain(resources, x, y);
                 } else if (random <= 3) {
-                    tile =2;
+                    tile = 2;
                     //tile = new TreeTerrain(resources, x, y);
                 } else {
-                    tile =0;
+                    tile = 0;
                     //tile = new PlainTerrain(resources, x, y);
                 }
                 //initialize the map
@@ -277,8 +274,9 @@ public class AnimationThread extends Thread {
         }
         song.stop();
     }
+
     @Override
-    public void start(){
+    public void start() {
         super.start();
         final Dialog dialog = new Dialog(context);
         dialog.setTitle(context.getString(R.string.dialogIntroTitle));
@@ -315,8 +313,8 @@ public class AnimationThread extends Thread {
             return;
 
         synchronized (terrainFactory) {
-            for(int i =0; i<terrainFactory.getSize(); i++){
-            terrainFactory.getTerrain(i).getSprite().Update(now);
+            for (int i = 0; i < terrainFactory.getSize(); i++) {
+                terrainFactory.getTerrain(i).getSprite().Update(now);
             }
         }
 
@@ -340,13 +338,12 @@ public class AnimationThread extends Thread {
                 }
 
 
-
             }
         }
         /*******************************************  END LEVEL CONDITION **************************************/
         synchronized (enemyArmy) {
 
-            if(terminateCondition.isWin(enemyArmy)){
+            if (terminateCondition.isWin(enemyArmy)) {
                 Looper.myLooper().prepare();
                 new AlertDialog.Builder(context)
                         .setTitle(context.getString(R.string.winTitle))
@@ -355,9 +352,9 @@ public class AnimationThread extends Thread {
                             public void onClick(DialogInterface dialog, int which) {
                                 // main menu
                                 dialog.dismiss();
-                                run=false;
+                                run = false;
 
-                                ((Activity)context).finish();
+                                ((Activity) context).finish();
                                 Looper.myLooper().quitSafely();
 
                             }
@@ -366,12 +363,11 @@ public class AnimationThread extends Thread {
                             public void onClick(DialogInterface dialog, int which) {
                                 // play again
                                 dialog.dismiss();
-                                run=false;
+                                run = false;
                                 Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
                                 context.startActivity(i);
-                                ((Activity)context).finish();
+                                ((Activity) context).finish();
                                 Looper.myLooper().quit();
-
 
 
                             }
@@ -383,14 +379,14 @@ public class AnimationThread extends Thread {
         }
         synchronized (playerArmy) {
 
-            if(terminateCondition.isLose(playerArmy)){
+            if (terminateCondition.isLose(playerArmy)) {
                 Looper.myLooper().prepare();
                 new AlertDialog.Builder(context)
                         .setTitle(context.getString(R.string.loseTitle))
                         .setMessage(terminateCondition.getTerminateString())
                         .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                run=false;
+                                run = false;
                                 dialog.dismiss();
                                 Looper.myLooper().quitSafely();
                                 Intent i = new Intent("com.zhang3r.onelevelgame.MAINMENU");
@@ -402,12 +398,12 @@ public class AnimationThread extends Thread {
                         .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // play again
-                                run=false;
+                                run = false;
                                 dialog.dismiss();
 
                                 Looper.myLooper().quitSafely();
 
-                                new AnimationThread(surfaceHolder,context,screenWidth,screenHeight,view).run();
+                                new AnimationThread(surfaceHolder, context, screenWidth, screenHeight, view).run();
 
 
                             }
@@ -563,7 +559,7 @@ public class AnimationThread extends Thread {
         // TODO send tile info to ui panel
         if (tileSelected >= 0) {
             {
-            MapFragment.getTerrainSelected(terrainFactory.getTerrain(tileSelected));
+                MapFragment.getTerrainSelected(terrainFactory.getTerrain(tileSelected));
 
 
             }
@@ -587,7 +583,7 @@ public class AnimationThread extends Thread {
         for (BaseUnit unit : unitList) {
             if ((int) (xPos / IAppConstants.SPRITE_WIDTH) == unit.getX()
                     && (int) (yPos / IAppConstants.SPRITE_HEIGHT) == unit.getY()) {
-                Log.d(ILogConstants.DEBUG_TAG, "xpos "+xPos+" ypos "+yPos+" unit found! unit is " + unit.getName()+" at x: "+unit.getX()+" y: "+unit.getY());
+                Log.d(ILogConstants.DEBUG_TAG, "xpos " + xPos + " ypos " + yPos + " unit found! unit is " + unit.getName() + " at x: " + unit.getX() + " y: " + unit.getY());
                 return unit;
             }
         }
@@ -630,7 +626,7 @@ public class AnimationThread extends Thread {
                 synchronized (moveSprites) {
                     moveSprites.clear();
                     moveSprites.addAll(unitToMove.getUnitMoveTiles(
-                            Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, playerArmy,enemyArmy, resources));
+                            Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, playerArmy, enemyArmy, resources));
                 }
                 unitToMove.setState(UnitState.SELECTED);
             } else {
