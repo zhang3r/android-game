@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -211,7 +212,7 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
         TextView unitName = (TextView) view.findViewById(R.id.unitName);
         TextView unitStatus = (TextView) view.findViewById(R.id.unitStatusText);
         TextView unitType = (TextView) view.findViewById(R.id.unitTypeText);
-
+        ImageView image = (ImageView) view.findViewById(R.id.unitImage);
         ProgressBar hpBar = (ProgressBar) view.findViewById(R.id.HPBar);
         TextView description = (TextView) view.findViewById(R.id.descriptionText);
 
@@ -226,6 +227,7 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
             unitType.setText("");
             unitStatus.setText("");
             description.setText("");
+            image.setImageBitmap(null);
         }else {
             attackStatText.setText("" + unit.getAttack());
             attackRangeStatText.setText("" + unit.getMaxAttackRange());
@@ -234,6 +236,7 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
             hpBarText.setText("" + unit.getHitPoints() + "/" + unit.getMaxHP());
             hpBar.setProgress((unit.getHitPoints() * 100) / unit.getMaxHP());
             unitName.setText(unit.getName());
+            image.setImageBitmap(unit.getSprite().getAnimation());
             unitType.setText(unit.getUnitType().toString().toLowerCase());
             unitStatus.setText(unit.getState().toString().toLowerCase());
             description.setText(unit.toString());
