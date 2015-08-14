@@ -29,34 +29,36 @@ public class ShittyAI implements AI {
             unit.setUnitSelected(true);
             //find closest unit using manhattan distance
             BaseUnit shortestUnit = pathFinding(unit, enemyArmy);
-            int shortestDistance = calcDistance(unit.getX(), unit.getY(), shortestUnit);
-            //if closet unit is outside of attack range, move
-            if (shortestDistance > unit.getMaxAttackRange()) {
-                int dX = 0;
-                int dY = 0;
-                // get valid moves
-                List<AnimatedSprite> moveTiles = unit.getUnitMoveTiles(Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, army, enemyArmy, Resources.getSystem());
-                for (AnimatedSprite tile : moveTiles) {
-                    int distance = calcDistance(tile.getXPos() / IAppConstants.SPRITE_WIDTH, tile.getYPos() / IAppConstants.SPRITE_HEIGHT, shortestUnit);
-                    if (distance < shortestDistance) {
-                        shortestDistance = distance;
-                        dX = tile.getXPos();
-                        dY = tile.getYPos();
+            if (shortestUnit != null) {
+                int shortestDistance = calcDistance(unit.getX(), unit.getY(), shortestUnit);
+                //if closet unit is outside of attack range, move
+                if (shortestDistance > unit.getMaxAttackRange()) {
+                    int dX = 0;
+                    int dY = 0;
+                    // get valid moves
+                    List<AnimatedSprite> moveTiles = unit.getUnitMoveTiles(Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, army, enemyArmy, Resources.getSystem());
+                    for (AnimatedSprite tile : moveTiles) {
+                        int distance = calcDistance(tile.getXPos() / IAppConstants.SPRITE_WIDTH, tile.getYPos() / IAppConstants.SPRITE_HEIGHT, shortestUnit);
+                        if (distance < shortestDistance) {
+                            shortestDistance = distance;
+                            dX = tile.getXPos() / IAppConstants.SPRITE_WIDTH;
+                            dY = tile.getYPos() / IAppConstants.SPRITE_WIDTH;
+                        }
                     }
+                    Log.d(ILogConstants.DEBUG_TAG, "AI Move x:" + dX + " y: " + dY);
+                    if (unit.unitMoveUpdate(moveTiles, army, enemyArmy, dX, dY)) {
+                        unit.setState(IGameConstants.UnitState.MOVED);
+                    }
+                    //update shortest distance
+                    shortestDistance -= Math.abs(dX) + Math.abs(dY);
                 }
-                Log.d(ILogConstants.DEBUG_TAG, "AI Move x:" + dX + " y: " + dY);
-                if (unit.unitMoveUpdate(moveTiles, army, enemyArmy, dX, dY)) {
-                    unit.setState(IGameConstants.UnitState.MOVED);
+                //check if enemy is in attack range
+                // if enemy is in attack range attack
+                if (shortestDistance <= unit.getMaxAttackRange()) {
+                    AttackEvent.attack(unit, shortestUnit, army, enemyArmy);
                 }
-                //update shortest distance
-                shortestDistance -= Math.abs(dX) + Math.abs(dY);
+                unit.setState(IGameConstants.UnitState.WAIT);
             }
-            //check if enemy is in attack range
-            // if enemy is in attack range attack
-            if (shortestDistance <= unit.getMaxAttackRange()) {
-                AttackEvent.attack(unit, shortestUnit, army, enemyArmy);
-            }
-            unit.setState(IGameConstants.UnitState.WAIT);
         }
         //all units has moved
         //end turn;
