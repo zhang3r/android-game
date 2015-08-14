@@ -33,13 +33,15 @@ public class AttackEvent {
     }
 
     public static AttackEvent attack(BaseUnit attacker, BaseUnit defender, Army army, Army enemyUnits) {
-        defender.setHitPoints(defender.getHitPoints() - 20);
-        attacker.setHitPoints(attacker.getHitPoints() - 5);
+        int damage =attacker.getAttack()-defender.getDefense();
+        int recoil =damage/5;
+        defender.setHitPoints(defender.getHitPoints() - damage);
+        attacker.setHitPoints(attacker.getHitPoints() - recoil);
         AttackEvent ae = new AttackEvent();
-        ae.setDamageDelt(20);
-        ae.setRecoil(5);
+        ae.setDamageDelt(damage);
+        ae.setRecoil(recoil);
         Log.d(ILogConstants.DEBUG_TAG, attacker.getName() + " attacked " + defender.getName());
-        ae.details.append(attacker.getName()+" dealt 20 damage to "+defender.getName()+" and took "+5+"damage in recoil");
+        ae.details.append(attacker.getName()+" dealt "+damage+ " damage to "+defender.getName()+" and took "+recoil+"damage in recoil");
         if (defender.getHitPoints() <= 0
                 || attacker.getHitPoints() <= 0) {
             synchronized (army) {
