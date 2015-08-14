@@ -32,7 +32,7 @@ public class RangedAttackImpl implements Attack {
                 + attackRange;
         // upper half
 
-        for (int z = lowerY, a = minAttackRange; z <= y && a <= attackRange; z++, a++) {
+        for (int z = lowerY, a = minAttackRange+1; z <= y && a <= attackRange; z++, a++) {
             for (int b = 0; b <= attackRange - (y - z); b++) {
                 int upper = x + b, lower = x - b;
                 if (x + b >= xLength) {
@@ -54,7 +54,7 @@ public class RangedAttackImpl implements Attack {
 
         }
         // lower half
-        for (int z = y, a = attackRange; z <= upperY && a >= minAttackRange; z++, a--) {
+        for (int z = y, a = attackRange; z <= upperY && a > minAttackRange; z++, a--) {
             for (int b = 0; b <= a; b++) {
                 int upper = x + b, lower = x - b;
                 if (x + b >= xLength) {

@@ -33,24 +33,26 @@ public class ShittyAI implements AI {
                 int shortestDistance = calcDistance(unit.getX(), unit.getY(), shortestUnit);
                 //if closet unit is outside of attack range, move
                 if (shortestDistance > unit.getMaxAttackRange()) {
-                    int dX = 0;
-                    int dY = 0;
+                    int dX = unit.getX()*IAppConstants.SPRITE_WIDTH;
+                    int dY = unit.getY()*IAppConstants.SPRITE_WIDTH;
+                    Log.d(ILogConstants.DEBUG_TAG, "AI "+unit.getUnitId()+" original x:" + dX + " y: " + dY);
                     // get valid moves
                     List<AnimatedSprite> moveTiles = unit.getUnitMoveTiles(Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, army, enemyArmy, Resources.getSystem());
                     for (AnimatedSprite tile : moveTiles) {
-                        int distance = calcDistance(tile.getXPos() / IAppConstants.SPRITE_WIDTH, tile.getYPos() / IAppConstants.SPRITE_HEIGHT, shortestUnit);
+                        int distance = calcDistance((tile.getXPos() / IAppConstants.SPRITE_WIDTH), (tile.getYPos() / IAppConstants.SPRITE_WIDTH), shortestUnit);
                         if (distance < shortestDistance) {
                             shortestDistance = distance;
-                            dX = tile.getXPos() / IAppConstants.SPRITE_WIDTH;
-                            dY = tile.getYPos() / IAppConstants.SPRITE_WIDTH;
+                            dX = tile.getXPos() ;
+                            dY = tile.getYPos() ;
+
                         }
                     }
-                    Log.d(ILogConstants.DEBUG_TAG, "AI Move x:" + dX + " y: " + dY);
                     if (unit.unitMoveUpdate(moveTiles, army, enemyArmy, dX, dY)) {
+                        Log.d(ILogConstants.DEBUG_TAG, "AI "+unit.getUnitId()+" Move x:" + dX + " y: " + dY);
                         unit.setState(IGameConstants.UnitState.MOVED);
                     }
                     //update shortest distance
-                    shortestDistance -= Math.abs(dX) + Math.abs(dY);
+                    shortestDistance =calcDistance(unit.getX(), unit.getY(), shortestUnit);
                 }
                 //check if enemy is in attack range
                 // if enemy is in attack range attack

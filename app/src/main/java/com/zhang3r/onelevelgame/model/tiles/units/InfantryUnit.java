@@ -22,6 +22,7 @@ public class InfantryUnit extends BaseUnit{
     public static BaseUnit create(int unitId,
                            String name, int x, int y){
         BaseUnit unit = new InfantryUnit();
+        unit.setUnitId(unitId);
         unit.setName(name);
         unit.setMaxAttackRange(1);
         unit.setX(x);

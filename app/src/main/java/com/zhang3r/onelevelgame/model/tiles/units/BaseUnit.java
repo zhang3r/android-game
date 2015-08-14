@@ -68,11 +68,11 @@ public abstract class BaseUnit extends Tile {
                                   Army playerArmy, Army enemyArmy, double eventX, double eventY) {
 
         if (unitSelected && moveUtil.unitMoveUpdate(spriteList, playerArmy, enemyArmy, eventX, eventY)) {
-            unitSelected = false;
-            setX((int) eventX / IAppConstants.SPRITE_WIDTH);
-            setY((int) eventY / IAppConstants.SPRITE_HEIGHT);
 
-            getSprite().setXPos( getX()*IAppConstants.SPRITE_HEIGHT);
+            setX((int) eventX / IAppConstants.SPRITE_WIDTH);
+            setY((int) eventY / IAppConstants.SPRITE_WIDTH);
+
+            getSprite().setXPos( getX()*IAppConstants.SPRITE_WIDTH);
             getSprite().setYPos( getY()*IAppConstants.SPRITE_WIDTH);
             setUnitSelected(false);
             return true;
