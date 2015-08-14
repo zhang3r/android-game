@@ -40,53 +40,45 @@ public class BasicMoveImpl implements Move {
         // upper half
         synchronized (army) {
             synchronized (enemyArmy) {
-                for (int z = lowerY, a = 0; z < y && a <= movePoints; z++, a++) {
-                    for (int b = 0; b <= movePoints - (y - z); b++) {
-                        int upper = x + b;
-                        int lower = x - b;
-                        if (x + b >= mapLengthX) {
-                            upper = mapLengthX - 1;
-                        }
-                        if (x - b < 0) {
-                            lower = 0;
-                        }
-                        if (upper != 0 && lower != 0) {
-                            if(!army.hasUnitAtLocation(upper,z)&&!enemyArmy.hasUnitAtLocation(upper,z)) {
-                                    spriteList.add(AnimatedSprite.create(moveTile,
-                                            IAppConstants.SPRITE_HEIGHT,
-                                        IAppConstants.SPRITE_WIDTH, 1, 1, true, upper, z));
-                            }
-                            if(upper!=lower&&!army.hasUnitAtLocation(lower,z)&&!enemyArmy.hasUnitAtLocation(lower,z)) {
+                for (int i = 0; i + y <= upperY; i++) {
+                    for (int j = movePoints - i; j >= 0; j--) {
+                        if (j + x <= upperX) {
+                            if (!army.hasUnitAtLocation(j + x, i+y) && !enemyArmy.hasUnitAtLocation(j + x, i+y)) {
                                 spriteList.add(AnimatedSprite.create(moveTile,
                                         IAppConstants.SPRITE_HEIGHT,
-                                        IAppConstants.SPRITE_WIDTH, 1, 1, true, lower, z));
+                                        IAppConstants.SPRITE_WIDTH, 1, 1, false, j + x, y + i));
+
+                            }
+                        }
+                        if (x - j >= lowerX && j > 0) {
+                            if (!army.hasUnitAtLocation(x-j, i+y) && !enemyArmy.hasUnitAtLocation(x-j, i+y)) {
+                                spriteList.add(AnimatedSprite.create(moveTile,
+                                        IAppConstants.SPRITE_HEIGHT,
+                                        IAppConstants.SPRITE_WIDTH, 1, 1, false, x - j, y + i));
+
                             }
                         }
                     }
-
                 }
-                // lower half
-                for (int z = y, a = movePoints; z <= upperY && a >= 0; z++, a--) {
-                    for (int b = 0; b <= a; b++) {
-                        int upper = x + b;
-                        int lower = x - b;
-                        if (x - b < 0) {
-                            lower = 0;
-                        }
-                        if (upper != 0 && lower != 0) {
-                            if(!army.hasUnitAtLocation(upper,z)&&!enemyArmy.hasUnitAtLocation(upper,z)) {
+                for (int i = 1; y - i >= lowerY; i++) {
+                    for (int j = movePoints - i; j >= 0; j--) {
+                        if (j + x <= upperX) {
+                            if (!army.hasUnitAtLocation(j + x, y-i) && !enemyArmy.hasUnitAtLocation(j + x, y-i)) {
                                 spriteList.add(AnimatedSprite.create(moveTile,
                                         IAppConstants.SPRITE_HEIGHT,
-                                        IAppConstants.SPRITE_WIDTH, 1, 1, true, upper, z));
+                                        IAppConstants.SPRITE_WIDTH, 1, 1, false, j + x, y - i));
+
                             }
-                            if(upper!=lower&&!army.hasUnitAtLocation(lower,z)&&!enemyArmy.hasUnitAtLocation(lower,z)) {
+                        }
+                        if (x - j >= lowerX && j > 0) {
+                            if (!army.hasUnitAtLocation(x-j, y-i) && !enemyArmy.hasUnitAtLocation(x-j, y-i)) {
                                 spriteList.add(AnimatedSprite.create(moveTile,
                                         IAppConstants.SPRITE_HEIGHT,
-                                        IAppConstants.SPRITE_WIDTH, 1, 1, true, lower, z));
+                                        IAppConstants.SPRITE_WIDTH, 1, 1, false, x - j, y - i));
+
                             }
                         }
                     }
-
                 }
             }
         }

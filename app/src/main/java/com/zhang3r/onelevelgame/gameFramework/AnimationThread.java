@@ -106,8 +106,6 @@ public class AnimationThread extends Thread {
         this.attackSprites = new LinkedList<>();
         this.terminateCondition = new AllUnitsDestroyed();
         Map.getMap().setGrid(mapFactory.initialize(1));
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
         ResourceConstant.resources = view.getResources();
         this.viewWidth = view.getWidth();
         this.viewHeight = view.getHeight();
@@ -160,7 +158,7 @@ public class AnimationThread extends Thread {
         Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit.getX() + " ," + unit.getY());
         army.add(unit);
         BaseUnit unit2 = CavalryUnit.create(2, "player unit 2", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
-        unit2 = new FriendlyUnit(unit2);
+        //unit2 = new FriendlyUnit(unit2);
         unit2.setSprite(AnimatedSprite.create(cavBitMap,
                 IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
                 true, unit2.getX(), unit2.getY()));
@@ -626,8 +624,9 @@ public class AnimationThread extends Thread {
                 // adding moveSprite
                 synchronized (moveSprites) {
                     moveSprites.clear();
+                    Log.d(ILogConstants.DEBUG_TAG,"Map X ="+Map.getMap().getGrid()[0].length+" , Y="+Map.getMap().getGrid()[0].length);
                     moveSprites.addAll(unitToMove.getUnitMoveTiles(
-                            Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, playerArmy, enemyArmy, resources));
+                            Map.getMap().getGrid().length, Map.getMap().getGrid()[0].length, playerArmy, enemyArmy, resources));
                 }
                 unitToMove.setState(UnitState.SELECTED);
             } else {
