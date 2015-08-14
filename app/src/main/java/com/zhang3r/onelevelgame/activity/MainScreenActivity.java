@@ -25,6 +25,7 @@ public class MainScreenActivity extends Activity{
             public void onClick(View v) {
                 Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
                 startActivity(i);
+                finish();
             }
         });
 

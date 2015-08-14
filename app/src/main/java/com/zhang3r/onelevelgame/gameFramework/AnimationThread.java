@@ -390,6 +390,7 @@ public class AnimationThread extends Thread {
                                 Looper.myLooper().quitSafely();
                                 Intent i = new Intent("com.zhang3r.onelevelgame.MAINMENU");
                                 context.startActivity(i);
+                                ((Activity) context).finish();
 
 
                             }
@@ -401,8 +402,10 @@ public class AnimationThread extends Thread {
                                 dialog.dismiss();
 
                                 Looper.myLooper().quitSafely();
+                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
 
-                                new AnimationThread(surfaceHolder, context, screenWidth, screenHeight, view).run();
+                                context.startActivity(i);
+                                ((Activity) context).finish();
 
 
                             }
@@ -624,7 +627,6 @@ public class AnimationThread extends Thread {
                 // adding moveSprite
                 synchronized (moveSprites) {
                     moveSprites.clear();
-                    Log.d(ILogConstants.DEBUG_TAG,"Map X ="+Map.getMap().getGrid()[0].length+" , Y="+Map.getMap().getGrid()[0].length);
                     moveSprites.addAll(unitToMove.getUnitMoveTiles(
                             Map.getMap().getGrid().length, Map.getMap().getGrid()[0].length, playerArmy, enemyArmy, resources));
                 }
