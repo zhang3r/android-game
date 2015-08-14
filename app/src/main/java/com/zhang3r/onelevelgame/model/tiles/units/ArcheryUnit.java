@@ -15,6 +15,7 @@ public class ArcheryUnit extends BaseUnit{
         super();
         //TODO: import stats elsewhere
         setName("Basic Archery Unit" + getUnitId());
+        setStats(statsFactory.createStat(IGameConstants.UnitType.ARCHER));
         setUnitType(IGameConstants.UnitType.ARCHER);
         setAttackUtil(new RangedAttackImpl());
         setMoveUtil(new BasicMoveImpl());

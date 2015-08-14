@@ -8,6 +8,9 @@ import com.zhang3r.onelevelgame.constants.IGameConstants.UnitType;
 import com.zhang3r.onelevelgame.constants.IGameConstants.UnitState;
 import com.zhang3r.onelevelgame.model.army.Army;
 import com.zhang3r.onelevelgame.model.sprite.Tile;
+import com.zhang3r.onelevelgame.model.tiles.statsFactory.StatsFactory;
+import com.zhang3r.onelevelgame.model.tiles.statsFactory.impl.Stats;
+import com.zhang3r.onelevelgame.model.tiles.statsFactory.impl.StatsFactoryImpl;
 import com.zhang3r.onelevelgame.model.tiles.units.Impl.BasicMoveImpl;
 import com.zhang3r.onelevelgame.model.tiles.units.Impl.MeleeAttackImpl;
 import com.zhang3r.onelevelgame.model.tiles.units.Interface.Attack;
@@ -16,15 +19,10 @@ import com.zhang3r.onelevelgame.model.tiles.units.Interface.Move;
 import java.util.List;
 
 public abstract class BaseUnit extends Tile {
+    protected StatsFactory statsFactory = new StatsFactoryImpl();
     //unit stats
     private int unitId;
-    private int hitPoints;
-    private int maxHP;
-    private int attack;
-    private int defense;
-    private int movePoints;
-    private int maxAttackRange;
-    private int minAttackRange;
+    private Stats stats;
     private String name;
     //unit location
     private int x;
@@ -44,15 +42,9 @@ public abstract class BaseUnit extends Tile {
 
     public BaseUnit() {
         unitId = (int) Math.random() * 100;
-        hitPoints = 20;
-        maxHP=20;
-        attack = 0;
-        defense = 0;
-        movePoints = 5;
-        maxAttackRange = 0;
-        minAttackRange = 0;
         name = "Basic Unit " + unitId;
         state = UnitState.NORMAL;
+        stats = statsFactory.createStat(UnitType.FOOT);
         attackUtil = new MeleeAttackImpl();
         moveUtil = new BasicMoveImpl();
     }
@@ -68,7 +60,7 @@ public abstract class BaseUnit extends Tile {
     public List<AnimatedSprite> getUnitAttackTiles(int xLength, int yLength,
                                                    Resources resources) {
         setUnitSelected(true);
-        return attackUtil.getUnitAttackTiles(getUnitId(), xLength, yLength, resources, getX(), getY(), maxAttackRange, minAttackRange);
+        return attackUtil.getUnitAttackTiles(getUnitId(), xLength, yLength, resources, getX(), getY(), stats.getMaxAttackRange(),stats.getMinAttackRange());
 
     }
 
@@ -99,51 +91,51 @@ public abstract class BaseUnit extends Tile {
     }
 
     public int getHitPoints() {
-        return hitPoints;
+        return stats.getHitPoints();
     }
 
     public void setHitPoints(int hitPoints) {
-        this.hitPoints = hitPoints;
+        stats.setHitPoints(hitPoints);
     }
 
     public int getAttack() {
-        return attack;
+        return stats.getAttack();
     }
 
     public void setAttack(int attack) {
-        this.attack = attack;
+        stats.setAttack(attack);
     }
 
     public int getDefense() {
-        return defense;
+       return stats.getDefense();
     }
 
     public void setDefense(int defense) {
-        this.defense = defense;
+        stats.setDefense(defense);
     }
 
     public int getMovePoints() {
-        return movePoints;
+        return stats.getMovePoints();
     }
 
     public void setMovePoints(int movePoints) {
-        this.movePoints = movePoints;
+        stats.setMovePoints(movePoints);
     }
 
     public int getMaxAttackRange() {
-        return maxAttackRange;
+        return stats.getMaxAttackRange();
     }
 
     public void setMaxAttackRange(int maxAttackRange) {
-        this.maxAttackRange = maxAttackRange;
+        stats.setMaxAttackRange(maxAttackRange);
     }
 
     public int getMinAttackRange() {
-        return minAttackRange;
+        return stats.getMinAttackRange();
     }
 
     public void setMinAttackRange(int minAttackRange) {
-        this.minAttackRange = minAttackRange;
+        stats.setMinAttackRange(minAttackRange);
     }
 
     public String getName() {
@@ -221,10 +213,18 @@ public abstract class BaseUnit extends Tile {
     }
 
     public int getMaxHP() {
-        return maxHP;
+        return stats.getMaxHP();
     }
 
     public void setMaxHP(int maxHP) {
-        this.maxHP = maxHP;
+        stats.setMaxHP(maxHP);
+    }
+
+    public Stats getStats() {
+        return stats;
+    }
+
+    public void setStats(Stats stats) {
+        this.stats = stats;
     }
 }

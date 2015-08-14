@@ -13,6 +13,7 @@ public class InfantryUnit extends BaseUnit{
     public InfantryUnit(){
         super();
         setName("Basic Infantry Unit" + getUnitId());
+        setStats(statsFactory.createStat(IGameConstants.UnitType.FOOT));
         setAttackUtil(new MeleeAttackImpl());
         setUnitType(IGameConstants.UnitType.FOOT);
         setMoveUtil(new BasicMoveImpl());
