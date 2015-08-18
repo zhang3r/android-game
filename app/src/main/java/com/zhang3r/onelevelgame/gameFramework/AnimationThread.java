@@ -64,6 +64,7 @@ public class AnimationThread extends Thread {
     int screenHeight;
     int viewWidth;
     int viewHeight;
+
     Resources resources;
     View view;
 
@@ -100,6 +101,8 @@ public class AnimationThread extends Thread {
     public AnimationThread(SurfaceHolder surfaceHolder, Context context,
                            int screenWidth, int screenHeight, View view) {
 
+        this.screenWidth=screenWidth;
+        this.screenHeight=screenHeight;
         this.surfaceHolder = surfaceHolder;
         this.mScaleFactor = 1.f;
         this.moveSprites = new LinkedList<>();
@@ -122,15 +125,15 @@ public class AnimationThread extends Thread {
         playerArmy = initializePlayerArmies(1);
         enemyArmy = initializeEnemyArmies(1);
         currViewport = new RectF(IAppConstants.AXIS_X_MIN,
-                IAppConstants.AXIS_Y_MIN, -viewWidth, -viewHeight);
+                IAppConstants.AXIS_Y_MIN, -screenWidth, -screenHeight);
         state = TurnState.PLAYER;
         terrainFactory = new TerrainFactory();
         initializeMap(playerArmy, enemyArmy);
         // music thank to Arkane
         song = MediaPlayer.create(context, R.raw.attack_on_titan_theme);
-        song.setVolume(.25f,.25f);
+        song.setVolume(0, 0);
         song.setLooping(true);
-        song.start();
+        //song.start();
 
 
     }
@@ -194,7 +197,6 @@ public class AnimationThread extends Thread {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap baseBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, true);
-
         for (int i = 0; i <= 7; i++) {
             BaseUnit unit = InfantryUnit.create(i, "enemy Infantry unit " + i, ((int) (Math.random() * xUpper) + xLower), (int) (Math.random() * yUpper));
             unit = new EnemyUnit(unit);
@@ -440,19 +442,24 @@ public class AnimationThread extends Thread {
 
     public void doScroll(MotionEvent e1, MotionEvent e2, float distanceX,
                          float distanceY) {
+//        Log.d(ILogConstants.DEBUG_TAG,"View Port Left "+currViewport.left);
+//        Log.d(ILogConstants.DEBUG_TAG,"View Port Right "+currViewport.right);
+//        Log.d(ILogConstants.DEBUG_TAG,"View Port top "+currViewport.top);
+//        Log.d(ILogConstants.DEBUG_TAG,"View Port bottom "+currViewport.bottom);
+//        Log.d(ILogConstants.DEBUG_TAG,"X "+.3*screenWidth);
+//        Log.d(ILogConstants.DEBUG_TAG,"Y "+distanceY);
 
-        Log.d(ILogConstants.DEBUG_TAG, "new Y: " + (currViewport.bottom));
-        Log.d(ILogConstants.DEBUG_TAG, "map Y: " + (screenHeight));
+
         // left bound
         if (currViewport.left - distanceX > 0) {
             currViewport.left = 0;
             currViewport.right = -screenWidth;
-        } else if (((currViewport.right - distanceX) * mScaleFactor) < (-1 * (Map.getMap().getGrid()[0].length
-                * IAppConstants.SPRITE_WIDTH + 10))) {
-            currViewport.right = (-1 * (Map.getMap().getGrid()[0].length
-                    * IAppConstants.SPRITE_WIDTH + 10));
-            currViewport.left = currViewport.right + screenWidth;
-        } else {
+        } else if(currViewport.right<=(-1*((Map.getMap().getGrid()[0].length-1)*IAppConstants.SPRITE_WIDTH))-.3*screenWidth){
+
+            currViewport.right = (int)(-1*((Map.getMap().getGrid()[0].length-1)*IAppConstants.SPRITE_WIDTH)-.3*screenWidth);
+            currViewport.left = currViewport.right+screenWidth;
+
+        } else{
             currViewport.right -= distanceX;
             currViewport.left -= distanceX;
         }
@@ -460,12 +467,12 @@ public class AnimationThread extends Thread {
         if (currViewport.top - distanceY > 0) {
             currViewport.top = 0;
             currViewport.bottom = -screenHeight;
-        } else if (((currViewport.bottom - distanceY) * mScaleFactor) < (-1 * (Map.getMap().getGrid().length
-                * IAppConstants.SPRITE_HEIGHT + 10))) {
-            currViewport.bottom = (-1 * (Map.getMap().getGrid().length
-                    * IAppConstants.SPRITE_HEIGHT + 10));
-            currViewport.top = currViewport.bottom + screenHeight;
-        } else {
+        } else if(currViewport.bottom<=(-1*(Map.getMap().getGrid().length*IAppConstants.SPRITE_HEIGHT)+50)){
+
+            currViewport.bottom = (-1*(Map.getMap().getGrid().length*IAppConstants.SPRITE_HEIGHT)+50);
+            currViewport.top = currViewport.bottom+screenHeight;
+
+        }else {
             currViewport.bottom -= distanceY;
             currViewport.top -= distanceY;
         }
@@ -476,7 +483,7 @@ public class AnimationThread extends Thread {
         mScaleFactor *= scaleGestureDetector.getScaleFactor();
 
         // Don't let the object get too small or too large.
-        mScaleFactor = Math.max(0.7f, Math.min(mScaleFactor, 1.2f));
+        mScaleFactor = Math.max(0.8f, Math.min(mScaleFactor, 1.2f));
         Log.d(ILogConstants.DEBUG_TAG, "Scale Factor: " + mScaleFactor);
         view.invalidate();
 
