@@ -6,6 +6,7 @@ import com.zhang3r.onelevelgame.constants.IGameConstants;
 import com.zhang3r.onelevelgame.constants.ILogConstants;
 import com.zhang3r.onelevelgame.model.army.Army;
 import com.zhang3r.onelevelgame.model.tiles.units.BaseUnit;
+import com.zhang3r.onelevelgame.model.tiles.units.Impl.RangedAttackImpl;
 
 public class AttackEvent {
     private int damageDelt;
@@ -35,8 +36,13 @@ public class AttackEvent {
     public static AttackEvent attack(BaseUnit attacker, BaseUnit defender, Army army, Army enemyUnits) {
         int damage =attacker.getAttack()-defender.getDefense();
         int recoil =damage/5;
+        boolean isRanged = attacker.getAttackUtil().getClass().isInstance(RangedAttackImpl.class);
+        if(isRanged){
+            recoil=0;
+        }
         defender.setHitPoints(defender.getHitPoints() - damage);
         attacker.setHitPoints(attacker.getHitPoints() - recoil);
+
         AttackEvent ae = new AttackEvent();
         ae.setDamageDelt(damage);
         ae.setRecoil(recoil);
