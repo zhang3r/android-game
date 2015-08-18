@@ -2,10 +2,7 @@ package com.zhang3r.onelevelgame.model.tiles.units.Impl;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
-
-import com.zhang3r.onelevelgame.R;
 import com.zhang3r.onelevelgame.bitmaps.AnimatedSprite;
 import com.zhang3r.onelevelgame.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.onelevelgame.constants.IAppConstants;
@@ -26,51 +23,44 @@ public class RangedAttackImpl implements Attack {
         int attackRange = maxAttackRange;
         List<AnimatedSprite> spriteList = new ArrayList<>();
 
-        Bitmap attackSprite= SpriteFactory.getInstance().getTiles(false);
+        Bitmap attackSprite = SpriteFactory.getInstance().getTiles(false);
+        int lowerX = x - attackRange > 0 ? x - attackRange : 0;
+        int upperX = x + attackRange > xLength - 1 ? xLength - 1 : x + attackRange;
         int lowerY = y - attackRange > 0 ? y - attackRange : 0;
         int upperY = y + attackRange > yLength - 1 ? yLength - 1 : y
                 + attackRange;
         // upper half
 
-        for (int z = lowerY, a = minAttackRange+1; z <= y && a <= attackRange; z++, a++) {
-            for (int b = 0; b <= attackRange - (y - z); b++) {
-                int upper = x + b, lower = x - b;
-                if (x + b >= xLength) {
-                    upper = xLength - 1;
-                }
-                if (x - b < 0) {
-                    lower = 0;
-                }
-                if (upper != 0 && lower != 0) {
-                    spriteList.add(AnimatedSprite.create(attackSprite,
-                            IAppConstants.SPRITE_HEIGHT,
-                            IAppConstants.SPRITE_WIDTH, 1, 1, true, upper, z));
 
+        for (int i = 0; i + y <= upperY; i++) {
+            for (int j = attackRange - i; j >= 0; j--) {
+                if (j + x <= upperX) {
                     spriteList.add(AnimatedSprite.create(attackSprite,
                             IAppConstants.SPRITE_HEIGHT,
-                            IAppConstants.SPRITE_WIDTH, 1, 1, true, lower, z));
+                            IAppConstants.SPRITE_WIDTH, 1, 1, false, j + x, y + i));
+
+                }
+                if (x - j >= lowerX && j > 0) {
+                    spriteList.add(AnimatedSprite.create(attackSprite,
+                            IAppConstants.SPRITE_HEIGHT,
+                            IAppConstants.SPRITE_WIDTH, 1, 1, false, x - j, y + i));
+
                 }
             }
-
         }
-        // lower half
-        for (int z = y, a = attackRange; z <= upperY && a > minAttackRange; z++, a--) {
-            for (int b = 0; b <= a; b++) {
-                int upper = x + b, lower = x - b;
-                if (x + b >= xLength) {
-                    // upper = map[1].length - 1;
-                }
-                if (x - b < 0) {
-                    lower = 0;
-                }
-                if (upper != 0 && lower != 0) {
-                    spriteList.add(AnimatedSprite.create( attackSprite,
+        for (int i = 1; y - i >= lowerY; i++) {
+            for (int j = attackRange - i; j >= 0; j--) {
+                if (j + x <= upperX) {
+                    spriteList.add(AnimatedSprite.create(attackSprite,
                             IAppConstants.SPRITE_HEIGHT,
-                            IAppConstants.SPRITE_WIDTH, 1, 1, true, upper, z));
+                            IAppConstants.SPRITE_WIDTH, 1, 1, false, j + x, y - i));
 
-                    spriteList.add(AnimatedSprite.create( attackSprite,
+                }
+                if (x - j >= lowerX && j > 0) {
+                    spriteList.add(AnimatedSprite.create(attackSprite,
                             IAppConstants.SPRITE_HEIGHT,
-                            IAppConstants.SPRITE_WIDTH, 1, 1, true, lower, z));
+                            IAppConstants.SPRITE_WIDTH, 1, 1, false, x - j, y - i));
+
                 }
             }
 
