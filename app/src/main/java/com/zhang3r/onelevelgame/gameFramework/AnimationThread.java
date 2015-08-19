@@ -142,8 +142,8 @@ public class AnimationThread extends Thread {
     private Army initializePlayerArmies(int level) {
         Army army = Army.create(IGameConstants.PLAYER);
 
-        int xUpper = Map.getMap().getGrid().length / 5;
-        int yUpper = Map.getMap().getGrid().length;
+        int xUpper = (Map.getMap().getGrid().length-1) / 5;
+        int yUpper = Map.getMap().getGrid().length-1;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap infantryBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, false);
@@ -191,9 +191,9 @@ public class AnimationThread extends Thread {
     private Army initializeEnemyArmies(int level) {
         //7 infantry
         Army army = Army.create(IGameConstants.ENEMY);
-        int xUpper = Map.getMap().getGrid().length / 5;
-        int xLower = Map.getMap().getGrid().length - xUpper;
-        int yUpper = Map.getMap().getGrid().length;
+        int xUpper = (Map.getMap().getGrid().length-1) / 5;
+        int xLower = Map.getMap().getGrid().length-1 - xUpper;
+        int yUpper = Map.getMap().getGrid().length-1;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap baseBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, true);
@@ -285,8 +285,8 @@ public class AnimationThread extends Thread {
         // set the custom dialog components - text, image and button
         TextView text = (TextView) dialog.findViewById(R.id.text);
         text.setText(context.getString(R.string.dialogIntro));
-        ImageView image = (ImageView) dialog.findViewById(R.id.image);
-        image.setImageResource(R.mipmap.ic_launcher);
+//        ImageView image = (ImageView) dialog.findViewById(R.id.image);
+//        image.setImageResource(R.mipmap.ic_launcher);
 
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
         dialogButton.setText(context.getString(R.string.dialogOK));
@@ -454,7 +454,7 @@ public class AnimationThread extends Thread {
         if (currViewport.left - distanceX > 0) {
             currViewport.left = 0;
             currViewport.right = -screenWidth;
-        } else if(currViewport.right<=(-1*((Map.getMap().getGrid()[0].length-1)*IAppConstants.SPRITE_WIDTH))-.3*screenWidth){
+        } else if(currViewport.right-distanceX<=(-1*((Map.getMap().getGrid()[0].length-1)*IAppConstants.SPRITE_WIDTH))-.3*screenWidth){
 
             currViewport.right = (int)(-1*((Map.getMap().getGrid()[0].length-1)*IAppConstants.SPRITE_WIDTH)-.3*screenWidth);
             currViewport.left = currViewport.right+screenWidth;
@@ -467,7 +467,7 @@ public class AnimationThread extends Thread {
         if (currViewport.top - distanceY > 0) {
             currViewport.top = 0;
             currViewport.bottom = -screenHeight;
-        } else if(currViewport.bottom<=(-1*(Map.getMap().getGrid().length*IAppConstants.SPRITE_HEIGHT)+50)){
+        } else if(currViewport.bottom-distanceY<=(-1*(Map.getMap().getGrid().length*IAppConstants.SPRITE_HEIGHT)+50)){
 
             currViewport.bottom = (-1*(Map.getMap().getGrid().length*IAppConstants.SPRITE_HEIGHT)+50);
             currViewport.top = currViewport.bottom+screenHeight;
