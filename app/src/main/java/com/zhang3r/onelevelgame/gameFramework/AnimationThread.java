@@ -431,8 +431,8 @@ public class AnimationThread extends Thread {
         double y = e.getY() / mScaleFactor;
         Army army = getArmy(false);
         if (army != null) {
-            Log.d(ILogConstants.DEBUG_TAG, "clicked on unit");
-            //
+
+            // Log.d(ILogConstants.DEBUG_TAG, "clicked on unit");
             unitOnTouch(army, x - currViewport.left, y - currViewport.top);
         } else {
             throw new RuntimeException("invaid turn state");
@@ -454,7 +454,7 @@ public class AnimationThread extends Thread {
         if (currViewport.left - distanceX > 0) {
             currViewport.left = 0;
             currViewport.right = -screenWidth;
-        } else if(currViewport.right-distanceX<=(-1*((Map.getMap().getGrid()[0].length-1)*IAppConstants.SPRITE_WIDTH))-.3*screenWidth){
+        } else if(currViewport.right*mScaleFactor-distanceX<=(-1*((Map.getMap().getGrid()[0].length-1)*IAppConstants.SPRITE_WIDTH))-.3*screenWidth){
 
             currViewport.right = (int)(-1*((Map.getMap().getGrid()[0].length-1)*IAppConstants.SPRITE_WIDTH)-.3*screenWidth);
             currViewport.left = currViewport.right+screenWidth;
@@ -467,7 +467,7 @@ public class AnimationThread extends Thread {
         if (currViewport.top - distanceY > 0) {
             currViewport.top = 0;
             currViewport.bottom = -screenHeight;
-        } else if(currViewport.bottom-distanceY<=(-1*(Map.getMap().getGrid().length*IAppConstants.SPRITE_HEIGHT)+50)){
+        } else if(currViewport.bottom*mScaleFactor-distanceY<=(-1*(Map.getMap().getGrid().length*IAppConstants.SPRITE_HEIGHT)+50)){
 
             currViewport.bottom = (-1*(Map.getMap().getGrid().length*IAppConstants.SPRITE_HEIGHT)+50);
             currViewport.top = currViewport.bottom+screenHeight;
@@ -622,12 +622,14 @@ public class AnimationThread extends Thread {
 
     private boolean unitOnTouch(Army army, double x, double y) {
         boolean isClickOnUnit = false;
+        //Not in attack state
         if (!isAttack) {
+            //select unit
             BaseUnit unit = unitDetection(army.getUnits(), x, y);
             unitSelected = unit;
             // get tile
             tileSelected = getTile(x, y);
-
+            //selecting unit
             if (unit != null && unit.getState() == UnitState.NORMAL) {
                 unitToMove = unit;
                 isClickOnUnit = true;
@@ -639,7 +641,7 @@ public class AnimationThread extends Thread {
                 }
                 unitToMove.setState(UnitState.SELECTED);
             } else {
-                // if unit has already been clicked on previously
+                // if unit has already been clicked on previously now we move
                 if (unitToMove != null
                         && (unitToMove.getState() == UnitState.SELECTED)) {
                     boolean unitMoved = false;
@@ -682,7 +684,10 @@ public class AnimationThread extends Thread {
                             unitToMove.setState(UnitState.NORMAL);
                             synchronized (moveSprites) {
                                 moveSprites.clear();
+                                unitOrigPosX=-1;
+                                unitOrigPosY=-1;
                             }
+                            unitToMove =null;
 
                         }
                     }
@@ -728,9 +733,11 @@ public class AnimationThread extends Thread {
                 synchronized (attackSprites) {
                     attackSprites.clear();
                 }
-
-                synchronized (unitToMove) {
-                    unitToMove.setState(UnitState.WAIT);
+                if(unitToMove!=null) {
+                    synchronized (unitToMove) {
+                        unitToMove.setState(UnitState.WAIT);
+                        unitToMove = null;
+                    }
                 }
                 message = ae.toString();
 
@@ -755,8 +762,8 @@ public class AnimationThread extends Thread {
 
     public void buttonEventHandler(String s) {
         if (s.equals(IButtonConstants.attack)) {
-            Log.d(ILogConstants.DEBUG_TAG, "attack button pressed" + unitToMove.getState());
-            if (unitToMove != null && unitToMove.getState() == UnitState.MOVED) {
+
+            if (unitToMove != null && (unitToMove.getState() == UnitState.MOVED||unitToMove.getState()==UnitState.SELECTED)) {
 
                 // 1. display unit attack range;
                 isAttack = true;
@@ -831,14 +838,16 @@ public class AnimationThread extends Thread {
             }
             if (unitToMove != null) {
                 synchronized (unitToMove) {
-                    unitToMove.setX(unitOrigPosX);
-                    unitToMove.setY(unitOrigPosY);
-                    unitToMove.getSprite().setXPos(
-                            unitOrigPosX * IAppConstants.SPRITE_WIDTH);
-                    unitToMove.getSprite().setYPos(
-                            unitOrigPosY * IAppConstants.SPRITE_HEIGHT);
+                    if(unitOrigPosX!=-1&&unitOrigPosY!=-1) {
+                        unitToMove.setX(unitOrigPosX);
+                        unitToMove.setY(unitOrigPosY);
+                        unitToMove.getSprite().setXPos(
+                                unitOrigPosX * IAppConstants.SPRITE_WIDTH);
+                        unitToMove.getSprite().setYPos(
+                                unitOrigPosY * IAppConstants.SPRITE_HEIGHT);
 
-                    unitToMove.setState(UnitState.NORMAL);
+                        unitToMove.setState(UnitState.NORMAL);
+                    }
                 }
             }
             // 2. return tile to previous position
@@ -851,6 +860,11 @@ public class AnimationThread extends Thread {
             if (moveSprites.size() != 0) {
                 synchronized (moveSprites) {
                     moveSprites.clear();
+                }
+            }
+            if(unitToMove!=null) {
+                synchronized (unitToMove) {
+                    unitToMove = null;
                 }
             }
             // TODO check logic
