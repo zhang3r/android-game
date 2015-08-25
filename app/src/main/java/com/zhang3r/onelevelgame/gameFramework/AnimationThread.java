@@ -648,9 +648,22 @@ public class AnimationThread extends Thread {
                     unitOrigPosX = unitToMove.getX();
                     unitOrigPosY = unitToMove.getY();
                     synchronized (moveSprites) {
+                        int oldX = unitToMove.getSprite().getXPos();
+                        int oldY= unitToMove.getSprite().getYPos();
                         unitMoved = unitToMove.unitMoveUpdate(moveSprites,
                                 playerArmy, enemyArmy, x, y);
+
                         if (unitMoved) {
+                            int newX =  unitToMove.getSprite().getXPos();
+                            int newY = unitToMove.getSprite().getYPos();
+                            int dX = (newX-oldX)/5;
+                            int dY = (newY-oldY)/5;
+                            for(int i=oldX; i<newX; i+=dX){
+//                                getSprite().setXPos(getSprite().getXPos()+dX);
+//                                getSprite().setYPos(getSprite().getXPos() + dY);
+
+                            }
+
                             unitToMove.setState(UnitState.MOVED);
                             Log.d(ILogConstants.DEBUG_TAG, "unitToMove state " + unitToMove.getState());
                         }
