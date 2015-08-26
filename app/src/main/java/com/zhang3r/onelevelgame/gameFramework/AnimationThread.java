@@ -644,11 +644,11 @@ public class AnimationThread extends Thread {
                     unitOrigPosX = unitToMove.getX();
                     unitOrigPosY = unitToMove.getY();
                     synchronized (moveSprites) {
-                        int oldX = unitToMove.getSprite().getXPos();
-                        int oldY = unitToMove.getSprite().getYPos();
                         //Call animation
-//                        unitMoved = unitToMove.unitMoveUpdate(moveSprites,
-//                            playerArmy, enemyArmy, x, y);
+                        //Movement updated for unit but not for sprite
+                        //sprite update in animation
+                        unitMoved = unitToMove.unitMoveUpdate(moveSprites,
+                            playerArmy, enemyArmy, x, y);
 
                         synchronized (unitToMove) {
                             unitToMove.setState(UnitState.MOVED);
@@ -671,7 +671,7 @@ public class AnimationThread extends Thread {
                         unitToMove = null;
                     }
                 }
-                //TODO animation stuff
+                //TODO animation hook in
                 AttackEvent ae = AttackEvent.attack(unitToMove, defender, army, enemyUnits);
                 message = ae.toString();
                 unitSelected = unitToMove;
@@ -761,26 +761,25 @@ public class AnimationThread extends Thread {
                 gameState = GameState.NORMAL;
             }
         } else if (s.equals(IButtonConstants.cancel)) {
-
-
-
-
             if (unitToMove != null) {
-                synchronized (unitToMove) {
-                    if(unitOrigPosX!=-1&&unitOrigPosY!=-1) {
-                        unitToMove.setX(unitOrigPosX);
-                        unitToMove.setY(unitOrigPosY);
-                        unitToMove.getSprite().setXPos(
-                                unitOrigPosX * IAppConstants.SPRITE_WIDTH);
-                        unitToMove.getSprite().setYPos(
-                                unitOrigPosY * IAppConstants.SPRITE_HEIGHT);
+                if(unitToMove.getState()==UnitState.MOVED) {
+                    synchronized (unitToMove) {
+                        if (unitOrigPosX != -1 && unitOrigPosY != -1) {
+                            unitToMove.setX(unitOrigPosX);
+                            unitToMove.setY(unitOrigPosY);
+                            unitToMove.getSprite().setXPos(
+                                    unitOrigPosX * IAppConstants.SPRITE_WIDTH);
+                            unitToMove.getSprite().setYPos(
+                                    unitOrigPosY * IAppConstants.SPRITE_HEIGHT);
 
-                        unitToMove.setState(UnitState.NORMAL);
+                            unitToMove.setState(UnitState.NORMAL);
+                        }
                     }
                 }
                 synchronized (attackSprites) {
                     attackSprites.clear();
                 }
+                gameState=GameState.NORMAL;
             }
             // 2. return tile to previous position
         } else if (s.equals(IButtonConstants.endTurn)) {
@@ -799,7 +798,7 @@ public class AnimationThread extends Thread {
                     unitToMove = null;
                 }
             }
-            // TODO check logic
+
             // if player has unit in move state they will be waited
             if (state == TurnState.PLAYER) {
 

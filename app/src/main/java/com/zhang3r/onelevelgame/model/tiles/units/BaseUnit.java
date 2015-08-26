@@ -71,14 +71,9 @@ public abstract class BaseUnit extends Tile {
 
             setX((int) eventX / IAppConstants.SPRITE_WIDTH);
             setY((int) eventY / IAppConstants.SPRITE_WIDTH);
-            //1. stop click
-            //2. animate move
-            //      a. calculate move tiles first y then x
-            //      b. animate move
-            //          i. transition between tiles
-            //3. reinstate click
-            getSprite().setXPos( getX()*IAppConstants.SPRITE_WIDTH);
-            getSprite().setYPos( getY()*IAppConstants.SPRITE_WIDTH);
+
+//            getSprite().setXPos( getX()*IAppConstants.SPRITE_WIDTH);
+//            getSprite().setYPos( getY()*IAppConstants.SPRITE_WIDTH);
             setUnitSelected(false);
             return true;
         }
