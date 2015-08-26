@@ -20,7 +20,7 @@ import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import com.zhang3r.onelevelgame.constants.IGameConstants.GameState;
 import android.widget.TextView;
 
 import com.zhang3r.onelevelgame.R;
@@ -92,6 +92,7 @@ public class AnimationThread extends Thread {
     private Context context;
     private TurnState state;
     private RectF currViewport;
+    private GameState gameState;
 
     // handle to the surface manager object we interact with
     private SurfaceHolder surfaceHolder;
@@ -134,6 +135,7 @@ public class AnimationThread extends Thread {
         song.setVolume(0, 0);
         song.setLooping(true);
         //song.start();
+        gameState = GameState.NORMAL;
 
 
     }
@@ -621,128 +623,45 @@ public class AnimationThread extends Thread {
     }
 
     private boolean unitOnTouch(Army army, double x, double y) {
-        boolean isClickOnUnit = false;
-        //Not in attack state
-        if (!isAttack) {
-            //select unit
-            BaseUnit unit = unitDetection(army.getUnits(), x, y);
-            unitSelected = unit;
-            // get tile
-            tileSelected = getTile(x, y);
-            //selecting unit
-            if (unit != null && unit.getState() == UnitState.NORMAL) {
-                unitToMove = unit;
-                isClickOnUnit = true;
-                // adding moveSprite
-                synchronized (moveSprites) {
-                    moveSprites.clear();
-                    moveSprites.addAll(unitToMove.getUnitMoveTiles(
-                            Map.getMap().getGrid().length, Map.getMap().getGrid()[0].length, playerArmy, enemyArmy, resources));
+        BaseUnit unit = unitDetection(army.getUnits(), x, y);
+        if(unit!=null){
+            if(gameState==GameState.NORMAL && unit!=unitToMove){
+                //get friendly unit
+                if(unit.getState() == UnitState.NORMAL) {
+                    synchronized (unitToMove) {
+                        unitToMove = unit;
+                    }
+                    synchronized (moveSprites) {
+                        moveSprites.clear();
+                        moveSprites.addAll(unitToMove.getUnitMoveTiles(
+                                Map.getMap().getGrid().length, Map.getMap().getGrid()[0].length, playerArmy, enemyArmy, resources));
+                    }
+                    gameState = GameState.UNITSELECTED;
                 }
-                unitToMove.setState(UnitState.SELECTED);
-            } else {
-                // if unit has already been clicked on previously now we move
-                if (unitToMove != null
-                        && (unitToMove.getState() == UnitState.SELECTED)) {
+            }else if(gameState==GameState.UNITSELECTED) {
+                if(unitToMove!=null&& unitToMove.getState()==UnitState.NORMAL) {
                     boolean unitMoved = false;
                     unitOrigPosX = unitToMove.getX();
                     unitOrigPosY = unitToMove.getY();
                     synchronized (moveSprites) {
                         int oldX = unitToMove.getSprite().getXPos();
-                        int oldY= unitToMove.getSprite().getYPos();
-                        unitMoved = unitToMove.unitMoveUpdate(moveSprites,
-                                playerArmy, enemyArmy, x, y);
+                        int oldY = unitToMove.getSprite().getYPos();
+                        //Call animation
+//                        unitMoved = unitToMove.unitMoveUpdate(moveSprites,
+//                            playerArmy, enemyArmy, x, y);
 
-                        if (unitMoved) {
-                            int newX =  unitToMove.getSprite().getXPos();
-                            int newY = unitToMove.getSprite().getYPos();
-                            int dX = (newX-oldX)/5;
-                            int dY = (newY-oldY)/5;
-                            for(int i=oldX; i<newX; i+=dX){
-//                                getSprite().setXPos(getSprite().getXPos()+dX);
-//                                getSprite().setYPos(getSprite().getXPos() + dY);
-
-                            }
-
-                            unitToMove.setState(UnitState.MOVED);
-                            Log.d(ILogConstants.DEBUG_TAG, "unitToMove state " + unitToMove.getState());
-                        }
-                    }
-
-                    synchronized (moveSprites) {
-                        moveSprites.clear();
-                    }
-                    // if unit has moved
-                    if (unitMoved) {
-                        if (state == TurnState.PLAYER
-                                && !playerArmy.hasUnmovedUnits()) {
-                            state = TurnState.ENEMY;
-                            // set unit moved state
-                            playerArmy.setEndTurnState();
-                            // reset unit state
-                            enemyArmy.resetUnitState();
-                        } else if (state == TurnState.ENEMY
-                                && !enemyArmy.hasUnmovedUnits()) {
-                            state = TurnState.PLAYER;
-                            enemyArmy.setEndTurnState();
-                            // reset unit state
-                            playerArmy.resetUnitState();
-                        } else {
-                            Log.d(ILogConstants.DEBUG_TAG,
-                                    "army has unmoved units nothing to do");
-                        }
-                    } else {
-                        // unit cancelled the move
                         synchronized (unitToMove) {
-                            unitToMove.setState(UnitState.NORMAL);
-                            synchronized (moveSprites) {
-                                moveSprites.clear();
-                                unitOrigPosX=-1;
-                                unitOrigPosY=-1;
-                            }
-                            unitToMove =null;
-
+                            unitToMove.setState(UnitState.MOVED);
                         }
-                    }
-                } else {
-                    // if unitToMove is not null display this message
-                    // display error Message this unit has already
-                    // completed move this turn
-                    if (unitToMove != null) {
-                        message = "this unit has already moved";
-                    }
-                    // if unitToMove is enemy display enemy stats
-                    // detect click is enemy unit
-                    BaseUnit enemyUnit = unitDetection(
-                            getArmy(true).getUnits(), x, y);
-                    if (enemyUnit != null) {
-                        // display enemy unit stats
-                        unitSelected = enemyUnit;
-                        // get tile
-                        tileSelected = getTile(x, y);
-
-                    } else {
-                        // if unitToMove is neither display tile stats.
-                        // MapFragment.getunit
-                        message = "you've clicked on a land tile!";
-                        // get tile
-                        tileSelected = getTile(x, y);
-
+                        gameState = GameState.UNITINANIMATION;
                     }
                 }
             }
-        } else if (unitToMove != null && isAttack
-                && unitToMove.getState() == UnitState.MOVED) {
-            //TODO: move this logic to BaseUnit
-            // is attack
-            // getting enemy units
+        }else if(gameState==GameState.UNITATTACKSELECT) {
             Army enemyUnits = getArmy(true);
             BaseUnit defender = unitDetection(enemyUnits.getUnits(), x, y);
             if (defender != null) {
-                // TODO: update attack calculations
                 isAttack = false;
-                AttackEvent ae = AttackEvent.attack(unitToMove, defender, army, enemyUnits);
-
                 synchronized (attackSprites) {
                     attackSprites.clear();
                 }
@@ -752,17 +671,16 @@ public class AnimationThread extends Thread {
                         unitToMove = null;
                     }
                 }
+                //TODO animation stuff
+                AttackEvent ae = AttackEvent.attack(unitToMove, defender, army, enemyUnits);
                 message = ae.toString();
-
-
                 unitSelected = unitToMove;
                 // get tile
                 tileSelected = getTile(x, y);
+                gameState = GameState.UNITINANIMATION;
             }
-
         }
-
-        return isClickOnUnit;
+        return true;
     }
 
     public BaseUnit getUnitToMove() {
@@ -776,7 +694,7 @@ public class AnimationThread extends Thread {
     public void buttonEventHandler(String s) {
         if (s.equals(IButtonConstants.attack)) {
 
-            if (unitToMove != null && (unitToMove.getState() == UnitState.MOVED||unitToMove.getState()==UnitState.SELECTED)) {
+            if (unitToMove != null && gameState==GameState.UNITSELECTED) {
 
                 // 1. display unit attack range;
                 isAttack = true;
@@ -785,6 +703,7 @@ public class AnimationThread extends Thread {
                     attackSprites.addAll(unitToMove.getUnitAttackTiles(
                             Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, resources));
                 }
+                gameState=GameState.UNITATTACKSELECT;
 
             }
         } else if (s.equals(IButtonConstants.item)) {
@@ -839,16 +758,13 @@ public class AnimationThread extends Thread {
                     }
 
                 }
+                gameState = GameState.NORMAL;
             }
         } else if (s.equals(IButtonConstants.cancel)) {
-            if (isAttack) {
-                if (attackSprites.size() != 0) {
-                    synchronized (attackSprites) {
-                        attackSprites.clear();
-                    }
-                }
-                isAttack = false;
-            }
+
+
+
+
             if (unitToMove != null) {
                 synchronized (unitToMove) {
                     if(unitOrigPosX!=-1&&unitOrigPosY!=-1) {
@@ -861,6 +777,9 @@ public class AnimationThread extends Thread {
 
                         unitToMove.setState(UnitState.NORMAL);
                     }
+                }
+                synchronized (attackSprites) {
+                    attackSprites.clear();
                 }
             }
             // 2. return tile to previous position
