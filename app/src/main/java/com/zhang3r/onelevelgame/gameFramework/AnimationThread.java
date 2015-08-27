@@ -93,6 +93,8 @@ public class AnimationThread extends Thread {
     private TurnState state;
     private RectF currViewport;
     private GameState gameState;
+    private static int dx;
+    private static int dy;
 
     // handle to the surface manager object we interact with
     private SurfaceHolder surfaceHolder;
@@ -319,6 +321,28 @@ public class AnimationThread extends Thread {
             for (int i = 0; i < terrainFactory.getSize(); i++) {
                 terrainFactory.getTerrain(i).getSprite().Update(now);
             }
+        }
+        // animations!!!
+        if(gameState== GameState.UNITINANIMATION){
+
+            if(unitToMove.getX()!= unitToMove.getSprite().getXPos()/IAppConstants.SPRITE_WIDTH||unitToMove.getY()!= unitToMove.getSprite().getYPos()/IAppConstants.SPRITE_WIDTH){
+                //move
+                if(unitToMove.getX()!= unitToMove.getSprite().getXPos()/IAppConstants.SPRITE_WIDTH) {
+                    unitToMove.getSprite().setXPos(unitToMove.getSprite().getXPos() + IAppConstants.SPRITE_WIDTH/4);
+                }else if(unitToMove.getY()!= unitToMove.getSprite().getYPos()/IAppConstants.SPRITE_WIDTH) {
+                    unitToMove.getSprite().setYPos(unitToMove.getSprite().getYPos() + IAppConstants.SPRITE_WIDTH/4);
+                }
+
+
+
+            }else{
+
+               gameState=GameState.UNITSELECTED;
+                Log.d(ILogConstants.DEBUG_TAG, "STATE is "+GameState.UNITSELECTED);
+
+
+            }
+
         }
 
         synchronized (playerArmy) {
@@ -628,9 +652,9 @@ public class AnimationThread extends Thread {
             if(gameState==GameState.NORMAL && unit!=unitToMove){
                 //get friendly unit
                 if(unit.getState() == UnitState.NORMAL) {
-                    synchronized (unitToMove) {
+                   // synchronized (unitToMove) {
                         unitToMove = unit;
-                    }
+                   // }
                     synchronized (moveSprites) {
                         moveSprites.clear();
                         moveSprites.addAll(unitToMove.getUnitMoveTiles(
@@ -638,25 +662,8 @@ public class AnimationThread extends Thread {
                     }
                     gameState = GameState.UNITSELECTED;
                 }
-            }else if(gameState==GameState.UNITSELECTED) {
-                if(unitToMove!=null&& unitToMove.getState()==UnitState.NORMAL) {
-                    boolean unitMoved = false;
-                    unitOrigPosX = unitToMove.getX();
-                    unitOrigPosY = unitToMove.getY();
-                    synchronized (moveSprites) {
-                        //Call animation
-                        //Movement updated for unit but not for sprite
-                        //sprite update in animation
-                        unitMoved = unitToMove.unitMoveUpdate(moveSprites,
-                            playerArmy, enemyArmy, x, y);
-
-                        synchronized (unitToMove) {
-                            unitToMove.setState(UnitState.MOVED);
-                        }
-                        gameState = GameState.UNITINANIMATION;
-                    }
-                }
             }
+
         }else if(gameState==GameState.UNITATTACKSELECT) {
             Army enemyUnits = getArmy(true);
             BaseUnit defender = unitDetection(enemyUnits.getUnits(), x, y);
@@ -678,6 +685,32 @@ public class AnimationThread extends Thread {
                 // get tile
                 tileSelected = getTile(x, y);
                 gameState = GameState.UNITINANIMATION;
+            }
+        }else if(gameState==GameState.UNITSELECTED) {
+            if(unitToMove!=null&& unitToMove.getState()==UnitState.NORMAL) {
+                boolean unitMoved = false;
+                unitOrigPosX = unitToMove.getX();
+                unitOrigPosY = unitToMove.getY();
+                synchronized (moveSprites) {
+                    //Call animation
+                    //Movement updated for unit but not for sprite
+                    //sprite update in animation
+                    unitMoved = unitToMove.unitMoveUpdate(moveSprites,
+                            playerArmy, enemyArmy, x, y);
+
+                    synchronized (unitToMove) {
+                        unitToMove.setState(UnitState.MOVED);
+                    }
+                    moveSprites.clear();
+                    if(unitMoved){
+                        dx=(unitToMove.getX()- unitToMove.getSprite().getXPos()/IAppConstants.SPRITE_WIDTH);
+                        dy=(unitToMove.getY()-unitToMove.getSprite().getYPos()/IAppConstants.SPRITE_WIDTH);
+                        Log.d(ILogConstants.DEBUG_TAG, "dx "+dx+" dy "+dy);
+                        gameState = GameState.UNITINANIMATION;
+                    }else{
+                        gameState = GameState.NORMAL;
+                    }
+                }
             }
         }
         return true;
