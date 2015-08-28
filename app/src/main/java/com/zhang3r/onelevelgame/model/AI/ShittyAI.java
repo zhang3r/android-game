@@ -49,6 +49,8 @@ public class ShittyAI implements AI {
                     }
                     if (unit.unitMoveUpdate(moveTiles, army, enemyArmy, dX, dY)) {
                         Log.d(ILogConstants.DEBUG_TAG, "AI "+unit.getUnitId()+" Move x:" + dX + " y: " + dY);
+                        unit.getSprite().setXPos(unit.getX() * IAppConstants.SPRITE_WIDTH);
+                        unit.getSprite().setYPos(unit.getY()*IAppConstants.SPRITE_WIDTH);
                         unit.setState(IGameConstants.UnitState.MOVED);
                     }
                     //update shortest distance
