@@ -75,8 +75,8 @@ public class MapView extends SurfaceView implements SurfaceHolder.Callback,
         Point size = new Point();
         display.getSize(size);
         screenWidth = size.x;
-        // screenHeight = size.y;
-        screenHeight = 1140;
+
+        screenHeight = size.y;
         thread = new AnimationThread(holder, context, screenWidth,
                 screenHeight, this);
 
