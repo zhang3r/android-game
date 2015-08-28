@@ -21,6 +21,8 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
 import com.zhang3r.onelevelgame.constants.IGameConstants.GameState;
+
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zhang3r.onelevelgame.R;
@@ -53,6 +55,7 @@ import com.zhang3r.onelevelgame.model.tiles.units.decorator.EnemyUnit;
 import com.zhang3r.onelevelgame.model.tiles.units.decorator.FriendlyUnit;
 import com.zhang3r.onelevelgame.terminate.AllUnitsDestroyed;
 import com.zhang3r.onelevelgame.terminate.TerminateCondition;
+
 
 import java.util.LinkedList;
 import java.util.List;
@@ -95,6 +98,8 @@ public class AnimationThread extends Thread {
     private GameState gameState;
     private static int dx;
     private static int dy;
+    private Dialog battleAnimation;
+    private AttackEvent ae;
 
     // handle to the surface manager object we interact with
     private SurfaceHolder surfaceHolder;
@@ -122,6 +127,9 @@ public class AnimationThread extends Thread {
         this.tileSelected = 0;
         this.shittyAi = new ShittyAI();
         // initiate the text painter
+        battleAnimation = new Dialog(context);
+        battleAnimation.setContentView(R.layout.attack_animation_dialog);
+
         textPainter = new Paint();
         textPainter.setARGB(255, 255, 255, 255);
         textPainter.setTextSize(32);
@@ -335,13 +343,19 @@ public class AnimationThread extends Thread {
 
 
 
-            }else{
+            }else if(ae!=null&& unitToMove.getSprite().getCurrentFrame()==1) {
+                battleAnimation.dismiss();
+                    gameState = GameState.UNITSELECTED;
+                    Log.d(ILogConstants.DEBUG_TAG, "STATE is " + GameState.UNITSELECTED);
 
-               gameState=GameState.UNITSELECTED;
-                Log.d(ILogConstants.DEBUG_TAG, "STATE is "+GameState.UNITSELECTED);
 
+            }else {
+                if(battleAnimation.isShowing()) {
+                    battleAnimation.dismiss();
+                }
+            gameState = GameState.UNITSELECTED;
 
-            }
+        }
 
         }
 
@@ -675,15 +689,21 @@ public class AnimationThread extends Thread {
                 if(unitToMove!=null) {
                     synchronized (unitToMove) {
                         unitToMove.setState(UnitState.WAIT);
-                        unitToMove = null;
                     }
                 }
                 //TODO animation hook in
-                AttackEvent ae = AttackEvent.attack(unitToMove, defender, army, enemyUnits);
+                ae = AttackEvent.attack(unitToMove, defender, army, enemyUnits);
                 message = ae.toString();
-                unitSelected = unitToMove;
+
                 // get tile
                 tileSelected = getTile(x, y);
+                ImageView defenderSprite = (ImageView)battleAnimation.findViewById(R.id.defender);
+                ImageView attackerSprite = (ImageView)battleAnimation.findViewById(R.id.attacker);
+                //kick off animations
+                //change height
+                defenderSprite.setImageBitmap(defender.getSprite().getAnimation());
+                attackerSprite.setImageBitmap(unitToMove.getSprite().getAnimation());
+                battleAnimation.show();
                 gameState = GameState.UNITINANIMATION;
             }
         }else if(gameState==GameState.UNITSELECTED) {
@@ -726,7 +746,6 @@ public class AnimationThread extends Thread {
 
     public void buttonEventHandler(String s) {
         if (s.equals(IButtonConstants.attack)) {
-
             if (unitToMove != null && gameState==GameState.UNITSELECTED) {
 
                 // 1. display unit attack range;
