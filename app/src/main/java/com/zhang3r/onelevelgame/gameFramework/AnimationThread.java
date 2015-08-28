@@ -325,12 +325,12 @@ public class AnimationThread extends Thread {
         // animations!!!
         if(gameState== GameState.UNITINANIMATION){
 
-            if(unitToMove.getX()!= unitToMove.getSprite().getXPos()/IAppConstants.SPRITE_WIDTH||unitToMove.getY()!= unitToMove.getSprite().getYPos()/IAppConstants.SPRITE_WIDTH){
+            if(unitToMove.getX()*IAppConstants.SPRITE_WIDTH!= unitToMove.getSprite().getXPos()||unitToMove.getY()*IAppConstants.SPRITE_WIDTH!= unitToMove.getSprite().getYPos()){
                 //move
-                if(unitToMove.getX()!= unitToMove.getSprite().getXPos()/IAppConstants.SPRITE_WIDTH) {
-                    unitToMove.getSprite().setXPos(unitToMove.getSprite().getXPos() + IAppConstants.SPRITE_WIDTH/4);
-                }else if(unitToMove.getY()!= unitToMove.getSprite().getYPos()/IAppConstants.SPRITE_WIDTH) {
-                    unitToMove.getSprite().setYPos(unitToMove.getSprite().getYPos() + IAppConstants.SPRITE_WIDTH/4);
+                if(unitToMove.getX()*IAppConstants.SPRITE_WIDTH!= unitToMove.getSprite().getXPos()) {
+                    unitToMove.getSprite().setXPos(unitToMove.getSprite().getXPos() + (dx >> 31 | 1) * IAppConstants.SPRITE_WIDTH / 4);
+                }else if(unitToMove.getY()*IAppConstants.SPRITE_WIDTH!= unitToMove.getSprite().getYPos()) {
+                    unitToMove.getSprite().setYPos(unitToMove.getSprite().getYPos() + (dy>>31|1)*IAppConstants.SPRITE_WIDTH/4);
                 }
 
 
@@ -705,7 +705,7 @@ public class AnimationThread extends Thread {
                     if(unitMoved){
                         dx=(unitToMove.getX()- unitToMove.getSprite().getXPos()/IAppConstants.SPRITE_WIDTH);
                         dy=(unitToMove.getY()-unitToMove.getSprite().getYPos()/IAppConstants.SPRITE_WIDTH);
-                        Log.d(ILogConstants.DEBUG_TAG, "dx "+dx+" dy "+dy);
+                        Log.d(ILogConstants.DEBUG_TAG, "dx "+(dx>>31|1)+" dy "+(dy>>31|1));
                         gameState = GameState.UNITINANIMATION;
                     }else{
                         gameState = GameState.NORMAL;
