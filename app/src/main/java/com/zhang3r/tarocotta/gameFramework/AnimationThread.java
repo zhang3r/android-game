@@ -489,9 +489,9 @@ public class AnimationThread extends Thread {
         if (currViewport.left - distanceX > 0) {
             currViewport.left = 0;
             currViewport.right = -screenWidth;
-        } else if (currViewport.right * mScaleFactor - distanceX <= (-1 * ((Map.getMap().getGrid()[0].length - 1) * IAppConstants.SPRITE_WIDTH)) - .3 * screenWidth) {
+        } else if (currViewport.right - distanceX <= (-1 * ((Map.getMap().getGrid()[0].length - 1) * IAppConstants.SPRITE_WIDTH)) - .3 * screenWidth) {
 
-            currViewport.right = (int) (-1 * ((Map.getMap().getGrid()[0].length - 1) * IAppConstants.SPRITE_WIDTH) - .3 * screenWidth);
+            currViewport.right = (int) (-1 * ((Map.getMap().getGrid()[0].length - 1) * IAppConstants.SPRITE_WIDTH) *mScaleFactor- .3 * screenWidth);
             currViewport.left = currViewport.right + screenWidth;
 
         } else {
@@ -502,9 +502,9 @@ public class AnimationThread extends Thread {
         if (currViewport.top - distanceY > 0) {
             currViewport.top = 0;
             currViewport.bottom = -screenHeight;
-        } else if (currViewport.bottom * mScaleFactor - distanceY <= (-1 * (Map.getMap().getGrid().length * IAppConstants.SPRITE_HEIGHT) + 50)) {
+        } else if (currViewport.bottom - distanceY <= (-1 * (Map.getMap().getGrid().length * IAppConstants.SPRITE_HEIGHT) + 50)) {
 
-            currViewport.bottom = (-1 * (Map.getMap().getGrid().length * IAppConstants.SPRITE_HEIGHT) + 50);
+            currViewport.bottom = (-1 * (Map.getMap().getGrid().length * IAppConstants.SPRITE_HEIGHT)*mScaleFactor + 50);
             currViewport.top = currViewport.bottom + screenHeight;
 
         } else {
