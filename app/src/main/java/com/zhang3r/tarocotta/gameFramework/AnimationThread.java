@@ -162,35 +162,35 @@ public class AnimationThread extends Thread {
         //1 cav
         //1 archer
         //2 infantry
-        BaseUnit unit = InfantryUnit.create(1, "player unit 1", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
-        unit = new FriendlyUnit(unit);
-        unit.setSprite(AnimatedSprite.create(infantryBitMap,
-                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-                true, unit.getX(), unit.getY()));
-        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit.getX() + " ," + unit.getY());
-        army.add(unit);
-        BaseUnit unit2 = CavalryUnit.create(2, "player unit 2", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
-        //unit2 = new FriendlyUnit(unit2);
-        unit2.setSprite(AnimatedSprite.create(cavBitMap,
-                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-                true, unit2.getX(), unit2.getY()));
-        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit2.getX() + " ," + unit2.getY());
-        army.add(unit2);
-        BaseUnit unit3 = ArcheryUnit.create(3, "player unit 3", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
-        unit3 = new FriendlyUnit(unit3);
-        unit3.setSprite(AnimatedSprite.create(archerBitMap,
-                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-                true, unit3.getX(), unit3.getY()));
-        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit3.getX() + " ," + unit3.getY());
-        army.add(unit3);
-
-        BaseUnit unit4 = InfantryUnit.create(4, "player unit 4", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
-        unit4 = new FriendlyUnit(unit4);
-        unit4.setSprite(AnimatedSprite.create(infantryBitMap,
-                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-                true, unit4.getX(), unit4.getY()));
-        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit4.getX() + " ," + unit4.getY());
-        army.add(unit4);
+//        BaseUnit unit = InfantryUnit.create(1, "player unit 1", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
+//        unit = new FriendlyUnit(unit);
+//        unit.setSprite(AnimatedSprite.create(infantryBitMap,
+//                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
+//                true, unit.getX(), unit.getY()));
+//        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit.getX() + " ," + unit.getY());
+//        army.add(unit);
+//        BaseUnit unit2 = CavalryUnit.create(2, "player unit 2", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
+//        //unit2 = new FriendlyUnit(unit2);
+//        unit2.setSprite(AnimatedSprite.create(cavBitMap,
+//                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
+//                true, unit2.getX(), unit2.getY()));
+//        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit2.getX() + " ," + unit2.getY());
+//        army.add(unit2);
+//        BaseUnit unit3 = ArcheryUnit.create(3, "player unit 3", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
+//        unit3 = new FriendlyUnit(unit3);
+//        unit3.setSprite(AnimatedSprite.create(archerBitMap,
+//                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
+//                true, unit3.getX(), unit3.getY()));
+//        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit3.getX() + " ," + unit3.getY());
+//        army.add(unit3);
+//
+//        BaseUnit unit4 = InfantryUnit.create(4, "player unit 4", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
+//        unit4 = new FriendlyUnit(unit4);
+//        unit4.setSprite(AnimatedSprite.create(infantryBitMap,
+//                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
+//                true, unit4.getX(), unit4.getY()));
+//        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit4.getX() + " ," + unit4.getY());
+//        army.add(unit4);
 
         return army;
 
@@ -206,14 +206,14 @@ public class AnimationThread extends Thread {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap baseBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, true);
-        for (int i = 0; i <= 7; i++) {
-            BaseUnit unit = InfantryUnit.create(i, "enemy Infantry unit " + i, ((int) (Math.random() * xUpper) + xLower), (int) (Math.random() * yUpper));
-            unit = new EnemyUnit(unit);
-            unit.setSprite(AnimatedSprite.create(baseBitMap,
-                    IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-                    true, unit.getX(), unit.getY()));
-            army.add(unit);
-        }
+//        for (int i = 0; i <= 7; i++) {
+//            BaseUnit unit = InfantryUnit.create(i, "enemy Infantry unit " + i, ((int) (Math.random() * xUpper) + xLower), (int) (Math.random() * yUpper));
+//            unit = new EnemyUnit(unit);
+//            unit.setSprite(AnimatedSprite.create(baseBitMap,
+//                    IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
+//                    true, unit.getX(), unit.getY()));
+//            army.add(unit);
+//        }
 
 
         return army;

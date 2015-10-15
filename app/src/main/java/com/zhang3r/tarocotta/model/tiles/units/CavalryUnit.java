@@ -12,7 +12,7 @@ public class CavalryUnit extends BaseUnit {
     public CavalryUnit(){
         super();
         setName("Basic Cavalry Unit" + getUnitId());
-        setStats(statsFactory.createStat(IGameConstants.UnitType.CAV));
+
         setUnitType(IGameConstants.UnitType.CAV);
         setAttackUtil(new MeleeAttackImpl());
         setMoveUtil(new BasicMoveImpl());
@@ -30,7 +30,7 @@ public class CavalryUnit extends BaseUnit {
     }
 
     @Override
-    public String toString(){
+    public String getDescription(){
         return "Cavalry is a man on a horse; a fine looking horse.";
     }
 }

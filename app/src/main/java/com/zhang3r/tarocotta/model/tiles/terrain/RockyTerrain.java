@@ -33,7 +33,7 @@ public class RockyTerrain extends BaseTerrain {
     }
 
     @Override
-    public String toString(){
+    public String getDescription(){
         return "rock: decrease defense. watch for rock slides!";
     }
 }
