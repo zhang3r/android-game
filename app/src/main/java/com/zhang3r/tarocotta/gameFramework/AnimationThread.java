@@ -52,6 +52,7 @@ import com.zhang3r.tarocotta.model.tiles.units.CavalryUnit;
 import com.zhang3r.tarocotta.model.tiles.units.InfantryUnit;
 import com.zhang3r.tarocotta.model.tiles.units.decorator.EnemyUnit;
 import com.zhang3r.tarocotta.model.tiles.units.decorator.FriendlyUnit;
+import com.zhang3r.tarocotta.model.tiles.units.decorator.IAllegiance;
 import com.zhang3r.tarocotta.terminate.AllUnitsDestroyed;
 import com.zhang3r.tarocotta.terminate.TerminateCondition;
 
@@ -97,6 +98,7 @@ public class AnimationThread extends Thread {
     private static int dy;
     private Dialog battleAnimation;
     private AttackEvent ae;
+    private Bitmap mapBackground;
 
     // handle to the surface manager object we interact with
     private SurfaceHolder surfaceHolder;
@@ -115,8 +117,7 @@ public class AnimationThread extends Thread {
         this.terminateCondition = new AllUnitsDestroyed();
         Map.getMap().setGrid(mapFactory.initialize(1));
         ResourceConstant.resources = view.getResources();
-        this.viewWidth = view.getWidth();
-        this.viewHeight = view.getHeight();
+
         this.view = view;
         this.context = context;
         this.unitToMove = null;
@@ -261,6 +262,7 @@ public class AnimationThread extends Thread {
      */
     @Override
     public void run() {
+        Log.d(ILogConstants.SYSTEM_ERROR_TAG, "run is " + run);
         while (run) {
             Canvas c = null;
             try {
@@ -287,7 +289,7 @@ public class AnimationThread extends Thread {
 
     @Override
     public void start() {
-        super.start();
+
         final Dialog dialog = new Dialog(context);
         dialog.setTitle(context.getString(R.string.dialogIntroTitle));
         dialog.setContentView(R.layout.custom_dialog);
@@ -309,7 +311,42 @@ public class AnimationThread extends Thread {
         });
 
         dialog.show();
+        IAppConstants.VIEW_WIDTH = view.getWidth();
+        IAppConstants.VIEW_HEIGHT = view.getHeight();
+        // merging map sprites into 1 sheet.
+        IAppConstants.SPRITE_WIDTH = view.getWidth()/10;
+        IAppConstants.SPRITE_HEIGHT = view.getHeight()/5;
+        terrainFactory= new TerrainFactory();
+        terrainFactory.addTerrain(new PlainTerrain(resources, 0, 0));
+        terrainFactory.addTerrain(new TreeTerrain(resources, 0, 0));
+        terrainFactory.addTerrain(new RockyTerrain(resources, 0, 0));
+        mapBackground = combineImages(Map.getMap().getGrid(), IAppConstants.SPRITE_WIDTH, IAppConstants.SPRITE_HEIGHT);
 
+        this.setRunning(true);
+        Log.d(ILogConstants.SYSTEM_ERROR_TAG, "Start run is " + run);
+        super.start();
+    }
+
+    public Bitmap combineImages(int[][] map,int spritewidth,int spriteheight) { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
+        Bitmap cs = null;
+
+
+
+        int width=0;
+        int height=0;
+        width = spritewidth*map[0].length;
+        height = spriteheight*map.length;
+
+        cs = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        Canvas comboImage = new Canvas(cs);
+        for (int y = 0; y < Map.getMap().getGrid().length; y++) {
+            for (int x = 0; x < Map.getMap().getGrid()[y].length; x++) {
+                //TODO change to sprite resolver
+                comboImage.drawBitmap(terrainFactory.getTerrain(map[y][x]).getSprite().getAnimation(), x*spritewidth, y*spriteheight, null);
+            }
+        }
+        return cs;
     }
 
     /**
@@ -354,106 +391,106 @@ public class AnimationThread extends Thread {
 
         }
 
-        synchronized (playerArmy) {
-            synchronized (enemyArmy) {
-                /************************************************* AI HOOK UP *******************************************/
-                if (state == TurnState.ENEMY) {
-                    shittyAi.AiMove(enemyArmy, playerArmy);
-                    state = TurnState.PLAYER;
-                    enemyArmy.setEndTurnState();
-                    // reset unit state
-                    playerArmy.resetUnitState();
-                }
-                /************************************************* END OF AI ********************************************/
-                List<BaseUnit> units = new LinkedList<>();
-                units.addAll(playerArmy.getUnits());
-                units.addAll(enemyArmy.getUnits());
-                for (BaseUnit unit : units) {
-                    AnimatedSprite animatedSprite = unit.getSprite();
-                    animatedSprite.Update(now);
-                }
-
-
-            }
-        }
-        /*******************************************  END LEVEL CONDITION **************************************/
-        synchronized (enemyArmy) {
-
-            if (terminateCondition.isWin(enemyArmy)) {
-                Looper.myLooper().prepare();
-                new AlertDialog.Builder(context)
-                        .setTitle(context.getString(R.string.winTitle))
-                        .setMessage(terminateCondition.getTerminateString())
-                        .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // main menu
-                                dialog.dismiss();
-                                run = false;
-
-                                ((Activity) context).finish();
-                                Looper.myLooper().quitSafely();
-
-                            }
-                        })
-                        .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // play again
-                                dialog.dismiss();
-                                run = false;
-                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
-                                context.startActivity(i);
-                                ((Activity) context).finish();
-                                Looper.myLooper().quit();
-
-
-                            }
-                        })
-
-                        .show();
-                Looper.myLooper().loop();
-            }
-        }
-        synchronized (playerArmy) {
-
-            if (terminateCondition.isLose(playerArmy)) {
-                Looper.myLooper().prepare();
-                new AlertDialog.Builder(context)
-                        .setTitle(context.getString(R.string.loseTitle))
-                        .setMessage(terminateCondition.getTerminateString())
-                        .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                run = false;
-                                dialog.dismiss();
-                                Looper.myLooper().quitSafely();
-                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINMENU");
-                                context.startActivity(i);
-                                ((Activity) context).finish();
-
-
-                            }
-                        })
-                        .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // play again
-                                run = false;
-                                dialog.dismiss();
-
-                                Looper.myLooper().quitSafely();
-                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
-
-                                context.startActivity(i);
-                                ((Activity) context).finish();
-
-
-                            }
-                        })
-
-                        .show();
-                Looper.myLooper().loop();
-            }
-        }
-
-        lastTime = now;
+//        synchronized (playerArmy) {
+//            synchronized (enemyArmy) {
+//                /************************************************* AI HOOK UP *******************************************/
+//                if (state == TurnState.ENEMY) {
+//                    shittyAi.AiMove(enemyArmy, playerArmy);
+//                    state = TurnState.PLAYER;
+//                    enemyArmy.setEndTurnState();
+//                    // reset unit state
+//                    playerArmy.resetUnitState();
+//                }
+//                /************************************************* END OF AI ********************************************/
+//                List<BaseUnit> units = new LinkedList<>();
+//                units.addAll(playerArmy.getUnits());
+//                units.addAll(enemyArmy.getUnits());
+//                for (BaseUnit unit : units) {
+//                    AnimatedSprite animatedSprite = unit.getSprite();
+//                    animatedSprite.Update(now);
+//                }
+//
+//
+//            }
+//        }
+//        /*******************************************  END LEVEL CONDITION **************************************/
+//        synchronized (enemyArmy) {
+//
+//            if (terminateCondition.isWin(enemyArmy)) {
+//                Looper.myLooper().prepare();
+//                new AlertDialog.Builder(context)
+//                        .setTitle(context.getString(R.string.winTitle))
+//                        .setMessage(terminateCondition.getTerminateString())
+//                        .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // main menu
+//                                dialog.dismiss();
+//                                run = false;
+//
+//                                ((Activity) context).finish();
+//                                Looper.myLooper().quitSafely();
+//
+//                            }
+//                        })
+//                        .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // play again
+//                                dialog.dismiss();
+//                                run = false;
+//                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
+//                                context.startActivity(i);
+//                                ((Activity) context).finish();
+//                                Looper.myLooper().quit();
+//
+//
+//                            }
+//                        })
+//
+//                        .show();
+//                Looper.myLooper().loop();
+//            }
+//        }
+//        synchronized (playerArmy) {
+//
+//            if (terminateCondition.isLose(playerArmy)) {
+//                Looper.myLooper().prepare();
+//                new AlertDialog.Builder(context)
+//                        .setTitle(context.getString(R.string.loseTitle))
+//                        .setMessage(terminateCondition.getTerminateString())
+//                        .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                run = false;
+//                                dialog.dismiss();
+//                                Looper.myLooper().quitSafely();
+//                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINMENU");
+//                                context.startActivity(i);
+//                                ((Activity) context).finish();
+//
+//
+//                            }
+//                        })
+//                        .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // play again
+//                                run = false;
+//                                dialog.dismiss();
+//
+//                                Looper.myLooper().quitSafely();
+//                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
+//
+//                                context.startActivity(i);
+//                                ((Activity) context).finish();
+//
+//
+//                            }
+//                        })
+//
+//                        .show();
+//                Looper.myLooper().loop();
+//            }
+//        }
+//
+//        lastTime = now;
     }
 
     /**
@@ -489,10 +526,10 @@ public class AnimationThread extends Thread {
         if (currViewport.left - distanceX > 0) {
             currViewport.left = 0;
             currViewport.right = -screenWidth;
-        } else if (currViewport.right - distanceX <= (-1 * ((Map.getMap().getGrid()[0].length - 1) * IAppConstants.SPRITE_WIDTH)) - .3 * screenWidth) {
+        } else if (currViewport.right - distanceX <= IAppConstants.VIEW_WIDTH*mScaleFactor) {
 
-            currViewport.right = (int) (-1 * ((Map.getMap().getGrid()[0].length - 1) * IAppConstants.SPRITE_WIDTH) *mScaleFactor- .3 * screenWidth);
-            currViewport.left = currViewport.right + screenWidth;
+            currViewport.right = IAppConstants.VIEW_WIDTH*mScaleFactor;
+            currViewport.left = currViewport.right + IAppConstants.VIEW_WIDTH;
 
         } else {
             currViewport.right -= distanceX;
@@ -502,9 +539,9 @@ public class AnimationThread extends Thread {
         if (currViewport.top - distanceY > 0) {
             currViewport.top = 0;
             currViewport.bottom = -screenHeight;
-        } else if (currViewport.bottom - distanceY <= (-1 * (Map.getMap().getGrid().length * IAppConstants.SPRITE_HEIGHT) + 50)) {
+        } else if (currViewport.bottom - distanceY <= IAppConstants.VIEW_HEIGHT*mScaleFactor) {
 
-            currViewport.bottom = (-1 * (Map.getMap().getGrid().length * IAppConstants.SPRITE_HEIGHT)*mScaleFactor + 50);
+            currViewport.bottom = IAppConstants.VIEW_HEIGHT*mScaleFactor;
             currViewport.top = currViewport.bottom + screenHeight;
 
         } else {
@@ -530,27 +567,14 @@ public class AnimationThread extends Thread {
      * *****************************************************************************************
      */
     private void doDraw(Canvas canvas) {
+
         // drawing background color. operations on the canvas accumulate
         // this is like clearing the screen //replace with background image
         canvas.save();
         canvas.scale(mScaleFactor, mScaleFactor);
         // terrain
-        synchronized (Map.getMap().getGrid()) {
-            synchronized (terrainFactory) {
-                for (int y = 0; y < Map.getMap().getGrid().length; y++) {
-                    for (int x = 0; x < Map.getMap().getGrid()[y].length; x++) {
 
-                        AnimatedSprite animatedSprite = terrainFactory.getTerrain(Map.getMap().getGrid()[y][x]).getSprite();
-                        animatedSprite.setYPos(y * IAppConstants.SPRITE_HEIGHT);
-                        animatedSprite.setXPos(x * IAppConstants.SPRITE_WIDTH);
-                        animatedSprite.draw(canvas, currViewport.left,
-                                currViewport.top, currViewport.right,
-                                currViewport.bottom);
-
-                    }
-                }
-            }
-        }
+        canvas.drawBitmap(mapBackground,currViewport.left, currViewport.top,null);
 
         if (moveSprites != null) {
             synchronized (moveSprites) {
@@ -574,24 +598,24 @@ public class AnimationThread extends Thread {
         }
         //units
 
-        synchronized (playerArmy) {
-
-            for (BaseUnit unit : playerArmy.getUnits()) {
-                AnimatedSprite animatedSprite = unit.getSprite();
-                animatedSprite.draw(canvas, currViewport.left,
-                        currViewport.top, currViewport.right,
-                        currViewport.bottom);
-            }
-        }
-        synchronized (enemyArmy) {
-
-            for (BaseUnit unit : enemyArmy.getUnits()) {
-                AnimatedSprite animatedSprite = unit.getSprite();
-                animatedSprite.draw(canvas, currViewport.left,
-                        currViewport.top, currViewport.right,
-                        currViewport.bottom);
-            }
-        }
+//        synchronized (playerArmy) {
+//
+//            for (BaseUnit unit : playerArmy.getUnits()) {
+//                AnimatedSprite animatedSprite = unit.getSprite();
+//                animatedSprite.draw(canvas, currViewport.left,
+//                        currViewport.top, currViewport.right,
+//                        currViewport.bottom);
+//            }
+//        }
+//        synchronized (enemyArmy) {
+//
+//            for (BaseUnit unit : enemyArmy.getUnits()) {
+//                AnimatedSprite animatedSprite = unit.getSprite();
+//                animatedSprite.draw(canvas, currViewport.left,
+//                        currViewport.top, currViewport.right,
+//                        currViewport.bottom);
+//            }
+//        }
 
         // sending Unit to ui panel
         MapFragment.getUnitSelected(unitToMove);
