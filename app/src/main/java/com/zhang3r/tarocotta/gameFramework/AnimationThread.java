@@ -327,15 +327,15 @@ public class AnimationThread extends Thread {
         super.start();
     }
 
-    public Bitmap combineImages(int[][] map,int spritewidth,int spriteheight) { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
+    public Bitmap combineImages(int[][] map,int spriteWidth,int spriteHeight) { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
         Bitmap cs = null;
 
 
 
         int width=0;
         int height=0;
-        width = spritewidth*map[0].length;
-        height = spriteheight*map.length;
+        width = spriteWidth*map[0].length;
+        height = spriteHeight*map.length;
 
         cs = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
@@ -343,7 +343,7 @@ public class AnimationThread extends Thread {
         for (int y = 0; y < Map.getMap().getGrid().length; y++) {
             for (int x = 0; x < Map.getMap().getGrid()[y].length; x++) {
                 //TODO change to sprite resolver
-                comboImage.drawBitmap(terrainFactory.getTerrain(map[y][x]).getSprite().getAnimation(), x*spritewidth, y*spriteheight, null);
+                comboImage.drawBitmap(terrainFactory.getTerrain(map[y][x]).getSprite().getAnimation(), x*spriteWidth, y*spriteHeight, null);
             }
         }
         return cs;
@@ -514,10 +514,10 @@ public class AnimationThread extends Thread {
 
     public void doScroll(MotionEvent e1, MotionEvent e2, float distanceX,
                          float distanceY) {
-//        Log.d(ILogConstants.DEBUG_TAG,"View Port Left "+currViewport.left);
-//        Log.d(ILogConstants.DEBUG_TAG,"View Port Right "+currViewport.right);
-//        Log.d(ILogConstants.DEBUG_TAG,"View Port top "+currViewport.top);
-//        Log.d(ILogConstants.DEBUG_TAG,"View Port bottom "+currViewport.bottom);
+        Log.d(ILogConstants.DEBUG_TAG,"View Port Left "+currViewport.left);
+        Log.d(ILogConstants.DEBUG_TAG,"View Port Right "+currViewport.right);
+        Log.d(ILogConstants.DEBUG_TAG,"View Port top "+currViewport.top);
+        Log.d(ILogConstants.DEBUG_TAG,"View Port bottom "+currViewport.bottom);
 //        Log.d(ILogConstants.DEBUG_TAG,"X "+.3*screenWidth);
 //        Log.d(ILogConstants.DEBUG_TAG,"Y "+distanceY);
 
@@ -525,10 +525,10 @@ public class AnimationThread extends Thread {
         // left bound
         if (currViewport.left - distanceX > 0) {
             currViewport.left = 0;
-            currViewport.right = -screenWidth;
-        } else if (currViewport.right - distanceX <= IAppConstants.VIEW_WIDTH*mScaleFactor) {
+            currViewport.right = -IAppConstants.VIEW_WIDTH;
+        } else if (currViewport.right - distanceX <= -1*mapBackground.getWidth()*mScaleFactor) {
 
-            currViewport.right = IAppConstants.VIEW_WIDTH*mScaleFactor;
+            currViewport.right = -1*mapBackground.getWidth()*mScaleFactor;
             currViewport.left = currViewport.right + IAppConstants.VIEW_WIDTH;
 
         } else {
@@ -538,11 +538,11 @@ public class AnimationThread extends Thread {
         // top
         if (currViewport.top - distanceY > 0) {
             currViewport.top = 0;
-            currViewport.bottom = -screenHeight;
-        } else if (currViewport.bottom - distanceY <= IAppConstants.VIEW_HEIGHT*mScaleFactor) {
+            currViewport.bottom = -IAppConstants.VIEW_HEIGHT;
+        } else if (currViewport.bottom - distanceY <= -1*mapBackground.getHeight()*mScaleFactor) {
 
-            currViewport.bottom = IAppConstants.VIEW_HEIGHT*mScaleFactor;
-            currViewport.top = currViewport.bottom + screenHeight;
+            currViewport.bottom = -1*mapBackground.getHeight()*mScaleFactor;
+            currViewport.top = currViewport.bottom + IAppConstants.VIEW_HEIGHT;
 
         } else {
             currViewport.bottom -= distanceY;
@@ -552,10 +552,11 @@ public class AnimationThread extends Thread {
     }
 
     public void doScale(ScaleGestureDetector scaleGestureDetector) {
+
         mScaleFactor *= scaleGestureDetector.getScaleFactor();
 
         // Don't let the object get too small or too large.
-        mScaleFactor = Math.max(0.8f, Math.min(mScaleFactor, 1.2f));
+        mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 1.3f));
         Log.d(ILogConstants.DEBUG_TAG, "Scale Factor: " + mScaleFactor);
         view.invalidate();
 
