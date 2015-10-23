@@ -32,6 +32,7 @@ public class AttackUtilTest extends TestCase {
     /**
      * This should test bounds.
      */
+
     public void testGetMeleeAttackTiles() {
         /*
          * 1. test for not null
@@ -39,12 +40,13 @@ public class AttackUtilTest extends TestCase {
          * 3. test if attack returns a Attack event
          * 4. test the contents of attack event
          */
-        List<AnimatedSprite> attackTiles = meleeAttack.getUnitAttackTiles(1, 10, 10, resource, 15, 15, 1, 0);
-        assertNotNull(attackTiles);
-        assertEquals(6, attackTiles.size());
+//        List<AnimatedSprite> attackTiles = meleeAttack.getUnitAttackTiles(1, 10, 10, resource, 15, 15, 1, 0);
+//        assertNotNull(attackTiles);
+//        assertEquals(6, attackTiles.size());
 
 
     }
+
 
     public void testGetRangedAttackTiles() {
         /*
@@ -54,9 +56,9 @@ public class AttackUtilTest extends TestCase {
          * 4. test the contents of attack event if a unit has been killed.
          */
 
-        List<AnimatedSprite> attackTiles = rangedAttack.getUnitAttackTiles(1, 10, 10, resource, 15, 15, 3, 1);
-        assertNotNull(attackTiles);
-        assertEquals(12,attackTiles.size());
+//        List<AnimatedSprite> attackTiles = rangedAttack.getUnitAttackTiles(1, 10, 10, resource, 15, 15, 3, 1);
+//        assertNotNull(attackTiles);
+//        assertEquals(12,attackTiles.size());
 
     }
 }

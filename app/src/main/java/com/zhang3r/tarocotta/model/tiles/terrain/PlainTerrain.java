@@ -36,7 +36,7 @@ public class PlainTerrain extends BaseTerrain{
     }
 
     @Override
-    public String toString(){
+    public String getDescription(){
         return "plain: no special effects. I wonder if I can build a house here";
     }
 }

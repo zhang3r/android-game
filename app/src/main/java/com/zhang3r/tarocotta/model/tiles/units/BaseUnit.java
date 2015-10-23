@@ -19,7 +19,6 @@ import com.zhang3r.tarocotta.model.tiles.units.Interface.Move;
 import java.util.List;
 
 public abstract class BaseUnit extends Tile {
-    protected StatsFactory statsFactory = new StatsFactoryImpl();
     //unit stats
     private int unitId;
     private Stats stats;
@@ -30,7 +29,6 @@ public abstract class BaseUnit extends Tile {
     // unit attributes
     private boolean unitSelected;
     private UnitState state;
-    private AnimatedSprite sprite;
     //utility
     private Attack attackUtil;
     private Move moveUtil;
@@ -41,10 +39,10 @@ public abstract class BaseUnit extends Tile {
 
 
     public BaseUnit() {
+        super();
         unitId = (int) Math.random() * 100;
         name = "Basic Unit " + unitId;
         state = UnitState.NORMAL;
-        stats = statsFactory.createStat(UnitType.FOOT);
         attackUtil = new MeleeAttackImpl();
         moveUtil = new BasicMoveImpl();
     }
@@ -60,7 +58,7 @@ public abstract class BaseUnit extends Tile {
     public List<AnimatedSprite> getUnitAttackTiles(int xLength, int yLength,
                                                    Resources resources) {
         setUnitSelected(true);
-        return attackUtil.getUnitAttackTiles(getUnitId(), xLength, yLength, resources, getX(), getY(), stats.getMaxAttackRange(),stats.getMinAttackRange());
+        return attackUtil.getUnitAttackTiles(getUnitId(), xLength, yLength, resources, getX(), getY(), stats.getMaxAttackRange(), stats.getMinAttackRange());
 
     }
 
@@ -80,6 +78,8 @@ public abstract class BaseUnit extends Tile {
         return false;
 
     }
+
+    public abstract String getDescription();
 
 
     public int getUnitId() {
@@ -176,16 +176,6 @@ public abstract class BaseUnit extends Tile {
 
     public void setState(UnitState state) {
         this.state = state;
-    }
-
-    @Override
-    public AnimatedSprite getSprite() {
-        return sprite;
-    }
-
-    @Override
-    public void setSprite(AnimatedSprite sprite) {
-        this.sprite = sprite;
     }
 
     public Attack getAttackUtil() {

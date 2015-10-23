@@ -75,4 +75,8 @@ public class BaseTerrain extends Tile {
     }
 
 
+    @Override
+    public String getDescription() {
+        return "base terrain, provides no special abilities";
+    }
 }

@@ -31,7 +31,7 @@ public class TreeTerrain extends BaseTerrain {
         this.setY(y);
     }
     @Override
-    public String toString(){
+    public String getDescription(){
         return "forest: increase defense. cool off in the shade";
     }
 }

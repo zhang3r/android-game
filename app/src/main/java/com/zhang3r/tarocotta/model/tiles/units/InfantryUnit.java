@@ -12,7 +12,7 @@ public class InfantryUnit extends BaseUnit{
     public InfantryUnit(){
         super();
         setName("Basic Infantry Unit" + getUnitId());
-        setStats(statsFactory.createStat(IGameConstants.UnitType.FOOT));
+
         setAttackUtil(new MeleeAttackImpl());
         setUnitType(IGameConstants.UnitType.FOOT);
         setMoveUtil(new BasicMoveImpl());
@@ -30,7 +30,7 @@ public class InfantryUnit extends BaseUnit{
     }
 
     @Override
-    public String toString(){
+    public String getDescription(){
         return "Heavy Infantry are the backbone of any army.";
     }
 

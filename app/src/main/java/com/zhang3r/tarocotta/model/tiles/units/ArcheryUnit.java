@@ -14,7 +14,7 @@ public class ArcheryUnit extends BaseUnit{
         super();
         //TODO: import stats elsewhere
         setName("Basic Archery Unit" + getUnitId());
-        setStats(statsFactory.createStat(IGameConstants.UnitType.ARCHER));
+
         setUnitType(IGameConstants.UnitType.ARCHER);
         setAttackUtil(new RangedAttackImpl());
         setMoveUtil(new BasicMoveImpl());
@@ -32,7 +32,7 @@ public class ArcheryUnit extends BaseUnit{
     }
 
     @Override
-    public String toString(){
+    public String getDescription(){
         return "Archers can do damage at a distance. Legend has it: with enough archers you can blockage the Sun";
     }
 
