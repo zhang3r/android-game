@@ -42,6 +42,7 @@ import com.zhang3r.tarocotta.model.AI.ShittyAI;
 import com.zhang3r.tarocotta.model.AttackEvent;
 import com.zhang3r.tarocotta.model.army.Army;
 import com.zhang3r.tarocotta.model.maps.Map;
+import com.zhang3r.tarocotta.model.tiles.terrain.BaseTerrain;
 import com.zhang3r.tarocotta.model.tiles.terrain.PlainTerrain;
 import com.zhang3r.tarocotta.model.tiles.terrain.RockyTerrain;
 import com.zhang3r.tarocotta.model.tiles.terrain.TerrainFactory;
@@ -248,9 +249,6 @@ public class AnimationThread extends Thread {
                 Map.getMap().getGrid()[y][x] = tile;
             }
         }
-        terrainFactory.addTerrain(new PlainTerrain(resources, 0, 0));
-        terrainFactory.addTerrain(new TreeTerrain(resources, 0, 0));
-        terrainFactory.addTerrain(new RockyTerrain(resources, 0, 0));
 
 
     }
@@ -328,16 +326,11 @@ public class AnimationThread extends Thread {
     }
 
     public Bitmap combineImages(int[][] map,int spriteWidth,int spriteHeight) { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
-        Bitmap cs = null;
 
+        int width = spriteWidth*map[0].length;
+        int height = spriteHeight*map.length;
 
-
-        int width=0;
-        int height=0;
-        width = spriteWidth*map[0].length;
-        height = spriteHeight*map.length;
-
-        cs = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Bitmap cs = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
         Canvas comboImage = new Canvas(cs);
         for (int y = 0; y < Map.getMap().getGrid().length; y++) {
@@ -514,22 +507,14 @@ public class AnimationThread extends Thread {
 
     public void doScroll(MotionEvent e1, MotionEvent e2, float distanceX,
                          float distanceY) {
-        Log.d(ILogConstants.DEBUG_TAG,"View Port Left "+currViewport.left);
-        Log.d(ILogConstants.DEBUG_TAG,"View Port Right "+currViewport.right);
-        Log.d(ILogConstants.DEBUG_TAG,"View Port top "+currViewport.top);
-        Log.d(ILogConstants.DEBUG_TAG,"View Port bottom "+currViewport.bottom);
-//        Log.d(ILogConstants.DEBUG_TAG,"X "+.3*screenWidth);
-//        Log.d(ILogConstants.DEBUG_TAG,"Y "+distanceY);
-
-
-        // left bound
+              // left bound
         if (currViewport.left - distanceX > 0) {
             currViewport.left = 0;
             currViewport.right = -IAppConstants.VIEW_WIDTH;
-        } else if (currViewport.right - distanceX <= -1*mapBackground.getWidth()*mScaleFactor) {
+        } else if ((currViewport.right - distanceX)*mScaleFactor <= -1*mapBackground.getWidth()) {
 
-            currViewport.right = -1*mapBackground.getWidth()*mScaleFactor;
-            currViewport.left = currViewport.right + IAppConstants.VIEW_WIDTH;
+            currViewport.right = -1*mapBackground.getWidth();
+            currViewport.left = (currViewport.right + IAppConstants.VIEW_WIDTH)*mScaleFactor;
 
         } else {
             currViewport.right -= distanceX;
@@ -539,10 +524,10 @@ public class AnimationThread extends Thread {
         if (currViewport.top - distanceY > 0) {
             currViewport.top = 0;
             currViewport.bottom = -IAppConstants.VIEW_HEIGHT;
-        } else if (currViewport.bottom - distanceY <= -1*mapBackground.getHeight()*mScaleFactor) {
+        } else if ((currViewport.bottom - distanceY) *mScaleFactor<= -1*mapBackground.getHeight()) {
 
-            currViewport.bottom = -1*mapBackground.getHeight()*mScaleFactor;
-            currViewport.top = currViewport.bottom + IAppConstants.VIEW_HEIGHT;
+            currViewport.bottom = -1*mapBackground.getHeight();
+            currViewport.top = (currViewport.bottom + IAppConstants.VIEW_HEIGHT)*mScaleFactor;
 
         } else {
             currViewport.bottom -= distanceY;
@@ -652,7 +637,7 @@ public class AnimationThread extends Thread {
         for (BaseUnit unit : unitList) {
             if ((int) (xPos / IAppConstants.SPRITE_WIDTH) == unit.getX()
                     && (int) (yPos / IAppConstants.SPRITE_HEIGHT) == unit.getY()) {
-                Log.d(ILogConstants.DEBUG_TAG, "xpos " + xPos + " ypos " + yPos + " unit found! unit is " + unit.getName() + " at x: " + unit.getX() + " y: " + unit.getY());
+//                Log.d(ILogConstants.DEBUG_TAG, "xpos " + xPos + " ypos " + yPos + " unit found! unit is " + unit.getName() + " at x: " + unit.getX() + " y: " + unit.getY());
                 return unit;
             }
         }

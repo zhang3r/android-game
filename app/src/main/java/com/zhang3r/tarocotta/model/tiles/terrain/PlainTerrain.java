@@ -25,7 +25,7 @@ public class PlainTerrain extends BaseTerrain{
         Bitmap unitBitmap =  SpriteFactory.getInstance().getTerrain(0);
 //                BitmapFactory.decodeResource(resources,
 //                R.drawable.base_land_tile);
-//        unitBitmap = Bitmap.createScaledBitmap(unitBitmap, 100, 50, false);
+        unitBitmap = Bitmap.createScaledBitmap(unitBitmap, IAppConstants.SPRITE_WIDTH, IAppConstants.SPRITE_HEIGHT, false);
         a.Initialize( unitBitmap, IAppConstants.SPRITE_HEIGHT,
                 IAppConstants.SPRITE_WIDTH, 2, 2, true);
         a.setXPos(x * IAppConstants.SPRITE_WIDTH);
