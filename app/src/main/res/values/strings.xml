@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OneLevelGame</string>
+    <string name="app_name">The Roots of Taro</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="attack">Attack</string>
@@ -14,7 +14,7 @@
     <string name="loseTitle">You Lost!</string>
     <string name="mainMenu">Main Menu</string>
     <string name="playAgain">Play Again?</string>
-    <string name="gameTitle">Autumn Wars: Birth Of An Empire</string>
+    <string name="gameTitle">The Roots of Taro</string>
     <string name="newGame">New Game</string>
     <string name="quit">Quit</string>
     <string name="dialogIntro">The Kingdom Of Taro has been viewed as barbarians by the other kingdoms. However, his Taroness has big dreams! He dreams of an Empire. As a captain in his majesty\'s army, your task is to make his dream a reality. \n First step is to conquer the Beet Root Empire. Your task is to eliminate all enemy forces.\n Good Luck Commander</string>

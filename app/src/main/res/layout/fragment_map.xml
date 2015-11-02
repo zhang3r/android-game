@@ -7,7 +7,7 @@
     tools:context=".FullscreenActivity">
 
 
-    <com.zhang3r.onelevelgame.views.MapView
+    <com.zhang3r.tarocotta.views.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
