@@ -7,6 +7,7 @@ import com.zhang3r.tarocotta.bitmaps.AnimatedSprite;
 import com.zhang3r.tarocotta.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.tarocotta.constants.IAppConstants;
 import com.zhang3r.tarocotta.model.army.Army;
+import com.zhang3r.tarocotta.model.maps.Map;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
 import com.zhang3r.tarocotta.model.tiles.units.Interface.Move;
 
@@ -23,7 +24,13 @@ public class BasicMoveImpl implements Move {
     }
 
 
-    public List<AnimatedSprite> getMoveTiles(int mapLengthX, int mapLengthY, int x, int y, Army army, Army enemyArmy, Resources resources, int unitId, int movePoints) {
+    public List<AnimatedSprite> getMoveTiles(BaseUnit unit, Army army, Army enemyArmy, Resources resources) {
+        int movePoints = unit.getStats().getMovePoints();
+        int x = unit.getX();
+        int y = unit.getY();
+        int mapLengthY = Map.getMap().getGrid().length;
+        int mapLengthX = Map.getMap().getGrid()[0].length;
+
         List<AnimatedSprite> spriteList = new ArrayList<>();
         int lowerX = x - movePoints > 0 ? x - movePoints : 0;
         int upperX = x + movePoints > mapLengthX ? mapLengthX : x + movePoints;
@@ -97,7 +104,7 @@ public class BasicMoveImpl implements Move {
                         units.addAll(playerArmy.getUnits());
                         units.addAll(enemyArmy.getUnits());
                         for (BaseUnit unit : units) {
-                            AnimatedSprite animatedSprite = unit.getSprite();
+                            AnimatedSprite animatedSprite = unit.getAnimation();
                             if ((animatedSprite.getXPos() / IAppConstants.SPRITE_WIDTH) == xPos
                                     && (animatedSprite.getYPos() / IAppConstants.SPRITE_HEIGHT) == yPos) {
                                 return false;

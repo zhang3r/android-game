@@ -6,14 +6,15 @@ import com.zhang3r.tarocotta.model.tiles.statsFactory.StatsFactory;
 /**
  * Created by Zhang3r on 8/13/2015.
  */
-public class StatsFactoryImpl implements StatsFactory {
+public class StatsFactoryImpl{
 
-    @Override
-    public Stats createStat( IGameConstants.UnitType unitType) {
+
+    public static Stats createStat( IGameConstants.UnitType unitType) {
         Stats stat= new Stats();
         //TODO: read from file
         switch (unitType) {
             case ARCHER:
+
                 stat.setHitPoints(20);
                 stat.setMaxHP(20);
                 stat.setMinAttackRange(1);
@@ -24,6 +25,7 @@ public class StatsFactoryImpl implements StatsFactory {
 
                 break;
             case CAV:
+
                 stat.setHitPoints(25);
                 stat.setMaxHP(25);
                 stat.setMinAttackRange(0);
@@ -33,6 +35,7 @@ public class StatsFactoryImpl implements StatsFactory {
                 stat.setDefense(3);
                 break;
             case FOOT:
+
                 stat.setHitPoints(35);
                 stat.setMaxHP(35);
                 stat.setMinAttackRange(0);

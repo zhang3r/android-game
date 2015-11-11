@@ -4,6 +4,8 @@ package com.zhang3r.tarocotta.model.tiles.statsFactory.impl;
  * Created by Zhang3r on 6/12/2015.
  */
 public class Stats {
+
+
     private int hitPoints;
     private int maxHP;
     private int attack;
@@ -12,11 +14,6 @@ public class Stats {
     private int maxAttackRange;
     private int minAttackRange;
 
-
-
-    public Stats(){
-
-    }
     public int getHitPoints() {
         return hitPoints;
     }
@@ -72,9 +69,6 @@ public class Stats {
     public void setMinAttackRange(int minAttackRange) {
         this.minAttackRange = minAttackRange;
     }
-
-
-
 
 
 }

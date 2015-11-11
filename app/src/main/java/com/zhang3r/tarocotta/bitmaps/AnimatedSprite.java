@@ -70,7 +70,7 @@ public class AnimatedSprite {
 
     public void draw(Canvas canvas, float left, float top, float right,
                      float bottom) {
-        Rect dest = new Rect((int) (getXPos() + left), (int) (getYPos() + top-25),
+        Rect dest = new Rect((int) (getXPos() + left), (int) (getYPos() + top),
                 (int) (getXPos() + spriteWidth + left), (int) (getYPos()
                 + spriteHeight + top));
         if ((dest.left >= 0 - spriteWidth && dest.right >= right)
