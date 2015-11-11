@@ -675,9 +675,13 @@ public class AnimationThread extends Thread {
                     }
                 }else{
                     //if terrain
+
                     if(gameState == GameState.UNITSELECTED){
+                        //if unit needs to move
                         unitSelected.setUnitState(UnitState.ANIMATION);
                         gameState = GameState.UNITINANIMATION;
+                        //unit move
+                        //unitSelected.getMoveUtil().unitMoveUpdate();
 
                     }else{
                         //terrain info

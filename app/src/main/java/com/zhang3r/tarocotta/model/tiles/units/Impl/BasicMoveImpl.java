@@ -88,34 +88,30 @@ public class BasicMoveImpl implements Move {
         return spriteList;
     }
 
-
+    /**
+     * return true when we have reached our target
+     * @param spriteList
+     * @param playerArmy
+     * @param enemyArmy
+     * @param eventX
+     * @param eventY
+     * @return
+     */
     public boolean unitMoveUpdate(List<AnimatedSprite> spriteList, Army playerArmy, Army enemyArmy, double eventX, double eventY) {
-        int eventXPos = (int) eventX / IAppConstants.SPRITE_WIDTH;
-        int eventYPos = (int) eventY / IAppConstants.SPRITE_HEIGHT;
-        for (AnimatedSprite sprite : spriteList) {
-            int xPos = sprite.getXPos() / IAppConstants.SPRITE_WIDTH;
-            int yPos = sprite.getYPos() / IAppConstants.SPRITE_HEIGHT;
-            if (eventXPos == xPos && eventYPos == yPos) {
-               // check if x, y isn't another unit
-                synchronized (playerArmy) {
-                    synchronized (enemyArmy) {
-
-                        List<BaseUnit> units = new LinkedList<>();
-                        units.addAll(playerArmy.getUnits());
-                        units.addAll(enemyArmy.getUnits());
-                        for (BaseUnit unit : units) {
-                            AnimatedSprite animatedSprite = unit.getAnimation();
-                            if ((animatedSprite.getXPos() / IAppConstants.SPRITE_WIDTH) == xPos
-                                    && (animatedSprite.getYPos() / IAppConstants.SPRITE_HEIGHT) == yPos) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-
-                return true;
-            }
-        }
         return false;
     }
+
+    //Todo: add impassible terrain
+
+    /**
+     * finds the x and y to update for the path.
+     * @param target
+     * @param playerArmy
+     * @param enemeyArmy
+     * @return
+     */
+    public int[] findNextUpdate(MoveTarget target, Army playerArmy, Army enemeyArmy ){
+        return null;
+    }
+
 }
