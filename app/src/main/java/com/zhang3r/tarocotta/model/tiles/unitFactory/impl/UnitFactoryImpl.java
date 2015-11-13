@@ -30,15 +30,15 @@ public class UnitFactoryImpl implements UnitFactory {
 
         switch (unitType) {
             case ARCHER:
-                unit = new ArcheryUnit();
+
                 //TODO: modify Archery unit here
                 break;
             case CAV:
-                unit = new CavalryUnit();
+//                unit = new CavalryUnit();
                 //TODO: modify Cav unit here
                 break;
             case FOOT:
-                unit = new InfantryUnit();
+//                unit = new InfantryUnit();
                 //TODO: modify infantry unit here
                 break;
         }

@@ -22,7 +22,8 @@ public class FriendlyUnit implements IAllegiance {
 
     @Override
     public String getDescription() {
-        return unit.getDescription()+" This unit is loyal to your cause.";
+//
+        return "";
     }
 
     public BaseUnit getUnit() {
