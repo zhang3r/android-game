@@ -26,23 +26,7 @@ public class MapView extends SurfaceView implements SurfaceHolder.Callback,
     private GestureDetectorCompat mDetector;
     private ScaleGestureDetector mScaleGestureDetector;
 
-    // private RectF mCurrentViewport = new RectF(IAppConstants.AXIS_X_MIN,
-    // IAppConstants.AXIS_Y_MIN, IAppConstants.AXIS_X_MAX,
-    // IAppConstants.AXIS_Y_MAX);
-    // private Rect mContentRect;
-    // private OverScroller overScroller;
-    // private RectF mScrollerStartViewport;
-    //
-    // // EDGE EFFECT OBJS
-    // private EdgeEffectCompat mEdgeEffectTop;
-    // private EdgeEffectCompat mEdgeEffectBottom;
-    // private EdgeEffectCompat mEdgeEffectLeft;
-    // private EdgeEffectCompat mEdgeEffectRight;
-    //
-    // private boolean mEdgeEffectTopActive;
-    // private boolean mEdgeEffectBottomActive;
-    // private boolean mEdgeEffectLeftActive;
-    // private boolean mEdgeEffectRightActive;
+
 
     /**
      * The thread that actually draws the animation
@@ -77,7 +61,7 @@ public class MapView extends SurfaceView implements SurfaceHolder.Callback,
         screenWidth = size.x;
 
         screenHeight = size.y;
-        thread = new AnimationThread(holder, context, screenWidth,
+        this.thread = new AnimationThread(holder, context, screenWidth,
                 screenHeight, this);
 
     }
@@ -172,23 +156,7 @@ public class MapView extends SurfaceView implements SurfaceHolder.Callback,
     // ViewCompat.postInvalidateOnAnimation(this);
     //
     // }
-    //
-    // private Point computeScrollSurfaceSize() {
-    // return new Point(
-    // (int) (mContentRect.width()
-    // * (IAppConstants.AXIS_X_MAX - IAppConstants.AXIS_X_MIN) /
-    // mCurrentViewport
-    // .width()),
-    // (int) (mContentRect.height()
-    // * (IAppConstants.AXIS_Y_MAX - IAppConstants.AXIS_Y_MIN) /
-    // mCurrentViewport
-    // .height()));
-    // }
-    //
 
-    /**
-     * Obligatory method that belong to the:implements SurfaceHolder.Callback
-     */
 
     /**
      * Callback invoked when the surface dimensions change.
@@ -202,16 +170,18 @@ public class MapView extends SurfaceView implements SurfaceHolder.Callback,
      * Callback invoked when the Surface has been created and is ready to be
      * used.
      */
+
     public void surfaceCreated(SurfaceHolder holder) {
         synchronized (thread) {
-            if (!(thread.getState() == Thread.State.NEW)) {
+            if (thread.getState() != Thread.State.NEW) {
                 // When game is opened again in the Android OS
                 thread = new AnimationThread(holder, this.getContext(),
                         screenWidth, screenHeight, this);
 
             }
-            thread.setRunning(true);
+            thread.setRunning(false);
             thread.start();
+
         }
     }
 
