@@ -56,9 +56,8 @@ public class Army {
             return;
         } else {
             for (BaseUnit unit : units) {
-                if (unit.getState() ==UnitState.DEAD) {
-                    Log.d(ILogConstants.DEBUG_TAG, "removing unit " + unit.getName());
-                    unit.setState(UnitState.DEAD);
+                if (unit.getUnitState() ==UnitState.DEAD) {
+                    unit.setUnitState(UnitState.DEAD);
                     getUnits().remove(unit);
                     return;
                 }
@@ -69,10 +68,9 @@ public class Army {
     public boolean hasUnmovedUnits() {
         if (units != null) {
             for (BaseUnit unit : units) {
-                Log.d(ILogConstants.DEBUG_TAG,
-                        "Unit state is :" + unit.getState());
-                if (unit.getState() == UnitState.NORMAL
-                        || unit.getState() == UnitState.MOVED) {
+
+                if (unit.getUnitState() == UnitState.NORMAL
+                        || unit.getUnitState() == UnitState.MOVED) {
 
                     return true;
                 }
@@ -84,8 +82,8 @@ public class Army {
     public void resetUnitState() {
         if (units != null) {
             for (BaseUnit unit : units) {
-                if (unit.getState() != UnitState.DEAD) {
-                    unit.setState(UnitState.NORMAL);
+                if (unit.getUnitState() != UnitState.DEAD) {
+                    unit.setUnitState(UnitState.NORMAL);
                 }
             }
         }
@@ -94,8 +92,8 @@ public class Army {
     public void setEndTurnState() {
         if (units != null) {
             for (BaseUnit unit : units) {
-                if (unit.getState() != UnitState.DEAD) {
-                    unit.setState(UnitState.WAIT);
+                if (unit.getUnitState() != UnitState.DEAD) {
+                    unit.setUnitState(UnitState.WAIT);
                 }
             }
         }

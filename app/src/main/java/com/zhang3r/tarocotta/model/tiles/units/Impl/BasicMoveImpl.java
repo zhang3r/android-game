@@ -7,12 +7,16 @@ import com.zhang3r.tarocotta.bitmaps.AnimatedSprite;
 import com.zhang3r.tarocotta.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.tarocotta.constants.IAppConstants;
 import com.zhang3r.tarocotta.model.army.Army;
+import com.zhang3r.tarocotta.model.maps.Map;
+import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
 import com.zhang3r.tarocotta.model.tiles.units.Interface.Move;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+
 
 /**
  * Created by Zhang3r on 6/12/2015.
@@ -23,92 +27,92 @@ public class BasicMoveImpl implements Move {
     }
 
 
-    public List<AnimatedSprite> getMoveTiles(int mapLengthX, int mapLengthY, int x, int y, Army army, Army enemyArmy, Resources resources, int unitId, int movePoints) {
+    public List<AnimatedSprite> getMoveTiles(BaseUnit unit, Army army, Army enemyArmy, Resources resources) {
+        int movePoints = unit.getStats().getMovePoints();
+        int x = unit.getX();
+        int y = unit.getY();
+        int mapLengthY = Map.getMap().getGrid().length;
+        int mapLengthX = Map.getMap().getGrid()[0].length;
+
         List<AnimatedSprite> spriteList = new ArrayList<>();
-        int lowerX = x - movePoints > 0 ? x - movePoints : 0;
-        int upperX = x + movePoints > mapLengthX ? mapLengthX : x + movePoints;
-        int lowerY = y - movePoints > 0 ? y - movePoints : 0;
-        int upperY = y + movePoints > mapLengthY - 1 ? mapLengthY - 1 : y
-                + movePoints;
-        //make a grid of possible moves
 
         Bitmap moveTile = SpriteFactory.getInstance().getTiles(false);
-        // upper half
-        synchronized (army) {
-            synchronized (enemyArmy) {
-                for (int i = 0; i + y <= upperY; i++) {
-                    for (int j = movePoints - i; j >= 0; j--) {
-                        if (j + x <= upperX) {
-                            if (!army.hasUnitAtLocation(j + x, i+y) && !enemyArmy.hasUnitAtLocation(j + x, i+y)) {
-                                spriteList.add(AnimatedSprite.create(moveTile,
-                                        IAppConstants.SPRITE_HEIGHT,
-                                        IAppConstants.SPRITE_WIDTH, 1, 1, false, j + x, y + i));
+        LinkedList<Point> points = new LinkedList<>();
+        points.add(new Point(x, y));
+        HashMap<String, Integer> seen = new HashMap<>();
+        int i = 0;
 
-                            }
-                        }
-                        if (x - j >= lowerX && j > 0) {
-                            if (!army.hasUnitAtLocation(x-j, i+y) && !enemyArmy.hasUnitAtLocation(x-j, i+y)) {
-                                spriteList.add(AnimatedSprite.create(moveTile,
-                                        IAppConstants.SPRITE_HEIGHT,
-                                        IAppConstants.SPRITE_WIDTH, 1, 1, false, x - j, y + i));
+        while (!points.isEmpty() && i <= movePoints) {
+            int list_size = points.size();
+            while (list_size > 0) {
+                Point point = points.poll();
+                list_size--;
+                //check if point is enemy
+                seen.put(point.toString(), 1);
+                if (enemyArmy.hasUnitAtLocation(point.getX(), point.getY())) {
+                    continue;
+                } else {
+                    if (!army.hasUnitAtLocation(point.getX(), point.getY())) {
 
+                        //we are terrain!
+                        spriteList.add(AnimatedSprite.create(moveTile,
+                                IAppConstants.SPRITE_HEIGHT,
+                                IAppConstants.SPRITE_WIDTH, 1, 1, false, point.getX(), point.getY()));
+                    }
+                    //add generate neighbors
+                    List<Point> neighbors = new ArrayList<>();
+                    neighbors.add(new Point(point.getX() + 1, point.getY()));
+                    neighbors.add(new Point(point.getX() - 1, point.getY()));
+                    neighbors.add(new Point(point.getX(), point.getY() + 1));
+                    neighbors.add(new Point(point.getX(), point.getY() - 1));
+
+                    // dont add if we already seen the point and if its out of bounds
+                    for(Point neighbor: neighbors){
+                        if(!seen.containsKey(neighbor.toString())){
+                            if(neighbor.getX()>=0 && neighbor.getX()<=mapLengthX){
+                                if(neighbor.getY()>=0&& neighbor.getY()<=mapLengthY){
+                                    seen.put(neighbor.toString(), 1);
+                                    points.add(neighbor);
+                                }
                             }
+
                         }
                     }
-                }
-                for (int i = 1; y - i >= lowerY; i++) {
-                    for (int j = movePoints - i; j >= 0; j--) {
-                        if (j + x <= upperX) {
-                            if (!army.hasUnitAtLocation(j + x, y-i) && !enemyArmy.hasUnitAtLocation(j + x, y-i)) {
-                                spriteList.add(AnimatedSprite.create(moveTile,
-                                        IAppConstants.SPRITE_HEIGHT,
-                                        IAppConstants.SPRITE_WIDTH, 1, 1, false, j + x, y - i));
 
-                            }
-                        }
-                        if (x - j >= lowerX && j > 0) {
-                            if (!army.hasUnitAtLocation(x-j, y-i) && !enemyArmy.hasUnitAtLocation(x-j, y-i)) {
-                                spriteList.add(AnimatedSprite.create(moveTile,
-                                        IAppConstants.SPRITE_HEIGHT,
-                                        IAppConstants.SPRITE_WIDTH, 1, 1, false, x - j, y - i));
-
-                            }
-                        }
-                    }
                 }
             }
+            i++;
+
         }
         return spriteList;
     }
 
-
+    /**
+     * return true when we have reached our target
+     *
+     * @param spriteList
+     * @param playerArmy
+     * @param enemyArmy
+     * @param eventX
+     * @param eventY
+     * @return
+     */
     public boolean unitMoveUpdate(List<AnimatedSprite> spriteList, Army playerArmy, Army enemyArmy, double eventX, double eventY) {
-        int eventXPos = (int) eventX / IAppConstants.SPRITE_WIDTH;
-        int eventYPos = (int) eventY / IAppConstants.SPRITE_HEIGHT;
-        for (AnimatedSprite sprite : spriteList) {
-            int xPos = sprite.getXPos() / IAppConstants.SPRITE_WIDTH;
-            int yPos = sprite.getYPos() / IAppConstants.SPRITE_HEIGHT;
-            if (eventXPos == xPos && eventYPos == yPos) {
-               // check if x, y isn't another unit
-                synchronized (playerArmy) {
-                    synchronized (enemyArmy) {
-
-                        List<BaseUnit> units = new LinkedList<>();
-                        units.addAll(playerArmy.getUnits());
-                        units.addAll(enemyArmy.getUnits());
-                        for (BaseUnit unit : units) {
-                            AnimatedSprite animatedSprite = unit.getSprite();
-                            if ((animatedSprite.getXPos() / IAppConstants.SPRITE_WIDTH) == xPos
-                                    && (animatedSprite.getYPos() / IAppConstants.SPRITE_HEIGHT) == yPos) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-
-                return true;
-            }
-        }
         return false;
     }
+
+    //Todo: add impassible terrain
+
+    /**
+     * finds the x and y to update for the path.
+     *
+     * @param target
+     * @param playerArmy
+     * @param enemeyArmy
+     * @return
+     */
+    public int[] findNextMove(MoveTarget target, Army playerArmy, Army enemeyArmy) {
+        return null;
+    }
+
 }

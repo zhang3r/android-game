@@ -10,7 +10,7 @@ public interface IGameConstants {
     }
 
      enum UnitState {
-        NORMAL, MOVED, DEAD, WAIT, SELECTED
+        NORMAL, SELECTED,  MOVED, ATTACK,  ANIMATION, WAIT, DEAD
     }
 
 

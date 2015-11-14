@@ -226,17 +226,17 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
             description.setText("");
             image.setImageBitmap(null);
         }else {
-            attackStatText.setText("" + unit.getAttack());
-            attackRangeStatText.setText("" + unit.getMaxAttackRange());
-            defenseStatText.setText("" + unit.getDefense());
-            moveStatText.setText("" + unit.getMovePoints());
-            hpBarText.setText("" + unit.getHitPoints() + "/" + unit.getMaxHP());
-            hpBar.setProgress((unit.getHitPoints() * 100) / unit.getMaxHP());
-            unitName.setText(unit.getName());
-            image.setImageBitmap(unit.getSprite().getAnimation());
-            unitType.setText(unit.getUnitType().toString().toLowerCase());
-            unitStatus.setText(unit.getState().toString().toLowerCase());
-            description.setText(unit.toString());
+//            attackStatText.setText("" + unit.getStats().getAttack());
+//            attackRangeStatText.setText("" + unit.getMaxAttackRange());
+//            defenseStatText.setText("" + unit.getDefense());
+//            moveStatText.setText("" + unit.getMovePoints());
+//            hpBarText.setText("" + unit.getHitPoints() + "/" + unit.getMaxHP());
+//            hpBar.setProgress((unit.getHitPoints() * 100) / unit.getMaxHP());
+//            unitName.setText(unit.getName());
+//            image.setImageBitmap(unit.getSprite().getAnimation());
+//            unitType.setText(unit.getUnitType().toString().toLowerCase());
+//            unitStatus.setText(unit.getState().toString().toLowerCase());
+//            description.setText(unit.toString());
         }
 
     }

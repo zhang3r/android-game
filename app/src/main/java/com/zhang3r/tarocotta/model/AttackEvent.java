@@ -34,44 +34,45 @@ public class AttackEvent {
     }
 
     public static AttackEvent attack(BaseUnit attacker, BaseUnit defender, Army army, Army enemyUnits) {
-        int damage =attacker.getAttack()-defender.getDefense();
-        int recoil =damage/5;
-        boolean isRanged = attacker.getAttackUtil().getClass().isInstance(RangedAttackImpl.class);
-        if(isRanged){
-            recoil=0;
-        }
-        defender.setHitPoints(defender.getHitPoints() - damage);
-        attacker.setHitPoints(attacker.getHitPoints() - recoil);
-
-        AttackEvent ae = new AttackEvent();
-        ae.setDamageDelt(damage);
-        ae.setRecoil(recoil);
-        Log.d(ILogConstants.DEBUG_TAG, attacker.getName() + " attacked " + defender.getName());
-        ae.details.append(attacker.getName()+" dealt "+damage+ " damage to "+defender.getName()+" and took "+recoil+"damage in recoil");
-        if (defender.getHitPoints() <= 0
-                || attacker.getHitPoints() <= 0) {
-            synchronized (army) {
-                synchronized (enemyUnits) {
-                    if (defender.getHitPoints() <= 0) {
-                        defender.setState(IGameConstants.UnitState.DEAD);
-                        Log.d(ILogConstants.DEBUG_TAG, defender.getName() + " died in battle");
-                        ae.details.append("\n");
-                        ae.details.append( defender.getName() + " died in battle");
-                        enemyUnits.remove(defender);
-                    }
-                    if (attacker.getHitPoints() <= 0) {
-                        //army.remove(this);
-                        Log.d(ILogConstants.DEBUG_TAG,  attacker.getName()+" died in battle");
-                        ae.details.append("\n");
-                        ae.details.append( defender.getName() + " died in battle");
-                        attacker.setState(IGameConstants.UnitState.DEAD);
-                    }
-                }
-            }
-
-
-        }
-        return ae;
+//        int damage =attacker.getAttack()-defender.getDefense();
+//        int recoil =damage/5;
+//        boolean isRanged = attacker.getAttackUtil().getClass().isInstance(RangedAttackImpl.class);
+//        if(isRanged){
+//            recoil=0;
+//        }
+//        defender.setHitPoints(defender.getHitPoints() - damage);
+//        attacker.setHitPoints(attacker.getHitPoints() - recoil);
+//
+//        AttackEvent ae = new AttackEvent();
+//        ae.setDamageDelt(damage);
+//        ae.setRecoil(recoil);
+//        Log.d(ILogConstants.DEBUG_TAG, attacker.getName() + " attacked " + defender.getName());
+//        ae.details.append(attacker.getName()+" dealt "+damage+ " damage to "+defender.getName()+" and took "+recoil+"damage in recoil");
+//        if (defender.getHitPoints() <= 0
+//                || attacker.getHitPoints() <= 0) {
+//            synchronized (army) {
+//                synchronized (enemyUnits) {
+//                    if (defender.getHitPoints() <= 0) {
+//                        defender.setState(IGameConstants.UnitState.DEAD);
+//                        Log.d(ILogConstants.DEBUG_TAG, defender.getName() + " died in battle");
+//                        ae.details.append("\n");
+//                        ae.details.append( defender.getName() + " died in battle");
+//                        enemyUnits.remove(defender);
+//                    }
+//                    if (attacker.getHitPoints() <= 0) {
+//                        //army.remove(this);
+//                        Log.d(ILogConstants.DEBUG_TAG,  attacker.getName()+" died in battle");
+//                        ae.details.append("\n");
+//                        ae.details.append( defender.getName() + " died in battle");
+//                        attacker.setState(IGameConstants.UnitState.DEAD);
+//                    }
+//                }
+//            }
+//
+//
+//        }
+//        return ae;
+        return null;
     }
     @Override
     public String toString(){

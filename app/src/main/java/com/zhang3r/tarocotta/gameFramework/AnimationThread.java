@@ -1,11 +1,7 @@
 package com.zhang3r.tarocotta.gameFramework;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,14 +9,12 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.MediaPlayer;
-import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zhang3r.tarocotta.R;
@@ -47,16 +41,19 @@ import com.zhang3r.tarocotta.model.tiles.terrain.PlainTerrain;
 import com.zhang3r.tarocotta.model.tiles.terrain.RockyTerrain;
 import com.zhang3r.tarocotta.model.tiles.terrain.TerrainFactory;
 import com.zhang3r.tarocotta.model.tiles.terrain.TreeTerrain;
-import com.zhang3r.tarocotta.model.tiles.units.ArcheryUnit;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
+<<<<<<< HEAD
+=======
 import com.zhang3r.tarocotta.model.tiles.units.CavalryUnit;
 import com.zhang3r.tarocotta.model.tiles.units.InfantryUnit;
 import com.zhang3r.tarocotta.model.tiles.units.decorator.EnemyUnit;
 import com.zhang3r.tarocotta.model.tiles.units.decorator.FriendlyUnit;
 import com.zhang3r.tarocotta.model.tiles.units.decorator.IAllegiance;
+>>>>>>> master
 import com.zhang3r.tarocotta.terminate.AllUnitsDestroyed;
 import com.zhang3r.tarocotta.terminate.TerminateCondition;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -86,7 +83,7 @@ public class AnimationThread extends Thread {
     private boolean isAttack;
     private Army enemyArmy;
     private Army playerArmy;
-    private BaseUnit unitToMove;
+    private BaseUnit unitSelected;
     private int tileSelected;
     private AI shittyAi;
     private TerrainFactory terrainFactory;
@@ -121,7 +118,7 @@ public class AnimationThread extends Thread {
 
         this.view = view;
         this.context = context;
-        this.unitToMove = null;
+        this.unitSelected = null;
 
         this.tileSelected = 0;
         this.shittyAi = new ShittyAI();
@@ -358,6 +355,32 @@ public class AnimationThread extends Thread {
             }
         }
         // animations!!!
+<<<<<<< HEAD
+//        if (gameState == GameState.UNITINANIMATION) {
+//
+//            if (unitToMove.getX() * IAppConstants.SPRITE_WIDTH != unitToMove.getSprite().getXPos() || unitToMove.getY() * IAppConstants.SPRITE_WIDTH != unitToMove.getSprite().getYPos()) {
+//                //move
+//                if (unitToMove.getX() * IAppConstants.SPRITE_WIDTH != unitToMove.getSprite().getXPos()) {
+//                    unitToMove.getSprite().setXPos(unitToMove.getSprite().getXPos() + (dx >> 31 | 1) * IAppConstants.SPRITE_WIDTH / 4);
+//                } else if (unitToMove.getY() * IAppConstants.SPRITE_WIDTH != unitToMove.getSprite().getYPos()) {
+//                    unitToMove.getSprite().setYPos(unitToMove.getSprite().getYPos() + (dy >> 31 | 1) * IAppConstants.SPRITE_WIDTH / 4);
+//                }
+//
+//
+//            } else if (ae != null && unitToMove.getSprite().getCurrentFrame() == 1) {
+//                //animation is still going on do nothing :)
+//
+//
+//            } else {
+//                //animations ended :(
+//                if (battleAnimation.isShowing()) {
+//                    battleAnimation.dismiss();
+//                }
+//                gameState = GameState.UNITSELECTED;
+//
+//            }
+
+=======
         if (gameState == GameState.UNITINANIMATION) {
 
             if (unitToMove.getX() * IAppConstants.SPRITE_WIDTH != unitToMove.getSprite().getXPos() || unitToMove.getY() * IAppConstants.SPRITE_WIDTH != unitToMove.getSprite().getYPos()) {
@@ -484,7 +507,110 @@ public class AnimationThread extends Thread {
 //        }
 //
 //        lastTime = now;
+>>>>>>> master
     }
+
+//        synchronized (playerArmy) {
+//            synchronized (enemyArmy) {
+//                /************************************************* AI HOOK UP *******************************************/
+//                if (state == TurnState.ENEMY) {
+//                    shittyAi.AiMove(enemyArmy, playerArmy);
+//                    state = TurnState.PLAYER;
+//                    enemyArmy.setEndTurnState();
+//                    // reset unit state
+//                    playerArmy.resetUnitState();
+//                }
+//                /************************************************* END OF AI ********************************************/
+//                List<BaseUnit> units = new LinkedList<>();
+//                units.addAll(playerArmy.getUnits());
+//                units.addAll(enemyArmy.getUnits());
+//                for (BaseUnit unit : units) {
+//                    AnimatedSprite animatedSprite = unit.getSprite();
+//                    animatedSprite.Update(now);
+//                }
+//
+//
+//            }
+//        }
+//        /*******************************************  END LEVEL CONDITION **************************************/
+//        synchronized (enemyArmy) {
+//
+//            if (terminateCondition.isWin(enemyArmy)) {
+//                Looper.myLooper().prepare();
+//                new AlertDialog.Builder(context)
+//                        .setTitle(context.getString(R.string.winTitle))
+//                        .setMessage(terminateCondition.getTerminateString())
+//                        .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // main menu
+//                                dialog.dismiss();
+//                                run = false;
+//
+//                                ((Activity) context).finish();
+//                                Looper.myLooper().quitSafely();
+//
+//                            }
+//                        })
+//                        .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // play again
+//                                dialog.dismiss();
+//                                run = false;
+//                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
+//                                context.startActivity(i);
+//                                ((Activity) context).finish();
+//                                Looper.myLooper().quit();
+//
+//
+//                            }
+//                        })
+//
+//                        .show();
+//                Looper.myLooper().loop();
+//            }
+//        }
+//        synchronized (playerArmy) {
+//
+//            if (terminateCondition.isLose(playerArmy)) {
+//                Looper.myLooper().prepare();
+//                new AlertDialog.Builder(context)
+//                        .setTitle(context.getString(R.string.loseTitle))
+//                        .setMessage(terminateCondition.getTerminateString())
+//                        .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                run = false;
+//                                dialog.dismiss();
+//                                Looper.myLooper().quitSafely();
+//                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINMENU");
+//                                context.startActivity(i);
+//                                ((Activity) context).finish();
+//
+//
+//                            }
+//                        })
+//                        .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // play again
+//                                run = false;
+//                                dialog.dismiss();
+//
+//                                Looper.myLooper().quitSafely();
+//                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
+//
+//                                context.startActivity(i);
+//                                ((Activity) context).finish();
+//
+//
+//                            }
+//                        })
+//
+//                        .show();
+//                Looper.myLooper().loop();
+//            }
+//        }
+//
+//        lastTime = now;
+//    }
 
     /**
      * *******************************************************************
@@ -492,12 +618,13 @@ public class AnimationThread extends Thread {
      * ********************************************************************
      */
     public void doUp(MotionEvent e) {
+        if(gameState == GameState.UNITINANIMATION){
+            return;
+        }
         double x = e.getX() / mScaleFactor;
         double y = e.getY() / mScaleFactor;
         Army army = getArmy(false);
         if (army != null) {
-
-            // Log.d(ILogConstants.DEBUG_TAG, "clicked on unit");
             unitOnTouch(army, x - currViewport.left, y - currViewport.top);
         } else {
             throw new RuntimeException("invaid turn state");
@@ -507,14 +634,23 @@ public class AnimationThread extends Thread {
 
     public void doScroll(MotionEvent e1, MotionEvent e2, float distanceX,
                          float distanceY) {
+<<<<<<< HEAD
+        // left bound
+=======
               // left bound
+>>>>>>> master
         if (currViewport.left - distanceX > 0) {
             currViewport.left = 0;
             currViewport.right = -IAppConstants.VIEW_WIDTH;
         } else if ((currViewport.right - distanceX)*mScaleFactor <= -1*mapBackground.getWidth()) {
 
+<<<<<<< HEAD
+            currViewport.right = (int) (-1 * ((Map.getMap().getGrid()[0].length - 1) * IAppConstants.SPRITE_WIDTH) * mScaleFactor - .3 * screenWidth);
+            currViewport.left = currViewport.right + screenWidth;
+=======
             currViewport.right = -1*mapBackground.getWidth();
             currViewport.left = (currViewport.right + IAppConstants.VIEW_WIDTH)*mScaleFactor;
+>>>>>>> master
 
         } else {
             currViewport.right -= distanceX;
@@ -526,8 +662,13 @@ public class AnimationThread extends Thread {
             currViewport.bottom = -IAppConstants.VIEW_HEIGHT;
         } else if ((currViewport.bottom - distanceY) *mScaleFactor<= -1*mapBackground.getHeight()) {
 
+<<<<<<< HEAD
+            currViewport.bottom = (-1 * (Map.getMap().getGrid().length * IAppConstants.SPRITE_HEIGHT) * mScaleFactor + 50);
+            currViewport.top = currViewport.bottom + screenHeight;
+=======
             currViewport.bottom = -1*mapBackground.getHeight();
             currViewport.top = (currViewport.bottom + IAppConstants.VIEW_HEIGHT)*mScaleFactor;
+>>>>>>> master
 
         } else {
             currViewport.bottom -= distanceY;
@@ -604,7 +745,7 @@ public class AnimationThread extends Thread {
 //        }
 
         // sending Unit to ui panel
-        MapFragment.getUnitSelected(unitToMove);
+        MapFragment.getUnitSelected(unitSelected);
 
         // sending message to ui panel
         if (message != null) {
@@ -637,7 +778,10 @@ public class AnimationThread extends Thread {
         for (BaseUnit unit : unitList) {
             if ((int) (xPos / IAppConstants.SPRITE_WIDTH) == unit.getX()
                     && (int) (yPos / IAppConstants.SPRITE_HEIGHT) == unit.getY()) {
+<<<<<<< HEAD
+=======
 //                Log.d(ILogConstants.DEBUG_TAG, "xpos " + xPos + " ypos " + yPos + " unit found! unit is " + unit.getName() + " at x: " + unit.getX() + " y: " + unit.getY());
+>>>>>>> master
                 return unit;
             }
         }
@@ -667,219 +811,193 @@ public class AnimationThread extends Thread {
 
     private boolean unitOnTouch(Army army, double x, double y) {
         BaseUnit unit = unitDetection(army.getUnits(), x, y);
-        if (unit != null) {
-            if (gameState == GameState.NORMAL && unit != unitToMove) {
-                //get friendly unit
-                if (unit.getState() == UnitState.NORMAL) {
-                    // synchronized (unitToMove) {
-                    unitToMove = unit;
-                    // }
-                    synchronized (moveSprites) {
-                        moveSprites.clear();
-                        moveSprites.addAll(unitToMove.getUnitMoveTiles(
-                                Map.getMap().getGrid().length, Map.getMap().getGrid()[0].length, playerArmy, enemyArmy, resources));
-                    }
-                    gameState = GameState.UNITSELECTED;
-                }
-            }
+        // if unit was clicked on
+        if (gameState != GameState.UNITINANIMATION) {
+            if (unit != null) {
+                if (unit.getUnitState() == UnitState.NORMAL) {
+                    //no unit was selected
+                    if (gameState == GameState.NORMAL) {
+                        gameState = GameState.UNITSELECTED;
+                        unit.setUnitState(UnitState.SELECTED);
+                        moveSprites = unit.getMoveUtil().getMoveTiles(unit, army, enemyArmy, resources);
 
-        } else if (gameState == GameState.UNITATTACKSELECT) {
-            Army enemyUnits = getArmy(true);
-            BaseUnit defender = unitDetection(enemyUnits.getUnits(), x, y);
-            if (defender != null) {
-                isAttack = false;
-                synchronized (attackSprites) {
-                    attackSprites.clear();
-                }
-                if (unitToMove != null) {
-                    synchronized (unitToMove) {
-                        unitToMove.setState(UnitState.WAIT);
+                    } else if (gameState == GameState.UNITSELECTED) {
+                        //if another unit was selected
+                        //reset original unit
+                        unitSelected.setUnitState(UnitState.NORMAL);
+                        unit.setUnitState(UnitState.SELECTED);
+                        moveSprites = unit.getMoveUtil().getMoveTiles(unit, army, enemyArmy, resources);
+                        unitSelected = unit;
                     }
+
                 }
-                //TODO animation hook in
-                ae = AttackEvent.attack(unitToMove, defender, army, enemyUnits);
-                message = ae.toString();
 
-                // get tile
-                tileSelected = getTile(x, y);
-                ImageView defenderSprite = (ImageView) battleAnimation.findViewById(R.id.defender);
-                ImageView attackerSprite = (ImageView) battleAnimation.findViewById(R.id.attacker);
-                //kick off animations
-                //change height
-                defenderSprite.setImageBitmap(defender.getSprite().getAnimation());
-                attackerSprite.setImageBitmap(unitToMove.getSprite().getAnimation());
-                battleAnimation.show();
-                gameState = GameState.UNITINANIMATION;
-            }
-        } else if (gameState == GameState.UNITSELECTED) {
-            if (unitToMove != null && unitToMove.getState() == UnitState.NORMAL) {
-                boolean unitMoved = false;
-                unitOrigPosX = unitToMove.getX();
-                unitOrigPosY = unitToMove.getY();
-                synchronized (moveSprites) {
-                    //Call animation
-                    //Movement updated for unit but not for sprite
-                    //sprite update in animation
-                    unitMoved = unitToMove.unitMoveUpdate(moveSprites,
-                            playerArmy, enemyArmy, x, y);
+            } else {
 
-                    synchronized (unitToMove) {
-                        unitToMove.setState(UnitState.MOVED);
-                    }
-                    moveSprites.clear();
-                    if (unitMoved) {
-                        dx = (unitToMove.getX() - unitToMove.getSprite().getXPos() / IAppConstants.SPRITE_WIDTH);
-                        dy = (unitToMove.getY() - unitToMove.getSprite().getYPos() / IAppConstants.SPRITE_WIDTH);
-                        Log.d(ILogConstants.DEBUG_TAG, "dx " + (dx >> 31 | 1) + " dy " + (dy >> 31 | 1));
-                        gameState = GameState.UNITINANIMATION;
-                    } else {
+                unit = unitDetection(getArmy(true).getUnits(), x, y);
+                //not a friendly unit
+                if(unit!=null){
+                    if(gameState!=GameState.UNITATTACKSELECT) {
+                        unitSelected.setUnitState(UnitState.NORMAL);
+                        moveSprites = new ArrayList<>();
                         gameState = GameState.NORMAL;
+                        unitSelected = unit;
+                    }else if(gameState == GameState.UNITATTACKSELECT){
+                        //attack select unit
+                    }
+                }else{
+                    //if terrain
+
+                    if(gameState == GameState.UNITSELECTED){
+                        //if unit needs to move
+                        unitSelected.setUnitState(UnitState.ANIMATION);
+                        gameState = GameState.UNITINANIMATION;
+                        //unit move
+                        //unitSelected.getMoveUtil().unitMoveUpdate();
+
+                    }else{
+                        //terrain info
+
                     }
                 }
             }
         }
+
+
         return true;
-    }
-
-    public BaseUnit getUnitToMove() {
-        return unitToMove;
-    }
-
-    public void setUnitToMove(BaseUnit unitToMove) {
-        this.unitToMove = unitToMove;
     }
 
     public void buttonEventHandler(String s) {
 
         if (s.equals(IButtonConstants.attack)) {
-            if (gameState != GameState.UNITINANIMATION) {
-                if (unitToMove != null && gameState == GameState.UNITSELECTED) {
-
-                    // 1. display unit attack range;
-                    isAttack = true;
-                    synchronized (attackSprites) {
-                        attackSprites.clear();
-                        attackSprites.addAll(unitToMove.getUnitAttackTiles(
-                                Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, resources));
-                    }
-                    gameState = GameState.UNITATTACKSELECT;
-
-                }
-            }
+//            if (gameState != GameState.UNITINANIMATION) {
+//                if (unitToMove != null && gameState == GameState.UNITSELECTED) {
+//
+//                    // 1. display unit attack range;
+//                    isAttack = true;
+//                    synchronized (attackSprites) {
+//                        attackSprites.clear();
+//                        attackSprites.addAll(unitToMove.getUnitAttackTiles(
+//                                Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, resources));
+//                    }
+//                    gameState = GameState.UNITATTACKSELECT;
+//
+//                }
+//            }
         } else if (s.equals(IButtonConstants.item)) {
             // TODO: item logic
-            if (unitToMove != null) {
-                synchronized (unitToMove) {
-                    unitToMove.setState(UnitState.WAIT);
-                }
-            }
+//            if (unitToMove != null) {
+//                synchronized (unitToMove) {
+//                    unitToMove.setState(UnitState.WAIT);
+//                }
+//            }
         } else if (s.equals(IButtonConstants.special)) {
             // TODO: specials logic
-            if (unitToMove != null) {
-                synchronized (unitToMove) {
-                    unitToMove.setState(UnitState.WAIT);
-                }
-            }
+//            if (unitToMove != null) {
+//                synchronized (unitToMove) {
+//                    unitToMove.setState(UnitState.WAIT);
+//                }
+//            }
         } else if (s.equals(IButtonConstants.wait)) {
             // wait logic
-            if (gameState != GameState.UNITINANIMATION) {
-                if (unitToMove != null && unitToMove.getState() == UnitState.MOVED) {
-                    synchronized (unitToMove) {
-
-                        unitToMove.setState(UnitState.WAIT);
-                        if (attackSprites.size() != 0) {
-                            synchronized (attackSprites) {
-                                attackSprites.clear();
-                            }
-                        }
-
-                        unitToMove = null;
-                        Log.d(ILogConstants.DEBUG_TAG, "enemy state is: "
-                                + enemyArmy.getUnits().size()
-                                + " player state is :"
-                                + playerArmy.getUnits().size());
-
-                        if (state == TurnState.PLAYER
-                                && !playerArmy.hasUnmovedUnits()) {
-                            state = TurnState.ENEMY;
-                            // set unit moved state
-                            playerArmy.setEndTurnState();
-                            // reset unit state
-                            enemyArmy.resetUnitState();
-                        } else if (state == TurnState.ENEMY
-                                && !enemyArmy.hasUnmovedUnits()) {
-                            state = TurnState.PLAYER;
-                            enemyArmy.setEndTurnState();
-                            // reset unit state
-                            playerArmy.resetUnitState();
-                        } else {
-                            Log.d(ILogConstants.SYSTEM_ERROR_TAG,
-                                    "there are still units unmoved nothing to do");
-                        }
-
-                    }
-                    gameState = GameState.NORMAL;
-                }
-            }
+//            if (gameState != GameState.UNITINANIMATION) {
+//                if (unitToMove != null && unitToMove.getState() == UnitState.MOVED) {
+//                    synchronized (unitToMove) {
+//
+//                        unitToMove.setState(UnitState.WAIT);
+//                        if (attackSprites.size() != 0) {
+//                            synchronized (attackSprites) {
+//                                attackSprites.clear();
+//                            }
+//                        }
+//
+//                        unitToMove = null;
+//                        Log.d(ILogConstants.DEBUG_TAG, "enemy state is: "
+//                                + enemyArmy.getUnits().size()
+//                                + " player state is :"
+//                                + playerArmy.getUnits().size());
+//
+//                        if (state == TurnState.PLAYER
+//                                && !playerArmy.hasUnmovedUnits()) {
+//                            state = TurnState.ENEMY;
+//                            // set unit moved state
+//                            playerArmy.setEndTurnState();
+//                            // reset unit state
+//                            enemyArmy.resetUnitState();
+//                        } else if (state == TurnState.ENEMY
+//                                && !enemyArmy.hasUnmovedUnits()) {
+//                            state = TurnState.PLAYER;
+//                            enemyArmy.setEndTurnState();
+//                            // reset unit state
+//                            playerArmy.resetUnitState();
+//                        } else {
+//                            Log.d(ILogConstants.SYSTEM_ERROR_TAG,
+//                                    "there are still units unmoved nothing to do");
+//                        }
+//
+//                    }
+//                    gameState = GameState.NORMAL;
+//                }
+//            }
         } else if (s.equals(IButtonConstants.cancel)) {
-            if (unitToMove != null) {
-                if (unitToMove.getState() == UnitState.MOVED) {
-                    synchronized (unitToMove) {
-                        if (unitOrigPosX != -1 && unitOrigPosY != -1) {
-                            unitToMove.setX(unitOrigPosX);
-                            unitToMove.setY(unitOrigPosY);
-                            unitToMove.getSprite().setXPos(
-                                    unitOrigPosX * IAppConstants.SPRITE_WIDTH);
-                            unitToMove.getSprite().setYPos(
-                                    unitOrigPosY * IAppConstants.SPRITE_HEIGHT);
-
-                            unitToMove.setState(UnitState.NORMAL);
-                        }
-                    }
-                }
-                synchronized (attackSprites) {
-                    attackSprites.clear();
-                }
-                gameState = GameState.NORMAL;
-            }
+//            if (unitToMove != null) {
+//                if (unitToMove.getState() == UnitState.MOVED) {
+//                    synchronized (unitToMove) {
+//                        if (unitOrigPosX != -1 && unitOrigPosY != -1) {
+//                            unitToMove.setX(unitOrigPosX);
+//                            unitToMove.setY(unitOrigPosY);
+//                            unitToMove.getSprite().setXPos(
+//                                    unitOrigPosX * IAppConstants.SPRITE_WIDTH);
+//                            unitToMove.getSprite().setYPos(
+//                                    unitOrigPosY * IAppConstants.SPRITE_HEIGHT);
+//
+//                            unitToMove.setState(UnitState.NORMAL);
+//                        }
+//                    }
+//                }
+//                synchronized (attackSprites) {
+//                    attackSprites.clear();
+//                }
+//                gameState = GameState.NORMAL;
+//            }
             // 2. return tile to previous position
         } else if (s.equals(IButtonConstants.endTurn)) {
-            if (gameState != GameState.UNITINANIMATION) {
-                if (attackSprites.size() != 0) {
-                    synchronized (attackSprites) {
-                        attackSprites.clear();
-                    }
-                }
-                if (moveSprites.size() != 0) {
-                    synchronized (moveSprites) {
-                        moveSprites.clear();
-                    }
-                }
-                if (unitToMove != null) {
-                    synchronized (unitToMove) {
-                        unitToMove = null;
-                    }
-                }
-
-                // if player has unit in move state they will be waited
-                if (state == TurnState.PLAYER) {
-
-                    state = TurnState.ENEMY;
-                    playerArmy.setEndTurnState();
-                    enemyArmy.resetUnitState();
-                    // reset unit state
-                } else if (state == TurnState.ENEMY) {
-                    state = TurnState.PLAYER;
-                    enemyArmy.setEndTurnState();
-                    // reset unit state
-                    playerArmy.resetUnitState();
-                } else {
-                    Log.d(ILogConstants.SYSTEM_ERROR_TAG,
-                            "things has gone awry please check state and army");
-                }
-                gameState = GameState.NORMAL;
-            }
-
+//            if (gameState != GameState.UNITINANIMATION) {
+//                if (attackSprites.size() != 0) {
+//                    synchronized (attackSprites) {
+//                        attackSprites.clear();
+//                    }
+//                }
+//                if (moveSprites.size() != 0) {
+//                    synchronized (moveSprites) {
+//                        moveSprites.clear();
+//                    }
+//                }
+//                if (unitToMove != null) {
+//                    synchronized (unitToMove) {
+//                        unitToMove = null;
+//                    }
+//                }
+//
+//                // if player has unit in move state they will be waited
+//                if (state == TurnState.PLAYER) {
+//
+//                    state = TurnState.ENEMY;
+//                    playerArmy.setEndTurnState();
+//                    enemyArmy.resetUnitState();
+//                    // reset unit state
+//                } else if (state == TurnState.ENEMY) {
+//                    state = TurnState.PLAYER;
+//                    enemyArmy.setEndTurnState();
+//                    // reset unit state
+//                    playerArmy.resetUnitState();
+//                } else {
+//                    Log.d(ILogConstants.SYSTEM_ERROR_TAG,
+//                            "things has gone awry please check state and army");
+//                }
+//                gameState = GameState.NORMAL;
+//            }
+//
         }
 
     }

@@ -224,7 +224,8 @@ public class MapView extends SurfaceView implements SurfaceHolder.Callback,
     }
 
     public BaseUnit getUnitedSelected() {
-        BaseUnit unit = thread.getUnitToMove();
-        return unit;
+//        BaseUnit unit = thread.getUnitToMove();
+//        return unit;
+        return null;
     }
 }

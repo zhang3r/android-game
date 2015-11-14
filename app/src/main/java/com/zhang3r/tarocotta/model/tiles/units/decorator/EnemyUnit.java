@@ -22,7 +22,8 @@ public class EnemyUnit implements IAllegiance {
 
     @Override
     public String getDescription() {
-        return unit.getDescription()+" This unit will attack you on sight.";
+//        return unit.getDescription()+" This unit will attack you on sight.";
+        return "";
     }
 
     public BaseUnit getUnit() {
