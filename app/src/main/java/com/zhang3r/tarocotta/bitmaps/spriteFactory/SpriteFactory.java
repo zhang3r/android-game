@@ -67,9 +67,10 @@ public class SpriteFactory {
         Bitmap pic= BitmapFactory
                 .decodeResource(ResourceConstant.resources, path);
         //TODO change
+        if(pic!=null) {
+            pic = Bitmap.createScaledBitmap(pic, frame * IAppConstants.SPRITE_WIDTH, IAppConstants.BITMAP_HEIGHT, false);
 
-        pic = Bitmap.createScaledBitmap(pic,frame* IAppConstants.SPRITE_WIDTH, IAppConstants.BITMAP_HEIGHT, false);
-        
+        }
         return pic;
     }
 

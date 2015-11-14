@@ -71,6 +71,7 @@ public class BasicMoveImpl implements Move {
                         if(!seen.containsKey(neighbor.toString())){
                             if(neighbor.getX()>=0 && neighbor.getX()<=mapLengthX){
                                 if(neighbor.getY()>=0&& neighbor.getY()<=mapLengthY){
+                                    seen.put(neighbor.toString(), 1);
                                     points.add(neighbor);
                                 }
                             }
