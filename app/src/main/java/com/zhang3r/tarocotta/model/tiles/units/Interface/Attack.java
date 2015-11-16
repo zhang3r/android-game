@@ -3,6 +3,7 @@ package com.zhang3r.tarocotta.model.tiles.units.Interface;
 import android.content.res.Resources;
 
 import com.zhang3r.tarocotta.bitmaps.AnimatedSprite;
+import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public interface Attack {
 
-    List<AnimatedSprite> getUnitAttackTiles(int unitId,int xLength, int yLength,
-                                            Resources resources, int x, int y, int maxAttackRange, int minAttackRange);
+    List<AnimatedSprite> getUnitAttackTiles(BaseUnit unit, int xLength, int yLength,
+                                            Resources resources);
 
 }
