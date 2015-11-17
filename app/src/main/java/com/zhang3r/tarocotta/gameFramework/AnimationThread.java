@@ -659,9 +659,10 @@ public class AnimationThread extends Thread {
     }
 
     private boolean unitOnTouch(Army army, double x, double y) {
-        BaseUnit unit = unitDetection(army.getUnits(), x, y);
+
         // if unit was clicked on
-        if (gameState != GameState.UNITINANIMATION) {
+        if (gameState != GameState.UNITINANIMATION&& gameState != GameState.UNITATTACKSELECT) {
+            BaseUnit unit = unitDetection(army.getUnits(), x, y);
             if (unit != null) {
                 if (unit.getUnitState() == UnitState.NORMAL) {
                     //no unit was selected
@@ -709,6 +710,13 @@ public class AnimationThread extends Thread {
 
                     }
                 }
+            }
+        }else if(gameState == GameState.UNITATTACKSELECT){
+            BaseUnit enemyUnit = unitDetection(getArmy(true).getUnits(), x, y);
+            if (enemyUnit != null) {
+                //enemy unit found
+                //fire off Attack Event
+                
             }
         }
 
