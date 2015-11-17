@@ -661,7 +661,7 @@ public class AnimationThread extends Thread {
     private boolean unitOnTouch(Army army, double x, double y) {
 
         // if unit was clicked on
-        if (gameState != GameState.UNITINANIMATION&& gameState != GameState.UNITATTACKSELECT) {
+        if (gameState != GameState.UNITINANIMATION && gameState != GameState.UNITATTACKSELECT) {
             BaseUnit unit = unitDetection(army.getUnits(), x, y);
             if (unit != null) {
                 if (unit.getUnitState() == UnitState.NORMAL) {
@@ -711,12 +711,12 @@ public class AnimationThread extends Thread {
                     }
                 }
             }
-        }else if(gameState == GameState.UNITATTACKSELECT){
+        } else if (gameState == GameState.UNITATTACKSELECT) {
             BaseUnit enemyUnit = unitDetection(getArmy(true).getUnits(), x, y);
             if (enemyUnit != null) {
                 //enemy unit found
                 //fire off Attack Event
-                
+
             }
         }
 
@@ -727,12 +727,12 @@ public class AnimationThread extends Thread {
     public void buttonEventHandler(String s) {
 
         if (s.equals(IButtonConstants.attack)) {
-            if (gameState != GameState.UNITINANIMATION&&unitSelected!=null) {
+            if (gameState != GameState.UNITINANIMATION && unitSelected != null) {
                 isAttack = true;
                 synchronized (attackSprites) {
                     attackSprites.clear();
-                    attackSprites.addAll(unitSelected.getAttackUtil().getUnitAttackTiles( unitSelected,
-                            Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, resources));
+                    attackSprites.addAll(unitSelected.getAttackUtil().getUnitAttackTiles(unitSelected, getArmy(false), getArmy(true),
+                            resources));
                 }
                 gameState = GameState.UNITATTACKSELECT;
 
@@ -816,7 +816,7 @@ public class AnimationThread extends Thread {
 //            }
             // 2. return tile to previous position
         } else if (s.equals(IButtonConstants.endTurn)) {
-            if(gameState != GameState.UNITINANIMATION){
+            if (gameState != GameState.UNITINANIMATION) {
                 //clear stuff
                 turns++;
                 //display turn modal

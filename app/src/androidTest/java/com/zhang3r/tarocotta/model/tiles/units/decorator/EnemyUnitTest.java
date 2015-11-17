@@ -10,17 +10,9 @@ import junit.framework.TestCase;
 public class EnemyUnitTest extends TestCase {
     BaseUnit unit;
     public void setUp(){
-        unit = new BaseUnit() {
-            @Override
-            public String getDescription() {
-                return "";
-            }
-        };
+
     }
     public void testEnemyUnit(){
-        EnemyUnit eunit= new EnemyUnit(unit);
 
-        assertEquals(" This unit will attack you on sight.", eunit.getDescription());
-        assertNotNull(eunit.getUnit());
     }
 }

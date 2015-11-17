@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import com.zhang3r.tarocotta.bitmaps.AnimatedSprite;
 import com.zhang3r.tarocotta.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.tarocotta.constants.IAppConstants;
+import com.zhang3r.tarocotta.model.army.Army;
 import com.zhang3r.tarocotta.model.maps.Map;
 import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
@@ -23,7 +24,7 @@ public class RangedAttackImpl implements Attack {
     public RangedAttackImpl() {
     }
 
-    public List<AnimatedSprite> getUnitAttackTiles(BaseUnit unit, int xLength, int yLength, Resources resources) {
+    public List<AnimatedSprite> getUnitAttackTiles(BaseUnit unit,Army army, Army enemyArmy, Resources resources) {
         int attackRange = unit.getStats().getMaxAttackRange();
 
         int x = unit.getX();
