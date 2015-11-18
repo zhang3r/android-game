@@ -25,26 +25,27 @@ public class SpriteFactory {
     }
 
     public  Bitmap getUnit(IGameConstants.UnitType unitType, boolean isEnemy){
-        switch(unitType){
-            case ARCHER:
-                if(isEnemy){
+//        switch(unitType){
+//            case ARCHER:
+//                if(isEnemy){
+//
+//                }
+//                return getSprite(R.drawable.archer,2);
+//
+//            case FOOT:
+//                if(isEnemy){
+//                    return getSprite(R.drawable.beet_infantry_tile,2);
+//                }
+//                return getSprite(R.drawable.infantry,2);
+//            case CAV:
+//                if(isEnemy){
+//
+//                }
+//                return getSprite(R.drawable.cavalry,2);
+//
+//        }
 
-                }
-                return getSprite(R.drawable.archer,2);
-
-            case FOOT:
-                if(isEnemy){
-                    return getSprite(R.drawable.beet_infantry_tile,2);
-                }
-                return getSprite(R.drawable.infantry,2);
-            case CAV:
-                if(isEnemy){
-
-                }
-                return getSprite(R.drawable.cavalry,2);
-        }
-
-        return null;
+        return getSprite(R.drawable.test_tile,5);
     }
     public Bitmap getTerrain(int terrain){
         switch(terrain){

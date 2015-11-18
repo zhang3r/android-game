@@ -36,7 +36,16 @@ public class BaseUnit{
     private Direction direction;
 
     public enum Direction{
-        UP,DOWN,LEFT,RIGHT
+        UP(3),DOWN(4),LEFT(1),RIGHT(2);
+        private final int mask;
+        private Direction(int mask)
+        {
+            this.mask = mask;
+        }
+        public int getMask()
+        {
+            return mask;
+        }
     }
 
     public BaseUnit(UnitType type){
@@ -46,6 +55,7 @@ public class BaseUnit{
         this.y=0;
         this.items = new ArrayList<>();
         this.direction =Direction.LEFT;
+        this.moveUtil = new BasicMoveImpl();
     }
 
     public Stats getStats() {

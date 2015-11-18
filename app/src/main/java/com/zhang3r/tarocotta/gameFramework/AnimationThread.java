@@ -121,7 +121,7 @@ public class AnimationThread extends Thread {
         textPainter = new Paint();
         textPainter.setARGB(255, 255, 255, 255);
         textPainter.setTextSize(32);
-        playerArmy = initializePlayerArmies(1);
+
         enemyArmy = initializeEnemyArmies(1);
         currViewport = new RectF(IAppConstants.AXIS_X_MIN,
                 IAppConstants.AXIS_Y_MIN, -screenWidth, -screenHeight);
@@ -141,16 +141,21 @@ public class AnimationThread extends Thread {
 
     // TODO: temp initalization: idealy this would vary by level
     private Army initializePlayerArmies(int level) {
+
         Army army = Army.create(IGameConstants.PLAYER);
 
         int xUpper = (Map.getMap().getGrid().length - 1) / 5;
         int yUpper = Map.getMap().getGrid().length - 1;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap infantryBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, false);
-        Bitmap cavBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.CAV, false);
-        Bitmap archerBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.ARCHER, false);
 
+        Bitmap testTile = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, false);
+        BaseUnit unit = new BaseUnit(IGameConstants.UnitType.FOOT);
+        unit.setAnimation(AnimatedSprite.create(testTile,IAppConstants.SPRITE_HEIGHT,IAppConstants.SPRITE_HEIGHT,1,5,true,0,0));
+        unit.getStats().setMovePoints(5);
+        unit.setX(0);
+        unit.setY(0);
+        army.add(unit);
         //1 cav
         //1 archer
         //2 infantry
@@ -207,7 +212,7 @@ public class AnimationThread extends Thread {
 //            army.add(unit);
 //        }
 
-
+        army.setUnits(new ArrayList<BaseUnit>());
         return army;
 
     }
@@ -242,39 +247,6 @@ public class AnimationThread extends Thread {
 
 
     }
-
-    /**
-     * *****************************************************************
-     * ************************** GAME LOOP ******************************
-     * ******************************************************************
-     */
-    @Override
-    public void run() {
-        Log.d(ILogConstants.SYSTEM_ERROR_TAG, "run is " + run);
-        while (run) {
-            Canvas c = null;
-            try {
-                c = surfaceHolder.lockCanvas();
-                if (c != null) {
-                    synchronized (surfaceHolder) {
-                        doDraw(c);
-                        updatePhysics();
-
-                    }
-                } else {
-                    break;
-                }
-            } finally {
-                if (c != null) {
-                    surfaceHolder.unlockCanvasAndPost(c);
-                } else {
-                    break;
-                }
-            }
-        }
-        song.stop();
-    }
-
     @Override
     public void start() {
 
@@ -312,6 +284,7 @@ public class AnimationThread extends Thread {
 
         this.setRunning(true);
         Log.d(ILogConstants.SYSTEM_ERROR_TAG, "Start run is " + run);
+        playerArmy = initializePlayerArmies(1);
         super.start();
     }
 
@@ -333,6 +306,40 @@ public class AnimationThread extends Thread {
     }
 
     /**
+     * *****************************************************************
+     * ************************** GAME LOOP ******************************
+     * ******************************************************************
+     */
+    @Override
+    public void run() {
+        Log.d(ILogConstants.SYSTEM_ERROR_TAG, "run is " + run);
+        while (run) {
+            Canvas c = null;
+            try {
+                c = surfaceHolder.lockCanvas();
+                if (c != null) {
+                    synchronized (surfaceHolder) {
+                        doDraw(c);
+                        updatePhysics();
+
+                    }
+                } else {
+                    break;
+                }
+            } finally {
+                if (c != null) {
+                    surfaceHolder.unlockCanvasAndPost(c);
+                } else {
+                    break;
+                }
+            }
+        }
+        song.stop();
+    }
+
+
+
+    /**
      * ******************************************************************
      * ********************** Game State Updater **************************
      * *******************************************************************
@@ -345,6 +352,11 @@ public class AnimationThread extends Thread {
         synchronized (terrainFactory) {
             for (int i = 0; i < terrainFactory.getSize(); i++) {
                 terrainFactory.getTerrain(i).getSprite().Update(now);
+            }
+        }
+        synchronized (playerArmy) {
+            for (int i = 0; i < playerArmy.getUnits().size(); i++) {
+                playerArmy.getUnits().get(i).getAnimation().Update(now);
             }
         }
     }
@@ -481,6 +493,7 @@ public class AnimationThread extends Thread {
      * ********************************************************************
      */
     public void doUp(MotionEvent e) {
+
         if (gameState == GameState.UNITINANIMATION) {
             return;
         }
@@ -577,15 +590,15 @@ public class AnimationThread extends Thread {
         }
         //units
 
-//        synchronized (playerArmy) {
-//
-//            for (BaseUnit unit : playerArmy.getUnits()) {
-//                AnimatedSprite animatedSprite = unit.getSprite();
-//                animatedSprite.draw(canvas, currViewport.left,
-//                        currViewport.top, currViewport.right,
-//                        currViewport.bottom);
-//            }
-//        }
+        synchronized (playerArmy) {
+
+            for (BaseUnit unit : playerArmy.getUnits()) {
+                AnimatedSprite animatedSprite = unit.getAnimation();
+                animatedSprite.draw(canvas, currViewport.left,
+                        currViewport.top, currViewport.right,
+                        currViewport.bottom);
+            }
+        }
 //        synchronized (enemyArmy) {
 //
 //            for (BaseUnit unit : enemyArmy.getUnits()) {
@@ -630,7 +643,7 @@ public class AnimationThread extends Thread {
         for (BaseUnit unit : unitList) {
             if ((int) (xPos / IAppConstants.SPRITE_WIDTH) == unit.getX()
                     && (int) (yPos / IAppConstants.SPRITE_HEIGHT) == unit.getY()) {
-
+                Log.d(ILogConstants.DEBUG_TAG, "unit found! ");
                 return unit;
             }
         }
@@ -662,6 +675,7 @@ public class AnimationThread extends Thread {
 
         // if unit was clicked on
         if (gameState != GameState.UNITINANIMATION && gameState != GameState.UNITATTACKSELECT) {
+            Log.d(ILogConstants.GESTURE_TAG, "GameState: "+gameState);
             BaseUnit unit = unitDetection(army.getUnits(), x, y);
             if (unit != null) {
                 if (unit.getUnitState() == UnitState.NORMAL) {
@@ -670,7 +684,7 @@ public class AnimationThread extends Thread {
                         gameState = GameState.UNITSELECTED;
                         unit.setUnitState(UnitState.SELECTED);
                         moveSprites = unit.getMoveUtil().getMoveTiles(unit, army, enemyArmy, resources);
-
+                        unitSelected = unit;
                     } else if (gameState == GameState.UNITSELECTED) {
                         //if another unit was selected
                         //reset original unit
