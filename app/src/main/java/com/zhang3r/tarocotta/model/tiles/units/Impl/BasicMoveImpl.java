@@ -48,7 +48,8 @@ public class BasicMoveImpl implements Move {
                 Point point = points.poll();
                 list_size--;
                 //check if point is enemy
-                seen.put(point.toString(), 1);
+                int cost = Map.getMap().getGrid()[point.getX()][point.getY()];
+                seen.put(point.toString(), cost);
                 if (enemyArmy.hasUnitAtLocation(point.getX(), point.getY())) {
                     continue;
                 } else {
@@ -71,11 +72,16 @@ public class BasicMoveImpl implements Move {
                         if(!seen.containsKey(neighbor.toString())){
                             if(neighbor.getX()>=0 && neighbor.getX()<=mapLengthX){
                                 if(neighbor.getY()>=0&& neighbor.getY()<=mapLengthY){
-                                    seen.put(neighbor.toString(), 1);
+                                    int costTile = Map.getMap().getGrid()[point.getX() + 1][point.getY()];
+                                    seen.put(neighbor.toString(), costTile);
                                     points.add(neighbor);
                                 }
                             }
-
+                        }else{
+                            int costTile = Map.getMap().getGrid()[point.getX() + 1][point.getY()];
+                            if(costTile>seen.get(neighbor.toString())){
+                                seen.put(neighbor.toString(), costTile);
+                            }
                         }
                     }
 
