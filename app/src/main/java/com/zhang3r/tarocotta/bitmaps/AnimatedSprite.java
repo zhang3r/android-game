@@ -19,11 +19,13 @@ public class AnimatedSprite {
     private int spriteHeight;
     private int spriteWidth;
     private boolean loop;
+    private int currentAnimation;
 
     public AnimatedSprite() {
         sRectangle = new Rect(0, 0, 0, 0);
         frameTimer = 0;
         currentFrame = 0;
+        currentAnimation=0;
         xPos = 80;
         yPos = 200;
         dispose = false;
@@ -42,10 +44,10 @@ public class AnimatedSprite {
                            int fps, int frameCount, boolean loop) {
 
         this.animation = bitmap;
-        this.spriteHeight = height;
-        this.spriteWidth = width;
+        this.spriteHeight = IAppConstants.SPRITE_HEIGHT;
+        this.spriteWidth = IAppConstants.SPRITE_WIDTH;
         this.sRectangle.top = 0;
-        this.sRectangle.bottom = IAppConstants.BITMAP_HEIGHT;
+        this.sRectangle.bottom = IAppConstants.SPRITE_HEIGHT;
         this.sRectangle.left = 0;
         this.sRectangle.right = spriteWidth;
         this.fps = 1000 / fps;
@@ -63,8 +65,10 @@ public class AnimatedSprite {
                     dispose = true;
                 }
             }
-            sRectangle.left = currentFrame * spriteWidth;
-            sRectangle.right = sRectangle.left + spriteWidth;
+            sRectangle.left = currentFrame * IAppConstants.SPRITE_WIDTH;
+            sRectangle.right = sRectangle.left + IAppConstants.SPRITE_WIDTH;
+            sRectangle.top = currentAnimation * IAppConstants.SPRITE_HEIGHT;
+            sRectangle.bottom = sRectangle.top + IAppConstants.SPRITE_HEIGHT;
         }
     }
 

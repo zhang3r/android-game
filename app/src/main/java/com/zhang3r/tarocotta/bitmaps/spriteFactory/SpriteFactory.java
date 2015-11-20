@@ -45,31 +45,31 @@ public class SpriteFactory {
 //
 //        }
 
-        return getSprite(R.drawable.test_tile,5);
+        return getSprite(R.drawable.test_tile,5,4);
     }
     public Bitmap getTerrain(int terrain){
         switch(terrain){
             case 0:
-                return getSprite(R.drawable.grass_tile,2);
+                return getSprite(R.drawable.grass_tile,1,1);
 
             case 1:
-                return getSprite(R.drawable.tree_tile,2);
+                return getSprite(R.drawable.tree_tile,1,1);
             case 2:
-                return getSprite(R.drawable.rock_tile,2);
+                return getSprite(R.drawable.rock_tile,1,1);
         }
 
         return null;
     }
     public Bitmap getTiles(boolean isEnemy){
-        return getSprite(R.drawable.base_move_tile,1);
+        return getSprite(R.drawable.base_move_tile,1,1);
     }
 
-    private Bitmap getSprite(int path, int frame){
+    private Bitmap getSprite(int path, int numFrame, int numAnimation){
         Bitmap pic= BitmapFactory
                 .decodeResource(ResourceConstant.resources, path);
         //TODO change
         if(pic!=null) {
-            pic = Bitmap.createScaledBitmap(pic, frame * IAppConstants.SPRITE_WIDTH, IAppConstants.BITMAP_HEIGHT, false);
+            pic = Bitmap.createScaledBitmap(pic, numFrame * IAppConstants.SPRITE_WIDTH, numAnimation*IAppConstants.SPRITE_HEIGHT, false);
 
         }
         return pic;
