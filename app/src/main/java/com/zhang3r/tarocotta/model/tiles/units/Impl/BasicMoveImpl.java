@@ -38,8 +38,10 @@ public class BasicMoveImpl implements Move {
 
         Bitmap moveTile = SpriteFactory.getInstance().getTiles(false);
         LinkedList<Point> points = new LinkedList<>();
-        points.add(new Point(x, y));
+        Point origin = new Point(x, y);
+        points.add(origin);
         HashMap<String, Integer> seen = new HashMap<>();
+        seen.put(origin.toString(),0);
         int i = 0;
 
         while (!points.isEmpty() && i <= movePoints) {
@@ -49,13 +51,12 @@ public class BasicMoveImpl implements Move {
                 list_size--;
                 //check if point is enemy
                 int cost = Map.getMap().getGrid()[point.getX()][point.getY()];
-                seen.put(point.toString(), cost);
                 if (enemyArmy.hasUnitAtLocation(point.getX(), point.getY())) {
                     continue;
                 } else {
-                    if (!army.hasUnitAtLocation(point.getX(), point.getY())) {
-
+                    if (!army.hasUnitAtLocation(point.getX(), point.getY())&& cost<=movePoints) {
                         //we are terrain!
+
                         spriteList.add(AnimatedSprite.create(moveTile,
                                 IAppConstants.SPRITE_HEIGHT,
                                 IAppConstants.SPRITE_WIDTH, 1, 1, false, point.getX(), point.getY()));
@@ -69,19 +70,21 @@ public class BasicMoveImpl implements Move {
 
                     // dont add if we already seen the point and if its out of bounds
                     for(Point neighbor: neighbors){
+
                         if(!seen.containsKey(neighbor.toString())){
                             if(neighbor.getX()>=0 && neighbor.getX()<=mapLengthX){
                                 if(neighbor.getY()>=0&& neighbor.getY()<=mapLengthY){
-                                    int costTile = Map.getMap().getGrid()[point.getX() + 1][point.getY()];
-                                    seen.put(neighbor.toString(), costTile);
+                                    int costTile = Map.getMap().getGrid()[neighbor.getX()][neighbor.getY()];
+                                    seen.put(neighbor.toString(), cost+costTile);
                                     points.add(neighbor);
                                 }
                             }
                         }else{
-                            int costTile = Map.getMap().getGrid()[point.getX() + 1][point.getY()];
-                            if(costTile>seen.get(neighbor.toString())){
-                                seen.put(neighbor.toString(), costTile);
-                            }
+                           int costTile = Map.getMap().getGrid()[neighbor.getX()][neighbor.getY()];
+                           if(seen.get(neighbor.toString())> costTile+cost){
+                               seen.put(neighbor.toString(), cost+costTile);
+                           }
+
                         }
                     }
 
