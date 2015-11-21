@@ -36,6 +36,7 @@ import com.zhang3r.tarocotta.model.AI.ShittyAI;
 import com.zhang3r.tarocotta.model.AttackEvent;
 import com.zhang3r.tarocotta.model.army.Army;
 import com.zhang3r.tarocotta.model.maps.Map;
+import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 import com.zhang3r.tarocotta.model.tiles.terrain.PlainTerrain;
 import com.zhang3r.tarocotta.model.tiles.terrain.RockyTerrain;
 import com.zhang3r.tarocotta.model.tiles.terrain.TerrainFactory;
@@ -89,6 +90,7 @@ public class AnimationThread extends Thread {
     private AttackEvent ae;
     private Bitmap mapBackground;
     private int turns;
+    private Point unitDestination;
 
     // handle to the surface manager object we interact with
     private SurfaceHolder surfaceHolder;
@@ -348,7 +350,9 @@ public class AnimationThread extends Thread {
         long now = System.currentTimeMillis();
         if (lastTime > now)
             return;
-
+        //attack sprite
+        //move
+        updateMove();
         synchronized (terrainFactory) {
             for (int i = 0; i < terrainFactory.getSize(); i++) {
                 terrainFactory.getTerrain(i).getSprite().Update(now);
@@ -358,6 +362,12 @@ public class AnimationThread extends Thread {
             for (int i = 0; i < playerArmy.getUnits().size(); i++) {
                 playerArmy.getUnits().get(i).getAnimation().Update(now);
             }
+        }
+    }
+
+    private void updateMove() {
+        if(gameState==GameState.UNIT_IN_ANIMATION&& unitSelected.getUnitState()==UnitState.MOVE_ANIMATION){
+
         }
     }
     // animations!!!
@@ -494,7 +504,7 @@ public class AnimationThread extends Thread {
      */
     public void doUp(MotionEvent e) {
 
-        if (gameState == GameState.UNITINANIMATION) {
+        if (gameState == GameState.UNIT_IN_ANIMATION) {
             return;
         }
         double x = e.getX() / mScaleFactor;
@@ -674,18 +684,18 @@ public class AnimationThread extends Thread {
     private boolean unitOnTouch(Army army, double x, double y) {
 
         // if unit was clicked on
-        if (gameState != GameState.UNITINANIMATION && gameState != GameState.UNITATTACKSELECT) {
+        if (gameState != GameState.UNIT_IN_ANIMATION && gameState != GameState.UNIT_ATTACK_SELECT) {
             Log.d(ILogConstants.GESTURE_TAG, "GameState: "+gameState);
             BaseUnit unit = unitDetection(army.getUnits(), x, y);
             if (unit != null) {
                 if (unit.getUnitState() == UnitState.NORMAL) {
                     //no unit was selected
                     if (gameState == GameState.NORMAL) {
-                        gameState = GameState.UNITSELECTED;
+                        gameState = GameState.UNIT_SELECTED;
                         unit.setUnitState(UnitState.SELECTED);
                         moveSprites = unit.getMoveUtil().getMoveTiles(unit, army, enemyArmy, resources);
                         unitSelected = unit;
-                    } else if (gameState == GameState.UNITSELECTED) {
+                    } else if (gameState == GameState.UNIT_SELECTED) {
                         //if another unit was selected
                         //reset original unit
                         unitSelected.setUnitState(UnitState.NORMAL);
@@ -701,23 +711,25 @@ public class AnimationThread extends Thread {
                 unit = unitDetection(getArmy(true).getUnits(), x, y);
                 //not a friendly unit
                 if (unit != null) {
-                    if (gameState != GameState.UNITATTACKSELECT) {
+                    if (gameState != GameState.UNIT_ATTACK_SELECT) {
                         unitSelected.setUnitState(UnitState.NORMAL);
                         moveSprites = new ArrayList<>();
                         gameState = GameState.NORMAL;
                         unitSelected = unit;
-                    } else if (gameState == GameState.UNITATTACKSELECT) {
+                    } else if (gameState == GameState.UNIT_ATTACK_SELECT) {
                         //attack select unit
                     }
                 } else {
                     //if terrain
 
-                    if (gameState == GameState.UNITSELECTED) {
+                    if (gameState == GameState.UNIT_SELECTED) {
                         //if unit needs to move
-                        unitSelected.setUnitState(UnitState.ANIMATION);
-                        gameState = GameState.UNITINANIMATION;
+                        unitDestination = new Point((int)(x / IAppConstants.SPRITE_WIDTH),(int)(y / IAppConstants.SPRITE_HEIGHT));
+                        unitSelected.setUnitState(UnitState.MOVE_ANIMATION);
+                        gameState = GameState.UNIT_IN_ANIMATION;
                         //unit move
                         //unitSelected.getMoveUtil().unitMoveUpdate();
+
 
                     } else {
                         //terrain info
@@ -725,7 +737,7 @@ public class AnimationThread extends Thread {
                     }
                 }
             }
-        } else if (gameState == GameState.UNITATTACKSELECT) {
+        } else if (gameState == GameState.UNIT_ATTACK_SELECT) {
             BaseUnit enemyUnit = unitDetection(getArmy(true).getUnits(), x, y);
             if (enemyUnit != null) {
                 //enemy unit found
@@ -741,14 +753,14 @@ public class AnimationThread extends Thread {
     public void buttonEventHandler(String s) {
 
         if (s.equals(IButtonConstants.attack)) {
-            if (gameState != GameState.UNITINANIMATION && unitSelected != null) {
+            if (gameState != GameState.UNIT_IN_ANIMATION && unitSelected != null) {
                 isAttack = true;
                 synchronized (attackSprites) {
                     attackSprites.clear();
                     attackSprites.addAll(unitSelected.getAttackUtil().getUnitAttackTiles(unitSelected, getArmy(false), getArmy(true),
                             resources));
                 }
-                gameState = GameState.UNITATTACKSELECT;
+                gameState = GameState.UNIT_ATTACK_SELECT;
 
 
             }
@@ -830,7 +842,7 @@ public class AnimationThread extends Thread {
 //            }
             // 2. return tile to previous position
         } else if (s.equals(IButtonConstants.endTurn)) {
-            if (gameState != GameState.UNITINANIMATION) {
+            if (gameState != GameState.UNIT_IN_ANIMATION) {
                 //clear stuff
                 turns++;
                 //display turn modal
