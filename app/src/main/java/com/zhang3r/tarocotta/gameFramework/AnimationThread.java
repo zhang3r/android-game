@@ -91,6 +91,7 @@ public class AnimationThread extends Thread {
     private Bitmap mapBackground;
     private int turns;
     private Point unitDestination;
+    List<Point> path;
 
     // handle to the surface manager object we interact with
     private SurfaceHolder surfaceHolder;
@@ -153,7 +154,7 @@ public class AnimationThread extends Thread {
 
         Bitmap testTile = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, false);
         BaseUnit unit = new BaseUnit(IGameConstants.UnitType.FOOT);
-        unit.setAnimation(AnimatedSprite.create(testTile,IAppConstants.SPRITE_HEIGHT,IAppConstants.SPRITE_HEIGHT,1,5,true,0,0));
+        unit.setAnimation(AnimatedSprite.create(testTile, IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_HEIGHT, 1, 5, true, 0, 0));
         unit.getStats().setMovePoints(5);
         unit.setX(0);
         unit.setY(0);
@@ -249,6 +250,7 @@ public class AnimationThread extends Thread {
 
 
     }
+
     @Override
     public void start() {
 
@@ -340,7 +342,6 @@ public class AnimationThread extends Thread {
     }
 
 
-
     /**
      * ******************************************************************
      * ********************** Game State Updater **************************
@@ -351,6 +352,7 @@ public class AnimationThread extends Thread {
         if (lastTime > now)
             return;
         //attack sprite
+        updateAttack();
         //move
         updateMove();
         synchronized (terrainFactory) {
@@ -365,8 +367,20 @@ public class AnimationThread extends Thread {
         }
     }
 
+    private void updateAttack() {
+        //set unit in attack.
+        //after animation
+        //dmg calc
+    }
+
     private void updateMove() {
-        if(gameState==GameState.UNIT_IN_ANIMATION&& unitSelected.getUnitState()==UnitState.MOVE_ANIMATION){
+        if (gameState == GameState.UNIT_IN_ANIMATION && unitSelected.getUnitState() == UnitState.MOVE_ANIMATION && unitDestination != null) {
+            //calculate unobstructed path
+            if(path == null) {
+                path = unitSelected.getMoveUtil().findPath(moveSprites,unitDestination, unitSelected.getX(), unitSelected.getY());
+            }
+            //update move according to time
+            //udpate direction
 
         }
     }
@@ -676,7 +690,7 @@ public class AnimationThread extends Thread {
             army = enemyArmy;
         }
         if (army == null) {
-            throw new RuntimeException("invaid army state");
+            throw new RuntimeException("invalid army state");
         }
         return army;
     }
@@ -685,7 +699,7 @@ public class AnimationThread extends Thread {
 
         // if unit was clicked on
         if (gameState != GameState.UNIT_IN_ANIMATION && gameState != GameState.UNIT_ATTACK_SELECT) {
-            Log.d(ILogConstants.GESTURE_TAG, "GameState: "+gameState);
+            Log.d(ILogConstants.GESTURE_TAG, "GameState: " + gameState);
             BaseUnit unit = unitDetection(army.getUnits(), x, y);
             if (unit != null) {
                 if (unit.getUnitState() == UnitState.NORMAL) {
@@ -724,7 +738,7 @@ public class AnimationThread extends Thread {
 
                     if (gameState == GameState.UNIT_SELECTED) {
                         //if unit needs to move
-                        unitDestination = new Point((int)(x / IAppConstants.SPRITE_WIDTH),(int)(y / IAppConstants.SPRITE_HEIGHT));
+                        unitDestination = new Point((int) (x / IAppConstants.SPRITE_WIDTH), (int) (y / IAppConstants.SPRITE_HEIGHT));
                         unitSelected.setUnitState(UnitState.MOVE_ANIMATION);
                         gameState = GameState.UNIT_IN_ANIMATION;
                         //unit move

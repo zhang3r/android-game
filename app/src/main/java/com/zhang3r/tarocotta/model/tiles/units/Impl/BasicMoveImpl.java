@@ -110,6 +110,24 @@ public class BasicMoveImpl implements Move {
         return false;
     }
 
+    @Override
+    public List<Point> findPath(List<AnimatedSprite> moveList, Point unitDestination, int x, int y) {
+        //path finding algorithm
+        //dijkstras
+        List<Point> path = dijkstras(moveList, unitDestination, new Point(x, y));
+        return reversePath(path);
+       //reverse path
+
+       
+    }
+    private List<Point> dijkstras(List<AnimatedSprite> moveList, Point unitDestination,Point source){
+        return null;
+    }
+
+    private List<Point> reversePath(List<Point> path){
+        return null;
+    }
+
     //Todo: add impassible terrain
 
     /**

@@ -3,7 +3,7 @@ package com.zhang3r.tarocotta.model.tiles.statsFactory.impl;
 /**
  * Created by Zhang3r on 11/12/2015.
  */
-public class Point {
+public class Point implements Comparable {
     int x;
     int y;
 
@@ -34,4 +34,13 @@ public class Point {
         return "x: " + x + ", y: " + y;
     }
 
+
+    @Override
+    public int compareTo(Object another) {
+        Point anotherPoint = (Point) another;
+        if (anotherPoint.getX() != this.getX() || anotherPoint.getY() != this.getY()) {
+            return -1;
+        }
+        return 0;
+    }
 }
