@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
+
 /**
  * Created by Zhang3r on 6/12/2015.
  */
@@ -62,14 +63,10 @@ public class BasicMoveImpl implements Move {
                                 IAppConstants.SPRITE_WIDTH, 1, 1, false, point.getX(), point.getY()));
                     }
                     //add generate neighbors
-                    List<Point> neighbors = new ArrayList<>();
-                    neighbors.add(new Point(point.getX() + 1, point.getY()));
-                    neighbors.add(new Point(point.getX() - 1, point.getY()));
-                    neighbors.add(new Point(point.getX(), point.getY() + 1));
-                    neighbors.add(new Point(point.getX(), point.getY() - 1));
+
 
                     // dont add if we already seen the point and if its out of bounds
-                    for(Point neighbor: neighbors){
+                    for(Point neighbor: getNeighbors(point)){
 
                         if(!seen.containsKey(neighbor.toString())){
                             if(neighbor.getX()>=0 && neighbor.getX()<=mapLengthX){
@@ -95,6 +92,14 @@ public class BasicMoveImpl implements Move {
         }
         return spriteList;
     }
+    private List<Point> getNeighbors(Point point){
+        List<Point> neighbors = new ArrayList<>();
+        neighbors.add(new Point(point.getX() + 1, point.getY()));
+        neighbors.add(new Point(point.getX() - 1, point.getY()));
+        neighbors.add(new Point(point.getX(), point.getY() + 1));
+        neighbors.add(new Point(point.getX(), point.getY() - 1));
+        return neighbors;
+    }
 
     /**
      * return true when we have reached our target
@@ -114,18 +119,52 @@ public class BasicMoveImpl implements Move {
     public List<Point> findPath(List<AnimatedSprite> moveList, Point unitDestination, int x, int y) {
         //path finding algorithm
         //dijkstras
-        List<Point> path = dijkstras(moveList, unitDestination, new Point(x, y));
-        return reversePath(path);
-       //reverse path
+        Point source =new Point(x, y);
+        java.util.Map<Point,Point> pathMap = dijkstras(moveList, source);
+        //find path
+        return findPath(pathMap, unitDestination, source);
 
-       
+
+
     }
-    private List<Point> dijkstras(List<AnimatedSprite> moveList, Point unitDestination,Point source){
-        return null;
+    private java.util.Map<Point,Point> dijkstras(List<AnimatedSprite> moveList, Point source){
+
+        LinkedList<Point> queue = new LinkedList<>();
+        HashMap<Point, Integer> dist= new HashMap<>();
+        HashMap<Point, Point> prev= new HashMap<>();
+        queue.add(source);
+        dist.put(source,0);
+        for(AnimatedSprite v: moveList){
+            if(v.getPoint().compareTo(source)!=0){
+                queue.add(v.getPoint());
+                prev.put(v.getPoint(), null);
+                dist.put(v.getPoint(), Integer.MAX_VALUE);
+
+            }
+        }
+        while(!queue.isEmpty()){
+            Point p = queue.poll();
+            for(Point neighbor:getNeighbors(p))
+                // no need to bound check since valid tiles has to be in moveList
+                if(moveList.contains(neighbor)){
+                    int alt = dist.get(p)+1;
+                    if(alt<dist.get(neighbor)){
+                        dist.put(neighbor,alt);
+                        prev.put(neighbor,p);
+                    }
+                }
+        }
+        return prev;
     }
 
-    private List<Point> reversePath(List<Point> path){
-        return null;
+    private List<Point> findPath(java.util.Map<Point,Point> pathMap, Point destination, Point source){
+        LinkedList<Point> path = new LinkedList<>();
+        Point current = destination;
+        while(current.compareTo(source)!=0){
+            path.addFirst(current);
+            current = pathMap.get(current);
+        }
+        return path;
     }
 
     //Todo: add impassible terrain

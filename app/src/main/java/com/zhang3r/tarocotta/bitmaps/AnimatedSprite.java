@@ -5,12 +5,14 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import com.zhang3r.tarocotta.constants.IAppConstants;
+import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 
 public class AnimatedSprite {
     public boolean dispose;
     private Bitmap animation;
     private int xPos;
     private int yPos;
+    private Point point;
     private Rect sRectangle;
     private int fps;
     private int numFrames;
@@ -35,6 +37,7 @@ public class AnimatedSprite {
                                         int width, int fps, int frameCount, boolean loop, int x, int y) {
         AnimatedSprite a = new AnimatedSprite();
         a.Initialize(bitmap, height, width, fps, frameCount, loop);
+        a.setPoint(new Point(x,y));
         a.setXPos(x * width);
         a.setYPos(y * height);
         return a;
@@ -53,6 +56,13 @@ public class AnimatedSprite {
         this.fps = 1000 / fps;
         this.numFrames = frameCount;
         this.loop = loop;
+    }
+    public Point getPoint() {
+        return point;
+    }
+
+    public void setPoint(Point point) {
+        this.point = point;
     }
 
     public void Update(long gameTime) {

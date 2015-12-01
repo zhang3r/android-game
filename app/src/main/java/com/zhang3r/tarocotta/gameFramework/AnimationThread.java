@@ -83,7 +83,7 @@ public class AnimationThread extends Thread {
     private Context context;
     private TurnState state;
     private RectF currViewport;
-    private GameState gameState;
+    private volatile GameState gameState;
     private static int dx;
     private static int dy;
     private Dialog battleAnimation;
@@ -156,8 +156,7 @@ public class AnimationThread extends Thread {
         BaseUnit unit = new BaseUnit(IGameConstants.UnitType.FOOT);
         unit.setAnimation(AnimatedSprite.create(testTile, IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_HEIGHT, 1, 5, true, 0, 0));
         unit.getStats().setMovePoints(5);
-        unit.setX(0);
-        unit.setY(0);
+        unit.setPosition(new Point(0,0));
         army.add(unit);
         //1 cav
         //1 archer
@@ -373,15 +372,25 @@ public class AnimationThread extends Thread {
         //dmg calc
     }
 
+    //TODO:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private void updateMove() {
-        if (gameState == GameState.UNIT_IN_ANIMATION && unitSelected.getUnitState() == UnitState.MOVE_ANIMATION && unitDestination != null) {
+        if (gameState == GameState.UNIT_IN_ANIMATION && unitSelected.getUnitState() == UnitState.MOVE_ANIMATION) {
             //calculate unobstructed path
-            if(path == null) {
-                path = unitSelected.getMoveUtil().findPath(moveSprites,unitDestination, unitSelected.getX(), unitSelected.getY());
+            if(unitSelected.getPosition().compareTo(unitDestination)==0){
+                unitDestination = null;
             }
-            //update move according to time
-            //udpate direction
+            if(unitDestination == null&&!path.isEmpty()){
+                unitDestination = path.remove(0);
+            }else if(unitDestination!= null){
+                //calculate move distance with time
+                //update unitSelected sprite
+                //update unitSelected position
 
+            }else if(path.isEmpty()) {
+                //finished
+                //set game state
+                //clear variables
+            }
         }
     }
     // animations!!!
@@ -665,8 +674,9 @@ public class AnimationThread extends Thread {
     private BaseUnit unitDetection(List<BaseUnit> unitList, double xPos,
                                    double yPos) {
         for (BaseUnit unit : unitList) {
-            if ((int) (xPos / IAppConstants.SPRITE_WIDTH) == unit.getX()
-                    && (int) (yPos / IAppConstants.SPRITE_HEIGHT) == unit.getY()) {
+            Point pos = unit.getPosition();
+            if ((int) (xPos / IAppConstants.SPRITE_WIDTH) == pos.getX()
+                    && (int) (yPos / IAppConstants.SPRITE_HEIGHT) == pos.getY()) {
                 Log.d(ILogConstants.DEBUG_TAG, "unit found! ");
                 return unit;
             }
@@ -740,9 +750,11 @@ public class AnimationThread extends Thread {
                         //if unit needs to move
                         unitDestination = new Point((int) (x / IAppConstants.SPRITE_WIDTH), (int) (y / IAppConstants.SPRITE_HEIGHT));
                         unitSelected.setUnitState(UnitState.MOVE_ANIMATION);
-                        gameState = GameState.UNIT_IN_ANIMATION;
+
                         //unit move
-                        //unitSelected.getMoveUtil().unitMoveUpdate();
+                        path = unitSelected.getMoveUtil().findPath(moveSprites,unitDestination, unitSelected.getX(), unitSelected.getY());
+                        unitDestination = null;
+                        gameState = GameState.UNIT_IN_ANIMATION;
 
 
                     } else {
