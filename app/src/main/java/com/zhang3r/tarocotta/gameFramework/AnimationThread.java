@@ -51,11 +51,9 @@ import java.util.List;
 
 public class AnimationThread extends Thread {
     public MapFactory mapFactory = new MapFactoryImpl();
-    //
     int screenWidth;
     int screenHeight;
-    int viewWidth;
-    int viewHeight;
+
 
     Resources resources;
     View view;
@@ -84,8 +82,6 @@ public class AnimationThread extends Thread {
     private TurnState state;
     private RectF currViewport;
     private volatile GameState gameState;
-    private static int dx;
-    private static int dy;
     private Dialog battleAnimation;
     private AttackEvent ae;
     private Bitmap mapBackground;
@@ -371,7 +367,7 @@ public class AnimationThread extends Thread {
         //after animation
         //dmg calc
     }
-    
+
     private void updateMove() {
         if (gameState == GameState.UNIT_IN_ANIMATION && unitSelected.getUnitState() == UnitState.MOVE_ANIMATION) {
             //calculate unobstructed path
@@ -382,8 +378,8 @@ public class AnimationThread extends Thread {
                 unitDestination = path.remove(0);
             }else if(unitDestination!= null){
                 //calculate move distance with time
-                int deltaX=0;
-                int deltaY=0;
+                int deltaX=unitDestination.getX()-unitSelected.getPosition().getX();
+                int deltaY=unitDestination.getY()-unitSelected.getPosition().getY();
                 //update unitSelected sprite
                 int spriteX = unitSelected.getAnimation().getXPos();
                 int spriteY = unitSelected.getAnimation().getYPos();
@@ -765,7 +761,7 @@ public class AnimationThread extends Thread {
                         unitSelected.setUnitState(UnitState.MOVE_ANIMATION);
 
                         //unit move
-                        path = unitSelected.getMoveUtil().findPath(moveSprites,unitDestination, unitSelected.getX(), unitSelected.getY());
+                        path = unitSelected.getMoveUtil().findPath(moveSprites,unitDestination, unitSelected.getPosition().getX(), unitSelected.getPosition().getY());
                         unitDestination = null;
                         gameState = GameState.UNIT_IN_ANIMATION;
 
