@@ -371,8 +371,7 @@ public class AnimationThread extends Thread {
         //after animation
         //dmg calc
     }
-
-    //TODO:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
     private void updateMove() {
         if (gameState == GameState.UNIT_IN_ANIMATION && unitSelected.getUnitState() == UnitState.MOVE_ANIMATION) {
             //calculate unobstructed path
@@ -383,13 +382,27 @@ public class AnimationThread extends Thread {
                 unitDestination = path.remove(0);
             }else if(unitDestination!= null){
                 //calculate move distance with time
+                int deltaX=0;
+                int deltaY=0;
                 //update unitSelected sprite
+                int spriteX = unitSelected.getAnimation().getXPos();
+                int spriteY = unitSelected.getAnimation().getYPos();
+
+                unitSelected.getAnimation().setXPos(spriteX + deltaX*IAppConstants.SPRITE_WIDTH/2);
+                unitSelected.getAnimation().setYPos(spriteY + deltaY*IAppConstants.SPRITE_HEIGHT/2);
                 //update unitSelected position
+                spriteX = unitSelected.getAnimation().getXPos();
+                spriteY = unitSelected.getAnimation().getYPos();
+                unitSelected.getPosition().setX(spriteX/IAppConstants.SPRITE_WIDTH);
+                unitSelected.getPosition().setY(spriteY/IAppConstants.SPRITE_HEIGHT);
 
             }else if(path.isEmpty()) {
                 //finished
                 //set game state
-                //clear variables
+                gameState = GameState.UNIT_SELECTED;
+                unitSelected.setUnitState(UnitState.MOVED);
+                //clear movesprite
+                moveSprites.clear();
             }
         }
     }
