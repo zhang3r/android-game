@@ -130,6 +130,8 @@ public class MoveUtilTest extends TestCase {
             Object path = pathfinding.invoke(move, (Map)map, dest, unit.getPosition());
             assertNotNull(path);
             assertEquals(4, ((List) path).size());
+            //test dest
+            assertTrue(((List) path).get(((List) path).size()-1).toString().equals(dest.toString()) );
         }catch(Exception e){
 
             throw new Error("path finding failure "+e.getCause().toString());

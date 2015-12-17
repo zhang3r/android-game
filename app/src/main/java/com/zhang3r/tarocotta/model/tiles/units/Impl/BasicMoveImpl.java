@@ -138,6 +138,7 @@ public class BasicMoveImpl implements Move {
             if(v.getPoint().compareTo(source)!=0){
                 queue.add(v.getPoint());
                 prev.put(v.getPoint().toString(), null);
+                //prevents overflow
                 dist.put(v.getPoint().toString(), Integer.MAX_VALUE-2);
 
             }
