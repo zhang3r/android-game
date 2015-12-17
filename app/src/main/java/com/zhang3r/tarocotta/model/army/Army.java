@@ -37,7 +37,7 @@ public class Army {
 
     public boolean hasUnitAtLocation(int x, int y){
         for(BaseUnit unit:units){
-            if(unit.getX()==x&&unit.getY()==y){
+            if(unit.getPosition().getX()==x&&unit.getPosition().getY()==y){
                 return true;
             }
         }

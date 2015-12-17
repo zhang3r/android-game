@@ -35,7 +35,7 @@ import com.zhang3r.tarocotta.model.AI.AI;
 import com.zhang3r.tarocotta.model.AI.ShittyAI;
 import com.zhang3r.tarocotta.model.AttackEvent;
 import com.zhang3r.tarocotta.model.army.Army;
-import com.zhang3r.tarocotta.model.maps.Map;
+import com.zhang3r.tarocotta.model.maps.GameMap;
 import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 import com.zhang3r.tarocotta.model.tiles.terrain.PlainTerrain;
 import com.zhang3r.tarocotta.model.tiles.terrain.RockyTerrain;
@@ -104,7 +104,7 @@ public class AnimationThread extends Thread {
         this.moveSprites = new LinkedList<>();
         this.attackSprites = new LinkedList<>();
         this.terminateCondition = new AllUnitsDestroyed();
-        Map.getMap().setGrid(mapFactory.initialize(1));
+        GameMap.getGameMap().setGrid(mapFactory.initialize(1));
         ResourceConstant.resources = view.getResources();
 
         this.view = view;
@@ -143,8 +143,8 @@ public class AnimationThread extends Thread {
 
         Army army = Army.create(IGameConstants.PLAYER);
 
-        int xUpper = (Map.getMap().getGrid().length - 1) / 5;
-        int yUpper = Map.getMap().getGrid().length - 1;
+        int xUpper = (GameMap.getGameMap().getGrid().length - 1) / 5;
+        int yUpper = GameMap.getGameMap().getGrid().length - 1;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
@@ -195,9 +195,9 @@ public class AnimationThread extends Thread {
     private Army initializeEnemyArmies(int level) {
         //7 infantry
         Army army = Army.create(IGameConstants.ENEMY);
-        int xUpper = (Map.getMap().getGrid().length - 1) / 5;
-        int xLower = Map.getMap().getGrid().length - 1 - xUpper;
-        int yUpper = Map.getMap().getGrid().length - 1;
+        int xUpper = (GameMap.getGameMap().getGrid().length - 1) / 5;
+        int xLower = GameMap.getGameMap().getGrid().length - 1 - xUpper;
+        int yUpper = GameMap.getGameMap().getGrid().length - 1;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap baseBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, true);
@@ -222,8 +222,8 @@ public class AnimationThread extends Thread {
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
 
-        for (int y = 0; y < Map.getMap().getGrid().length; y++) {
-            for (int x = 0; x < Map.getMap().getGrid()[y].length; x++) {
+        for (int y = 0; y < GameMap.getGameMap().getGrid().length; y++) {
+            for (int x = 0; x < GameMap.getGameMap().getGrid()[y].length; x++) {
                 // TODO:
                 // if not in terrrain
                 int tile = 0;
@@ -239,7 +239,7 @@ public class AnimationThread extends Thread {
                     //tile = new PlainTerrain(resources, x, y);
                 }
                 //initialize the map
-                Map.getMap().getGrid()[y][x] = tile;
+                GameMap.getGameMap().getGrid()[y][x] = tile;
             }
         }
 
@@ -279,7 +279,7 @@ public class AnimationThread extends Thread {
         terrainFactory.addTerrain(new PlainTerrain(resources, 0, 0));
         terrainFactory.addTerrain(new TreeTerrain(resources, 0, 0));
         terrainFactory.addTerrain(new RockyTerrain(resources, 0, 0));
-        mapBackground = combineImages(Map.getMap().getGrid(), IAppConstants.SPRITE_WIDTH, IAppConstants.SPRITE_HEIGHT);
+        mapBackground = combineImages(GameMap.getGameMap().getGrid(), IAppConstants.SPRITE_WIDTH, IAppConstants.SPRITE_HEIGHT);
 
         this.setRunning(true);
         Log.d(ILogConstants.SYSTEM_ERROR_TAG, "Start run is " + run);
@@ -295,8 +295,8 @@ public class AnimationThread extends Thread {
         Bitmap cs = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
         Canvas comboImage = new Canvas(cs);
-        for (int y = 0; y < Map.getMap().getGrid().length; y++) {
-            for (int x = 0; x < Map.getMap().getGrid()[y].length; x++) {
+        for (int y = 0; y < GameMap.getGameMap().getGrid().length; y++) {
+            for (int x = 0; x < GameMap.getGameMap().getGrid()[y].length; x++) {
                 //TODO change to sprite resolver
                 comboImage.drawBitmap(terrainFactory.getTerrain(map[y][x]).getSprite().getAnimation(), x * spriteWidth, y * spriteHeight, null);
             }
@@ -559,7 +559,7 @@ public class AnimationThread extends Thread {
         } else if ((currViewport.right - distanceX) * mScaleFactor <= -1 * mapBackground.getWidth()) {
 
 
-            currViewport.right = (int) (-1 * ((Map.getMap().getGrid()[0].length - 1) * IAppConstants.SPRITE_WIDTH) * mScaleFactor - .3 * screenWidth);
+            currViewport.right = (int) (-1 * ((GameMap.getGameMap().getGrid()[0].length - 1) * IAppConstants.SPRITE_WIDTH) * mScaleFactor - .3 * screenWidth);
             currViewport.left = currViewport.right + screenWidth;
 
         } else {
@@ -696,7 +696,7 @@ public class AnimationThread extends Thread {
     private int getTile(double xPos, double yPos) {
         int x = (int) (xPos / IAppConstants.SPRITE_WIDTH);
         int y = (int) (yPos / IAppConstants.SPRITE_HEIGHT);
-        return Map.getMap().getGrid()[y][x];
+        return GameMap.getGameMap().getGrid()[y][x];
     }
 
     private Army getArmy(boolean reverse) {

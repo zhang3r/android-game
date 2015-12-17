@@ -4,19 +4,8 @@ package com.zhang3r.tarocotta.model.AI;
  * Created by Zhang3r on 5/6/2015.
  */
 
-import android.content.res.Resources;
-import android.util.Log;
-
-import com.zhang3r.tarocotta.bitmaps.AnimatedSprite;
-import com.zhang3r.tarocotta.constants.IAppConstants;
-import com.zhang3r.tarocotta.constants.IGameConstants;
-import com.zhang3r.tarocotta.constants.ILogConstants;
-import com.zhang3r.tarocotta.model.AttackEvent;
 import com.zhang3r.tarocotta.model.army.Army;
-import com.zhang3r.tarocotta.model.maps.Map;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
-
-import java.util.List;
 
 public class ShittyAI implements AI {
     public ShittyAI() {
@@ -37,7 +26,7 @@ public class ShittyAI implements AI {
 //                    int dY = unit.getY()*IAppConstants.SPRITE_WIDTH;
 //                    Log.d(ILogConstants.DEBUG_TAG, "AI "+unit.getUnitId()+" original x:" + dX + " y: " + dY);
 //                    // get valid moves
-//                    List<AnimatedSprite> moveTiles = unit.getUnitMoveTiles(Map.getMap().getGrid()[0].length, Map.getMap().getGrid().length, army, enemyArmy, Resources.getSystem());
+//                    List<AnimatedSprite> moveTiles = unit.getUnitMoveTiles(GameMap.getGameMap().getGrid()[0].length, GameMap.getGameMap().getGrid().length, army, enemyArmy, Resources.getSystem());
 //                    for (AnimatedSprite tile : moveTiles) {
 //                        int distance = calcDistance((tile.getXPos() / IAppConstants.SPRITE_WIDTH), (tile.getYPos() / IAppConstants.SPRITE_WIDTH), shortestUnit);
 //                        if (distance < shortestDistance) {
@@ -85,7 +74,7 @@ public class ShittyAI implements AI {
             if (closest == null) {
                 closest = enemyUnit;
             }
-            int tempDistance = calcDistance(unit.getX(), unit.getY(), enemyUnit);
+            int tempDistance = calcDistance(unit.getPosition().getX(), unit.getPosition().getY(), enemyUnit);
             if (tempDistance < distance) {
                 distance = tempDistance;
                 closest = enemyUnit;
@@ -106,8 +95,8 @@ public class ShittyAI implements AI {
     private int calcDistance(int x, int y, BaseUnit unit2) {
         int x1 = x;
         int y1 = y;
-        int x2 = unit2.getX();
-        int y2 = unit2.getY();
+        int x2 = unit2.getPosition().getX();
+        int y2 = unit2.getPosition().getY();
         return Math.abs(x2 - x1) + Math.abs(y2 - y1);
     }
 }

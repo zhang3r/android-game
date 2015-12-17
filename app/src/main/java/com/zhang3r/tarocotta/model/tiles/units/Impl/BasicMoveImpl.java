@@ -7,7 +7,7 @@ import com.zhang3r.tarocotta.bitmaps.AnimatedSprite;
 import com.zhang3r.tarocotta.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.tarocotta.constants.IAppConstants;
 import com.zhang3r.tarocotta.model.army.Army;
-import com.zhang3r.tarocotta.model.maps.Map;
+import com.zhang3r.tarocotta.model.maps.GameMap;
 import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
 import com.zhang3r.tarocotta.model.tiles.units.Interface.Move;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Map;
 
 
 /**
@@ -30,10 +30,10 @@ public class BasicMoveImpl implements Move {
 
     public List<AnimatedSprite> getMoveTiles(BaseUnit unit, Army army, Army enemyArmy, Resources resources) {
         int movePoints = unit.getStats().getMovePoints();
-        int x = unit.getX();
-        int y = unit.getY();
-        int mapLengthY = Map.getMap().getGrid().length;
-        int mapLengthX = Map.getMap().getGrid()[0].length;
+        int x = unit.getPosition().getX();
+        int y = unit.getPosition().getY();
+        int mapLengthY = GameMap.getGameMap().getGrid().length;
+        int mapLengthX = GameMap.getGameMap().getGrid()[0].length;
 
         List<AnimatedSprite> spriteList = new ArrayList<>();
 
@@ -51,7 +51,7 @@ public class BasicMoveImpl implements Move {
                 Point point = points.poll();
                 list_size--;
                 //check if point is enemy
-                int cost = Map.getMap().getGrid()[point.getX()][point.getY()];
+                int cost = GameMap.getGameMap().getGrid()[point.getX()][point.getY()];
                 if (enemyArmy.hasUnitAtLocation(point.getX(), point.getY())) {
                     continue;
                 } else {
@@ -71,13 +71,13 @@ public class BasicMoveImpl implements Move {
                         if(!seen.containsKey(neighbor.toString())){
                             if(neighbor.getX()>=0 && neighbor.getX()<=mapLengthX){
                                 if(neighbor.getY()>=0&& neighbor.getY()<=mapLengthY){
-                                    int costTile = Map.getMap().getGrid()[neighbor.getX()][neighbor.getY()];
+                                    int costTile = GameMap.getGameMap().getGrid()[neighbor.getX()][neighbor.getY()];
                                     seen.put(neighbor.toString(), cost+costTile);
                                     points.add(neighbor);
                                 }
                             }
                         }else{
-                           int costTile = Map.getMap().getGrid()[neighbor.getX()][neighbor.getY()];
+                           int costTile = GameMap.getGameMap().getGrid()[neighbor.getX()][neighbor.getY()];
                            if(seen.get(neighbor.toString())> costTile+cost){
                                seen.put(neighbor.toString(), cost+costTile);
                            }
@@ -120,49 +120,57 @@ public class BasicMoveImpl implements Move {
         //path finding algorithm
         //dijkstras
         Point source =new Point(x, y);
-        java.util.Map<Point,Point> pathMap = dijkstras(moveList, source);
+        Map<String,Point> pathMap = dijkstras(moveList, source);
         //find path
         return findPath(pathMap, unitDestination, source);
 
 
 
     }
-    private java.util.Map<Point,Point> dijkstras(List<AnimatedSprite> moveList, Point source){
+    private Map<String,Point> dijkstras(List<AnimatedSprite> moveList, Point source){
 
         LinkedList<Point> queue = new LinkedList<>();
-        HashMap<Point, Integer> dist= new HashMap<>();
-        HashMap<Point, Point> prev= new HashMap<>();
+        HashMap<String, Integer> dist= new HashMap<>();
+        HashMap<String, Point> prev= new HashMap<>();
         queue.add(source);
-        dist.put(source,0);
+        dist.put(source.toString(),0);
         for(AnimatedSprite v: moveList){
             if(v.getPoint().compareTo(source)!=0){
                 queue.add(v.getPoint());
-                prev.put(v.getPoint(), null);
-                dist.put(v.getPoint(), Integer.MAX_VALUE);
+                prev.put(v.getPoint().toString(), null);
+                dist.put(v.getPoint().toString(), Integer.MAX_VALUE-2);
 
             }
         }
         while(!queue.isEmpty()){
             Point p = queue.poll();
-            for(Point neighbor:getNeighbors(p))
-                // no need to bound check since valid tiles has to be in moveList
-                if(moveList.contains(neighbor)){
-                    int alt = dist.get(p)+1;
-                    if(alt<dist.get(neighbor)){
-                        dist.put(neighbor,alt);
-                        prev.put(neighbor,p);
+            for(Point neighbor:getNeighbors(p)) {
+                boolean inMoveList = false;
+                for (AnimatedSprite tile : moveList) {
+                    if (tile.getPoint().compareTo(neighbor) == 0) {
+                        inMoveList = true;
+                        break;
                     }
                 }
+                // no need to bound check since valid tiles has to be in moveList
+                if (inMoveList) {
+                    int alt = dist.get(p.toString()) + 1;
+                    if (alt < dist.get(neighbor.toString())) {
+                        dist.put(neighbor.toString(), alt);
+                        prev.put(neighbor.toString(), p);
+                    }
+                }
+            }
         }
         return prev;
     }
 
-    private List<Point> findPath(java.util.Map<Point,Point> pathMap, Point destination, Point source){
+    private List<Point> findPath(Map<String,Point> pathMap, Point destination, Point source){
         LinkedList<Point> path = new LinkedList<>();
         Point current = destination;
         while(current.compareTo(source)!=0){
             path.addFirst(current);
-            current = pathMap.get(current);
+            current = pathMap.get(current.toString());
         }
         return path;
     }

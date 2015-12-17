@@ -7,7 +7,7 @@ import com.zhang3r.tarocotta.bitmaps.AnimatedSprite;
 import com.zhang3r.tarocotta.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.tarocotta.constants.IAppConstants;
 import com.zhang3r.tarocotta.model.army.Army;
-import com.zhang3r.tarocotta.model.maps.Map;
+import com.zhang3r.tarocotta.model.maps.GameMap;
 import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
 import com.zhang3r.tarocotta.model.tiles.units.Interface.Attack;
@@ -27,10 +27,10 @@ public class RangedAttackImpl implements Attack {
     public List<AnimatedSprite> getUnitAttackTiles(BaseUnit unit,Army army, Army enemyArmy, Resources resources) {
         int attackRange = unit.getStats().getMaxAttackRange();
 
-        int x = unit.getX();
-        int y = unit.getY();
-        int mapLengthY = Map.getMap().getGrid().length;
-        int mapLengthX = Map.getMap().getGrid()[0].length;
+        int x = unit.getPosition().getX();
+        int y = unit.getPosition().getY();
+        int mapLengthY = GameMap.getGameMap().getGrid().length;
+        int mapLengthX = GameMap.getGameMap().getGrid()[0].length;
 
         List<AnimatedSprite> spriteList = new ArrayList<>();
 
