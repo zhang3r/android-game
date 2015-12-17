@@ -371,7 +371,7 @@ public class AnimationThread extends Thread {
     private void updateMove() {
         if (gameState == GameState.UNIT_IN_ANIMATION && unitSelected.getUnitState() == UnitState.MOVE_ANIMATION) {
             //calculate unobstructed path
-            if(unitSelected.getPosition().compareTo(unitDestination)==0){
+            if(unitDestination!=null && unitSelected.getPosition().compareTo(unitDestination)==0){
                 unitDestination = null;
             }
             if(unitDestination == null&&!path.isEmpty()){
