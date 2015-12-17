@@ -7,10 +7,9 @@ import com.zhang3r.tarocotta.bitmaps.AnimatedSprite;
 import com.zhang3r.tarocotta.constants.IGameConstants;
 import com.zhang3r.tarocotta.constants.ResourceConstant;
 import com.zhang3r.tarocotta.model.army.Army;
-import com.zhang3r.tarocotta.model.maps.Map;
+import com.zhang3r.tarocotta.model.maps.GameMap;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
 import com.zhang3r.tarocotta.model.tiles.units.Interface.Attack;
-import com.zhang3r.tarocotta.model.tiles.units.Interface.Move;
 
 import junit.framework.TestCase;
 
@@ -44,13 +43,13 @@ public class MeleeAttackImplTest extends TestCase {
         army.getUnits().add(unit);
         ResourceConstant.resources = resources;
 
-        Map.getMap().setGrid(new int[50][50]);
+        GameMap.getGameMap().setGrid(new int[50][50]);
     }
 
 
     public void testGetUnitAttackTiles() throws Exception {
-        unit.setX(10);
-        unit.setY(10);
+        unit.getPosition().setX(10);
+        unit.getPosition().setY(10);
         List<AnimatedSprite> attackTiles =  attack.getUnitAttackTiles(unit, army, enemyArmy, resources);
         assertNotNull(attackTiles);
         assertEquals(5, attackTiles.size());

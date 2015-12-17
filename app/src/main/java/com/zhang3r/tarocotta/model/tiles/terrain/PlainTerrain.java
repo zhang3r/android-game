@@ -27,7 +27,7 @@ public class PlainTerrain extends BaseTerrain{
 //                R.drawable.base_land_tile);
         unitBitmap = Bitmap.createScaledBitmap(unitBitmap, IAppConstants.SPRITE_WIDTH, IAppConstants.SPRITE_HEIGHT, false);
         a.Initialize( unitBitmap, IAppConstants.SPRITE_HEIGHT,
-                IAppConstants.SPRITE_WIDTH, 2, 2, true);
+                IAppConstants.SPRITE_WIDTH, 1, 1, true);
         a.setXPos(x * IAppConstants.SPRITE_WIDTH);
         a.setYPos(y * IAppConstants.SPRITE_HEIGHT);
         this.setSprite(a);

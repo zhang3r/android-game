@@ -4,6 +4,7 @@ import android.content.res.Resources;
 
 import com.zhang3r.tarocotta.bitmaps.AnimatedSprite;
 import com.zhang3r.tarocotta.model.army.Army;
+import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
 
 import java.util.List;
@@ -18,4 +19,5 @@ public interface Move {
                            Army playerArmy, Army enemyArmy, double eventX, double eventY);
 
 
+    List<Point> findPath(List<AnimatedSprite> moveList, Point unitDestination, int x, int y);
 }

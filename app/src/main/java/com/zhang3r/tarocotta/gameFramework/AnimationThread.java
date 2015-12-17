@@ -35,7 +35,8 @@ import com.zhang3r.tarocotta.model.AI.AI;
 import com.zhang3r.tarocotta.model.AI.ShittyAI;
 import com.zhang3r.tarocotta.model.AttackEvent;
 import com.zhang3r.tarocotta.model.army.Army;
-import com.zhang3r.tarocotta.model.maps.Map;
+import com.zhang3r.tarocotta.model.maps.GameMap;
+import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 import com.zhang3r.tarocotta.model.tiles.terrain.PlainTerrain;
 import com.zhang3r.tarocotta.model.tiles.terrain.RockyTerrain;
 import com.zhang3r.tarocotta.model.tiles.terrain.TerrainFactory;
@@ -50,11 +51,9 @@ import java.util.List;
 
 public class AnimationThread extends Thread {
     public MapFactory mapFactory = new MapFactoryImpl();
-    //
     int screenWidth;
     int screenHeight;
-    int viewWidth;
-    int viewHeight;
+
 
     Resources resources;
     View view;
@@ -82,13 +81,13 @@ public class AnimationThread extends Thread {
     private Context context;
     private TurnState state;
     private RectF currViewport;
-    private GameState gameState;
-    private static int dx;
-    private static int dy;
+    private volatile GameState gameState;
     private Dialog battleAnimation;
     private AttackEvent ae;
     private Bitmap mapBackground;
     private int turns;
+    private Point unitDestination;
+    List<Point> path;
 
     // handle to the surface manager object we interact with
     private SurfaceHolder surfaceHolder;
@@ -105,7 +104,7 @@ public class AnimationThread extends Thread {
         this.moveSprites = new LinkedList<>();
         this.attackSprites = new LinkedList<>();
         this.terminateCondition = new AllUnitsDestroyed();
-        Map.getMap().setGrid(mapFactory.initialize(1));
+        GameMap.getGameMap().setGrid(mapFactory.initialize(1));
         ResourceConstant.resources = view.getResources();
 
         this.view = view;
@@ -144,17 +143,16 @@ public class AnimationThread extends Thread {
 
         Army army = Army.create(IGameConstants.PLAYER);
 
-        int xUpper = (Map.getMap().getGrid().length - 1) / 5;
-        int yUpper = Map.getMap().getGrid().length - 1;
+        int xUpper = (GameMap.getGameMap().getGrid().length - 1) / 5;
+        int yUpper = GameMap.getGameMap().getGrid().length - 1;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
         Bitmap testTile = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, false);
         BaseUnit unit = new BaseUnit(IGameConstants.UnitType.FOOT);
-        unit.setAnimation(AnimatedSprite.create(testTile,IAppConstants.SPRITE_HEIGHT,IAppConstants.SPRITE_HEIGHT,1,5,true,0,0));
+        unit.setAnimation(AnimatedSprite.create(testTile, IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_HEIGHT, 1, 5, true, 0, 0));
         unit.getStats().setMovePoints(5);
-        unit.setX(0);
-        unit.setY(0);
+        unit.setPosition(new Point(0,0));
         army.add(unit);
         //1 cav
         //1 archer
@@ -197,9 +195,9 @@ public class AnimationThread extends Thread {
     private Army initializeEnemyArmies(int level) {
         //7 infantry
         Army army = Army.create(IGameConstants.ENEMY);
-        int xUpper = (Map.getMap().getGrid().length - 1) / 5;
-        int xLower = Map.getMap().getGrid().length - 1 - xUpper;
-        int yUpper = Map.getMap().getGrid().length - 1;
+        int xUpper = (GameMap.getGameMap().getGrid().length - 1) / 5;
+        int xLower = GameMap.getGameMap().getGrid().length - 1 - xUpper;
+        int yUpper = GameMap.getGameMap().getGrid().length - 1;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap baseBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, true);
@@ -224,8 +222,8 @@ public class AnimationThread extends Thread {
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
 
-        for (int y = 0; y < Map.getMap().getGrid().length; y++) {
-            for (int x = 0; x < Map.getMap().getGrid()[y].length; x++) {
+        for (int y = 0; y < GameMap.getGameMap().getGrid().length; y++) {
+            for (int x = 0; x < GameMap.getGameMap().getGrid()[y].length; x++) {
                 // TODO:
                 // if not in terrrain
                 int tile = 0;
@@ -241,12 +239,13 @@ public class AnimationThread extends Thread {
                     //tile = new PlainTerrain(resources, x, y);
                 }
                 //initialize the map
-                Map.getMap().getGrid()[y][x] = tile;
+                GameMap.getGameMap().getGrid()[y][x] = tile;
             }
         }
 
 
     }
+
     @Override
     public void start() {
 
@@ -280,7 +279,7 @@ public class AnimationThread extends Thread {
         terrainFactory.addTerrain(new PlainTerrain(resources, 0, 0));
         terrainFactory.addTerrain(new TreeTerrain(resources, 0, 0));
         terrainFactory.addTerrain(new RockyTerrain(resources, 0, 0));
-        mapBackground = combineImages(Map.getMap().getGrid(), IAppConstants.SPRITE_WIDTH, IAppConstants.SPRITE_HEIGHT);
+        mapBackground = combineImages(GameMap.getGameMap().getGrid(), IAppConstants.SPRITE_WIDTH, IAppConstants.SPRITE_HEIGHT);
 
         this.setRunning(true);
         Log.d(ILogConstants.SYSTEM_ERROR_TAG, "Start run is " + run);
@@ -296,8 +295,8 @@ public class AnimationThread extends Thread {
         Bitmap cs = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
         Canvas comboImage = new Canvas(cs);
-        for (int y = 0; y < Map.getMap().getGrid().length; y++) {
-            for (int x = 0; x < Map.getMap().getGrid()[y].length; x++) {
+        for (int y = 0; y < GameMap.getGameMap().getGrid().length; y++) {
+            for (int x = 0; x < GameMap.getGameMap().getGrid()[y].length; x++) {
                 //TODO change to sprite resolver
                 comboImage.drawBitmap(terrainFactory.getTerrain(map[y][x]).getSprite().getAnimation(), x * spriteWidth, y * spriteHeight, null);
             }
@@ -338,7 +337,6 @@ public class AnimationThread extends Thread {
     }
 
 
-
     /**
      * ******************************************************************
      * ********************** Game State Updater **************************
@@ -348,7 +346,10 @@ public class AnimationThread extends Thread {
         long now = System.currentTimeMillis();
         if (lastTime > now)
             return;
-
+        //attack sprite
+        updateAttack();
+        //move
+        updateMove();
         synchronized (terrainFactory) {
             for (int i = 0; i < terrainFactory.getSize(); i++) {
                 terrainFactory.getTerrain(i).getSprite().Update(now);
@@ -357,6 +358,47 @@ public class AnimationThread extends Thread {
         synchronized (playerArmy) {
             for (int i = 0; i < playerArmy.getUnits().size(); i++) {
                 playerArmy.getUnits().get(i).getAnimation().Update(now);
+            }
+        }
+    }
+
+    private void updateAttack() {
+        //set unit in attack.
+        //after animation
+        //dmg calc
+    }
+
+    private void updateMove() {
+        if (gameState == GameState.UNIT_IN_ANIMATION && unitSelected.getUnitState() == UnitState.MOVE_ANIMATION) {
+            //calculate unobstructed path
+            if(unitDestination!=null && unitSelected.getPosition().compareTo(unitDestination)==0){
+                unitDestination = null;
+            }
+            if(unitDestination == null&&!path.isEmpty()){
+                unitDestination = path.remove(0);
+            }else if(unitDestination!= null){
+                //calculate move distance with time
+                int deltaX=unitDestination.getX()-unitSelected.getPosition().getX();
+                int deltaY=unitDestination.getY()-unitSelected.getPosition().getY();
+                //update unitSelected sprite
+                int spriteX = unitSelected.getAnimation().getXPos();
+                int spriteY = unitSelected.getAnimation().getYPos();
+
+                unitSelected.getAnimation().setXPos(spriteX + deltaX*IAppConstants.SPRITE_WIDTH/2);
+                unitSelected.getAnimation().setYPos(spriteY + deltaY*IAppConstants.SPRITE_HEIGHT/2);
+                //update unitSelected position
+                spriteX = unitSelected.getAnimation().getXPos();
+                spriteY = unitSelected.getAnimation().getYPos();
+                unitSelected.getPosition().setX(spriteX/IAppConstants.SPRITE_WIDTH);
+                unitSelected.getPosition().setY(spriteY/IAppConstants.SPRITE_HEIGHT);
+
+            }else if(path.isEmpty()) {
+                //finished
+                //set game state
+                gameState = GameState.UNIT_SELECTED;
+                unitSelected.setUnitState(UnitState.MOVED);
+                //clear movesprite
+                moveSprites.clear();
             }
         }
     }
@@ -494,7 +536,7 @@ public class AnimationThread extends Thread {
      */
     public void doUp(MotionEvent e) {
 
-        if (gameState == GameState.UNITINANIMATION) {
+        if (gameState == GameState.UNIT_IN_ANIMATION) {
             return;
         }
         double x = e.getX() / mScaleFactor;
@@ -517,7 +559,7 @@ public class AnimationThread extends Thread {
         } else if ((currViewport.right - distanceX) * mScaleFactor <= -1 * mapBackground.getWidth()) {
 
 
-            currViewport.right = (int) (-1 * ((Map.getMap().getGrid()[0].length - 1) * IAppConstants.SPRITE_WIDTH) * mScaleFactor - .3 * screenWidth);
+            currViewport.right = (int) (-1 * ((GameMap.getGameMap().getGrid()[0].length - 1) * IAppConstants.SPRITE_WIDTH) * mScaleFactor - .3 * screenWidth);
             currViewport.left = currViewport.right + screenWidth;
 
         } else {
@@ -641,8 +683,9 @@ public class AnimationThread extends Thread {
     private BaseUnit unitDetection(List<BaseUnit> unitList, double xPos,
                                    double yPos) {
         for (BaseUnit unit : unitList) {
-            if ((int) (xPos / IAppConstants.SPRITE_WIDTH) == unit.getX()
-                    && (int) (yPos / IAppConstants.SPRITE_HEIGHT) == unit.getY()) {
+            Point pos = unit.getPosition();
+            if ((int) (xPos / IAppConstants.SPRITE_WIDTH) == pos.getX()
+                    && (int) (yPos / IAppConstants.SPRITE_HEIGHT) == pos.getY()) {
                 Log.d(ILogConstants.DEBUG_TAG, "unit found! ");
                 return unit;
             }
@@ -653,7 +696,7 @@ public class AnimationThread extends Thread {
     private int getTile(double xPos, double yPos) {
         int x = (int) (xPos / IAppConstants.SPRITE_WIDTH);
         int y = (int) (yPos / IAppConstants.SPRITE_HEIGHT);
-        return Map.getMap().getGrid()[y][x];
+        return GameMap.getGameMap().getGrid()[y][x];
     }
 
     private Army getArmy(boolean reverse) {
@@ -666,7 +709,7 @@ public class AnimationThread extends Thread {
             army = enemyArmy;
         }
         if (army == null) {
-            throw new RuntimeException("invaid army state");
+            throw new RuntimeException("invalid army state");
         }
         return army;
     }
@@ -674,18 +717,18 @@ public class AnimationThread extends Thread {
     private boolean unitOnTouch(Army army, double x, double y) {
 
         // if unit was clicked on
-        if (gameState != GameState.UNITINANIMATION && gameState != GameState.UNITATTACKSELECT) {
-            Log.d(ILogConstants.GESTURE_TAG, "GameState: "+gameState);
+        if (gameState != GameState.UNIT_IN_ANIMATION && gameState != GameState.UNIT_ATTACK_SELECT) {
+            Log.d(ILogConstants.GESTURE_TAG, "GameState: " + gameState);
             BaseUnit unit = unitDetection(army.getUnits(), x, y);
             if (unit != null) {
                 if (unit.getUnitState() == UnitState.NORMAL) {
                     //no unit was selected
                     if (gameState == GameState.NORMAL) {
-                        gameState = GameState.UNITSELECTED;
+                        gameState = GameState.UNIT_SELECTED;
                         unit.setUnitState(UnitState.SELECTED);
                         moveSprites = unit.getMoveUtil().getMoveTiles(unit, army, enemyArmy, resources);
                         unitSelected = unit;
-                    } else if (gameState == GameState.UNITSELECTED) {
+                    } else if (gameState == GameState.UNIT_SELECTED) {
                         //if another unit was selected
                         //reset original unit
                         unitSelected.setUnitState(UnitState.NORMAL);
@@ -701,23 +744,27 @@ public class AnimationThread extends Thread {
                 unit = unitDetection(getArmy(true).getUnits(), x, y);
                 //not a friendly unit
                 if (unit != null) {
-                    if (gameState != GameState.UNITATTACKSELECT) {
+                    if (gameState != GameState.UNIT_ATTACK_SELECT) {
                         unitSelected.setUnitState(UnitState.NORMAL);
                         moveSprites = new ArrayList<>();
                         gameState = GameState.NORMAL;
                         unitSelected = unit;
-                    } else if (gameState == GameState.UNITATTACKSELECT) {
+                    } else if (gameState == GameState.UNIT_ATTACK_SELECT) {
                         //attack select unit
                     }
                 } else {
                     //if terrain
 
-                    if (gameState == GameState.UNITSELECTED) {
+                    if (gameState == GameState.UNIT_SELECTED) {
                         //if unit needs to move
-                        unitSelected.setUnitState(UnitState.ANIMATION);
-                        gameState = GameState.UNITINANIMATION;
+                        unitDestination = new Point((int) (x / IAppConstants.SPRITE_WIDTH), (int) (y / IAppConstants.SPRITE_HEIGHT));
+                        unitSelected.setUnitState(UnitState.MOVE_ANIMATION);
+
                         //unit move
-                        //unitSelected.getMoveUtil().unitMoveUpdate();
+                        path = unitSelected.getMoveUtil().findPath(moveSprites,unitDestination, unitSelected.getPosition().getX(), unitSelected.getPosition().getY());
+                        unitDestination = null;
+                        gameState = GameState.UNIT_IN_ANIMATION;
+
 
                     } else {
                         //terrain info
@@ -725,7 +772,7 @@ public class AnimationThread extends Thread {
                     }
                 }
             }
-        } else if (gameState == GameState.UNITATTACKSELECT) {
+        } else if (gameState == GameState.UNIT_ATTACK_SELECT) {
             BaseUnit enemyUnit = unitDetection(getArmy(true).getUnits(), x, y);
             if (enemyUnit != null) {
                 //enemy unit found
@@ -741,14 +788,14 @@ public class AnimationThread extends Thread {
     public void buttonEventHandler(String s) {
 
         if (s.equals(IButtonConstants.attack)) {
-            if (gameState != GameState.UNITINANIMATION && unitSelected != null) {
+            if (gameState != GameState.UNIT_IN_ANIMATION && unitSelected != null) {
                 isAttack = true;
                 synchronized (attackSprites) {
                     attackSprites.clear();
                     attackSprites.addAll(unitSelected.getAttackUtil().getUnitAttackTiles(unitSelected, getArmy(false), getArmy(true),
                             resources));
                 }
-                gameState = GameState.UNITATTACKSELECT;
+                gameState = GameState.UNIT_ATTACK_SELECT;
 
 
             }
@@ -830,7 +877,7 @@ public class AnimationThread extends Thread {
 //            }
             // 2. return tile to previous position
         } else if (s.equals(IButtonConstants.endTurn)) {
-            if (gameState != GameState.UNITINANIMATION) {
+            if (gameState != GameState.UNIT_IN_ANIMATION) {
                 //clear stuff
                 turns++;
                 //display turn modal

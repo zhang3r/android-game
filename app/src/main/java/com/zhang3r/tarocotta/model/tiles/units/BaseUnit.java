@@ -9,6 +9,7 @@ import com.zhang3r.tarocotta.constants.IGameConstants.UnitState;
 import com.zhang3r.tarocotta.model.army.Army;
 import com.zhang3r.tarocotta.model.sprite.Tile;
 import com.zhang3r.tarocotta.model.tiles.statsFactory.StatsFactory;
+import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Stats;
 import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.StatsFactoryImpl;
 import com.zhang3r.tarocotta.model.tiles.units.Impl.BasicMoveImpl;
@@ -23,8 +24,7 @@ public class BaseUnit{
     private AnimatedSprite animation;
     private Stats stats;
     private List<Integer> items;
-    private int x;
-    private int y;
+    private Point position;
     private UnitState unitState;
     private String unitDescription;
     private String characterDescription;
@@ -51,8 +51,7 @@ public class BaseUnit{
     public BaseUnit(UnitType type){
         this.stats = StatsFactoryImpl.createStat(type);
         this.unitState = UnitState.NORMAL;
-        this.x=0;
-        this.y=0;
+        this.position = new Point(0,0);
         this.items = new ArrayList<>();
         this.direction =Direction.LEFT;
         this.moveUtil = new BasicMoveImpl();
@@ -74,21 +73,15 @@ public class BaseUnit{
         this.items = items;
     }
 
-    public int getX() {
-        return x;
+
+    public Point getPosition() {
+        return position;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setPosition(Point position) {
+        this.position = position;
     }
 
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
 
     public UnitState getUnitState() {
         return unitState;

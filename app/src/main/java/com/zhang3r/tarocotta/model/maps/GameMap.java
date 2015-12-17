@@ -4,21 +4,21 @@ package com.zhang3r.tarocotta.model.maps;
 /**
  * Created by Zhang3r on 7/21/2015.
  */
-public class Map {
-    private static Map map;
+public class GameMap {
+    private static GameMap gameMap;
     private int[][] grid;
 
-    private Map(){}
+    private GameMap(){}
 
-    private Map(int x, int y){
+    private GameMap(int x, int y){
         grid = new int[x][y];
     }
 
-    public static Map getMap(){
-        if(map==null){
-            map=new Map(5,5);
+    public static GameMap getGameMap(){
+        if(gameMap ==null){
+            gameMap =new GameMap(5,5);
         }
-        return map;
+        return gameMap;
     }
 
     public int[][] getGrid() {

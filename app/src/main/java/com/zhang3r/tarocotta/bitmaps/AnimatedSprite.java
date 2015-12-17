@@ -5,12 +5,14 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import com.zhang3r.tarocotta.constants.IAppConstants;
+import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 
 public class AnimatedSprite {
     public boolean dispose;
     private Bitmap animation;
     private int xPos;
     private int yPos;
+    private Point point;
     private Rect sRectangle;
     private int fps;
     private int numFrames;
@@ -19,11 +21,13 @@ public class AnimatedSprite {
     private int spriteHeight;
     private int spriteWidth;
     private boolean loop;
+    private int currentAnimation;
 
     public AnimatedSprite() {
         sRectangle = new Rect(0, 0, 0, 0);
         frameTimer = 0;
         currentFrame = 0;
+        currentAnimation=0;
         xPos = 80;
         yPos = 200;
         dispose = false;
@@ -33,6 +37,7 @@ public class AnimatedSprite {
                                         int width, int fps, int frameCount, boolean loop, int x, int y) {
         AnimatedSprite a = new AnimatedSprite();
         a.Initialize(bitmap, height, width, fps, frameCount, loop);
+        a.setPoint(new Point(x,y));
         a.setXPos(x * width);
         a.setYPos(y * height);
         return a;
@@ -42,15 +47,22 @@ public class AnimatedSprite {
                            int fps, int frameCount, boolean loop) {
 
         this.animation = bitmap;
-        this.spriteHeight = height;
-        this.spriteWidth = width;
+        this.spriteHeight = IAppConstants.SPRITE_HEIGHT;
+        this.spriteWidth = IAppConstants.SPRITE_WIDTH;
         this.sRectangle.top = 0;
-        this.sRectangle.bottom = IAppConstants.BITMAP_HEIGHT;
+        this.sRectangle.bottom = IAppConstants.SPRITE_HEIGHT;
         this.sRectangle.left = 0;
         this.sRectangle.right = spriteWidth;
         this.fps = 1000 / fps;
         this.numFrames = frameCount;
         this.loop = loop;
+    }
+    public Point getPoint() {
+        return point;
+    }
+
+    public void setPoint(Point point) {
+        this.point = point;
     }
 
     public void Update(long gameTime) {
@@ -63,8 +75,10 @@ public class AnimatedSprite {
                     dispose = true;
                 }
             }
-            sRectangle.left = currentFrame * spriteWidth;
-            sRectangle.right = sRectangle.left + spriteWidth;
+            sRectangle.left = currentFrame * IAppConstants.SPRITE_WIDTH;
+            sRectangle.right = sRectangle.left + IAppConstants.SPRITE_WIDTH;
+            sRectangle.top = currentAnimation * IAppConstants.SPRITE_HEIGHT;
+            sRectangle.bottom = sRectangle.top + IAppConstants.SPRITE_HEIGHT;
         }
     }
 
