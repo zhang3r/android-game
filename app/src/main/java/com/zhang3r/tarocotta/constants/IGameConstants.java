@@ -22,7 +22,18 @@ public interface IGameConstants {
         NORMAL, UNIT_SELECTED, UNIT_IN_ANIMATION, UNIT_ATTACK_SELECT,
     }
 
+    enum AnimationState{
+        FACELEFT(0),
+        FACERIGHT(1),
+        FACEUP(2),
+        FACEDOWN(3);
+        private int value;
+        private AnimationState(int value){this.value=value;}
 
+        public int getValue(){
+            return value;
+        }
+    }
 
 
 }
