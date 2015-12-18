@@ -26,6 +26,7 @@ import com.zhang3r.tarocotta.constants.IGameConstants;
 import com.zhang3r.tarocotta.constants.IGameConstants.GameState;
 import com.zhang3r.tarocotta.constants.IGameConstants.TurnState;
 import com.zhang3r.tarocotta.constants.IGameConstants.UnitState;
+import com.zhang3r.tarocotta.constants.IGameConstants.AnimationState;
 import com.zhang3r.tarocotta.constants.ILogConstants;
 import com.zhang3r.tarocotta.constants.ResourceConstant;
 import com.zhang3r.tarocotta.fragments.MapFragment;
@@ -363,7 +364,7 @@ public class AnimationThread extends Thread {
     }
 
     private void updateAttack() {
-        //set unit in attack.
+
         //after animation
         //dmg calc
     }
@@ -380,6 +381,16 @@ public class AnimationThread extends Thread {
                 //calculate move distance with time
                 int deltaX=unitDestination.getX()-unitSelected.getPosition().getX();
                 int deltaY=unitDestination.getY()-unitSelected.getPosition().getY();
+                //update direction
+                if(deltaX>0){
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACELEFT.getValue());
+                }else if(deltaX<0){
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACERIGHT.getValue());
+                }else if(deltaY>0){
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACEUP.getValue());
+                }else if(deltaY<0){
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACEDOWN.getValue());
+                }
                 //update unitSelected sprite
                 int spriteX = unitSelected.getAnimation().getXPos();
                 int spriteY = unitSelected.getAnimation().getYPos();
