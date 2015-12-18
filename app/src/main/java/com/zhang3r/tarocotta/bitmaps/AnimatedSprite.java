@@ -190,5 +190,13 @@ public class AnimatedSprite {
         this.dispose = dispose;
     }
 
+    public int getCurrentAnimation() {
+        return currentAnimation;
+    }
+
+    public void setCurrentAnimation(int currentAnimation) {
+        this.currentAnimation = currentAnimation;
+    }
+
 
 }
