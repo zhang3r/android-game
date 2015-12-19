@@ -75,6 +75,7 @@ public class AnimationThread extends Thread {
     private Army enemyArmy;
     private Army playerArmy;
     private BaseUnit unitSelected;
+    private BaseUnit unitDefending;
     private int tileSelected;
     private AI shittyAi;
     private TerrainFactory terrainFactory;
@@ -367,9 +368,22 @@ public class AnimationThread extends Thread {
     private void updateAttack() {
 
         //after animation
-        //dmg calc
-        
-        isAttack=false;
+        if(unitSelected.getAnimation().getCurrentFrame()==unitSelected.getAnimation().getNumFrames()){
+            //reset unit animation
+            unitDefending.getAnimation().setCurrentAnimation(unitDefending.getAnimation().getCurrentAnimation()&3);
+            unitSelected.getAnimation().setCurrentAnimation(unitSelected.getAnimation().getCurrentAnimation() & 3);
+
+            //TODO: dmg calc
+            //TODO: apply dmg calc
+            //setting unit state
+            unitSelected.setUnitState(UnitState.MOVED);
+            unitSelected = null;
+            isAttack=false;
+            synchronized (gameState){
+                gameState = GameState.NORMAL;
+            }
+        }
+
     }
 
     private void updateMove() {
@@ -795,11 +809,12 @@ public class AnimationThread extends Thread {
                 //fire off Attack Event
                 //set relevant unit in animation
                 //TODO: find out about direction
+                unitDefending= enemyUnit;
                 unitSelected.getAnimation().setCurrentAnimation(AnimationState.FIGHT_LEFT.getValue());
-                enemyUnit.getAnimation().setCurrentAnimation(AnimationState.DMG_RIGHT.getValue());
+                unitDefending.getAnimation().setCurrentAnimation(AnimationState.DMG_RIGHT.getValue());
                 //resetting frames
                 unitSelected.getAnimation().setCurrentFrame(0);
-                enemyUnit.getAnimation().setCurrentFrame(0);
+                unitDefending.getAnimation().setCurrentFrame(0);
 
                 gameState = GameState.UNIT_IN_ANIMATION;
 
