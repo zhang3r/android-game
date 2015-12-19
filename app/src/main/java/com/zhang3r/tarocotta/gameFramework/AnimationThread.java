@@ -23,10 +23,10 @@ import com.zhang3r.tarocotta.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.tarocotta.constants.IAppConstants;
 import com.zhang3r.tarocotta.constants.IButtonConstants;
 import com.zhang3r.tarocotta.constants.IGameConstants;
+import com.zhang3r.tarocotta.constants.IGameConstants.AnimationState;
 import com.zhang3r.tarocotta.constants.IGameConstants.GameState;
 import com.zhang3r.tarocotta.constants.IGameConstants.TurnState;
 import com.zhang3r.tarocotta.constants.IGameConstants.UnitState;
-import com.zhang3r.tarocotta.constants.IGameConstants.AnimationState;
 import com.zhang3r.tarocotta.constants.ILogConstants;
 import com.zhang3r.tarocotta.constants.ResourceConstant;
 import com.zhang3r.tarocotta.fragments.MapFragment;
@@ -349,7 +349,7 @@ public class AnimationThread extends Thread {
         if (lastTime > now)
             return;
         //attack sprite
-        if(isAttack)
+        if (isAttack)
             updateAttack();
         //move
         updateMove();
@@ -368,9 +368,9 @@ public class AnimationThread extends Thread {
     private void updateAttack() {
 
         //after animation
-        if(unitSelected.getAnimation().getCurrentFrame()==unitSelected.getAnimation().getNumFrames()){
+        if (unitSelected.getAnimation().getCurrentFrame() == unitSelected.getAnimation().getNumFrames()) {
             //reset unit animation
-            unitDefending.getAnimation().setCurrentAnimation(unitDefending.getAnimation().getCurrentAnimation()&3);
+            unitDefending.getAnimation().setCurrentAnimation(unitDefending.getAnimation().getCurrentAnimation() & 3);
             unitSelected.getAnimation().setCurrentAnimation(unitSelected.getAnimation().getCurrentAnimation() & 3);
 
             //TODO: dmg calc
@@ -378,8 +378,8 @@ public class AnimationThread extends Thread {
             //setting unit state
             unitSelected.setUnitState(UnitState.MOVED);
             unitSelected = null;
-            isAttack=false;
-            synchronized (gameState){
+            isAttack = false;
+            synchronized (gameState) {
                 gameState = GameState.NORMAL;
             }
         }
@@ -397,16 +397,16 @@ public class AnimationThread extends Thread {
             } else if (unitDestination != null) {
                 //calculate move distance with time
 
-                int deltaX=unitDestination.getX()-unitSelected.getPosition().getX();
-                int deltaY=unitDestination.getY()-unitSelected.getPosition().getY();
+                int deltaX = unitDestination.getX() - unitSelected.getPosition().getX();
+                int deltaY = unitDestination.getY() - unitSelected.getPosition().getY();
                 //update direction
-                if(deltaX>0){
+                if (deltaX > 0) {
                     unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_LEFT.getValue());
-                }else if(deltaX<0){
+                } else if (deltaX < 0) {
                     unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_RIGHT.getValue());
-                }else if(deltaY>0){
+                } else if (deltaY > 0) {
                     unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_UP.getValue());
-                }else if(deltaY<0){
+                } else if (deltaY < 0) {
                     unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_DOWN.getValue());
                 }
 
@@ -809,7 +809,7 @@ public class AnimationThread extends Thread {
                 //fire off Attack Event
                 //set relevant unit in animation
                 //TODO: find out about direction
-                unitDefending= enemyUnit;
+                unitDefending = enemyUnit;
                 unitSelected.getAnimation().setCurrentAnimation(AnimationState.FIGHT_LEFT.getValue());
                 unitDefending.getAnimation().setCurrentAnimation(AnimationState.DMG_RIGHT.getValue());
                 //resetting frames
