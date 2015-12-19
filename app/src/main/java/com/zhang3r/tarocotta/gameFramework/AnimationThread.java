@@ -23,10 +23,10 @@ import com.zhang3r.tarocotta.bitmaps.spriteFactory.SpriteFactory;
 import com.zhang3r.tarocotta.constants.IAppConstants;
 import com.zhang3r.tarocotta.constants.IButtonConstants;
 import com.zhang3r.tarocotta.constants.IGameConstants;
+import com.zhang3r.tarocotta.constants.IGameConstants.AnimationState;
 import com.zhang3r.tarocotta.constants.IGameConstants.GameState;
 import com.zhang3r.tarocotta.constants.IGameConstants.TurnState;
 import com.zhang3r.tarocotta.constants.IGameConstants.UnitState;
-import com.zhang3r.tarocotta.constants.IGameConstants.AnimationState;
 import com.zhang3r.tarocotta.constants.ILogConstants;
 import com.zhang3r.tarocotta.constants.ResourceConstant;
 import com.zhang3r.tarocotta.fragments.MapFragment;
@@ -75,6 +75,7 @@ public class AnimationThread extends Thread {
     private Army enemyArmy;
     private Army playerArmy;
     private BaseUnit unitSelected;
+    private BaseUnit unitDefending;
     private int tileSelected;
     private AI shittyAi;
     private TerrainFactory terrainFactory;
@@ -153,7 +154,7 @@ public class AnimationThread extends Thread {
         BaseUnit unit = new BaseUnit(IGameConstants.UnitType.FOOT);
         unit.setAnimation(AnimatedSprite.create(testTile, IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_HEIGHT, 1, 5, true, 0, 0));
         unit.getStats().setMovePoints(5);
-        unit.setPosition(new Point(0,0));
+        unit.setPosition(new Point(0, 0));
         army.add(unit);
         //1 cav
         //1 archer
@@ -348,7 +349,8 @@ public class AnimationThread extends Thread {
         if (lastTime > now)
             return;
         //attack sprite
-        updateAttack();
+        if (isAttack)
+            updateAttack();
         //move
         updateMove();
         synchronized (terrainFactory) {
@@ -366,44 +368,62 @@ public class AnimationThread extends Thread {
     private void updateAttack() {
 
         //after animation
-        //dmg calc
+        if (unitSelected.getAnimation().getCurrentFrame() == unitSelected.getAnimation().getNumFrames()) {
+            //reset unit animation
+            unitDefending.getAnimation().setCurrentAnimation(unitDefending.getAnimation().getCurrentAnimation() & 3);
+            unitSelected.getAnimation().setCurrentAnimation(unitSelected.getAnimation().getCurrentAnimation() & 3);
+
+            //TODO: dmg calc
+            AttackEvent ae = new AttackEvent(unitSelected, unitDefending);
+            ae.calcuateDMG();
+            //setting unit state
+            unitSelected.setUnitState(UnitState.MOVED);
+            unitSelected = null;
+            isAttack = false;
+            synchronized (gameState) {
+                gameState = GameState.NORMAL;
+            }
+        }
+
     }
 
     private void updateMove() {
         if (gameState == GameState.UNIT_IN_ANIMATION && unitSelected.getUnitState() == UnitState.MOVE_ANIMATION) {
             //calculate unobstructed path
-            if(unitDestination!=null && unitSelected.getPosition().compareTo(unitDestination)==0){
+            if (unitDestination != null && unitSelected.getPosition().compareTo(unitDestination) == 0) {
                 unitDestination = null;
             }
-            if(unitDestination == null&&!path.isEmpty()){
+            if (unitDestination == null && !path.isEmpty()) {
                 unitDestination = path.remove(0);
-            }else if(unitDestination!= null){
+            } else if (unitDestination != null) {
                 //calculate move distance with time
-                int deltaX=unitDestination.getX()-unitSelected.getPosition().getX();
-                int deltaY=unitDestination.getY()-unitSelected.getPosition().getY();
+
+                int deltaX = unitDestination.getX() - unitSelected.getPosition().getX();
+                int deltaY = unitDestination.getY() - unitSelected.getPosition().getY();
                 //update direction
-                if(deltaX>0){
-                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACELEFT.getValue());
-                }else if(deltaX<0){
-                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACERIGHT.getValue());
-                }else if(deltaY>0){
-                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACEUP.getValue());
-                }else if(deltaY<0){
-                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACEDOWN.getValue());
+                if (deltaX > 0) {
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_LEFT.getValue());
+                } else if (deltaX < 0) {
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_RIGHT.getValue());
+                } else if (deltaY > 0) {
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_UP.getValue());
+                } else if (deltaY < 0) {
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_DOWN.getValue());
                 }
+
                 //update unitSelected sprite
                 int spriteX = unitSelected.getAnimation().getXPos();
                 int spriteY = unitSelected.getAnimation().getYPos();
 
-                unitSelected.getAnimation().setXPos(spriteX + deltaX*IAppConstants.SPRITE_WIDTH/2);
-                unitSelected.getAnimation().setYPos(spriteY + deltaY*IAppConstants.SPRITE_HEIGHT/2);
+                unitSelected.getAnimation().setXPos(spriteX + deltaX * IAppConstants.SPRITE_WIDTH / 2);
+                unitSelected.getAnimation().setYPos(spriteY + deltaY * IAppConstants.SPRITE_HEIGHT / 2);
                 //update unitSelected position
                 spriteX = unitSelected.getAnimation().getXPos();
                 spriteY = unitSelected.getAnimation().getYPos();
-                unitSelected.getPosition().setX(spriteX/IAppConstants.SPRITE_WIDTH);
-                unitSelected.getPosition().setY(spriteY/IAppConstants.SPRITE_HEIGHT);
+                unitSelected.getPosition().setX(spriteX / IAppConstants.SPRITE_WIDTH);
+                unitSelected.getPosition().setY(spriteY / IAppConstants.SPRITE_HEIGHT);
 
-            }else if(path.isEmpty()) {
+            } else if (path.isEmpty()) {
                 //finished
                 //set game state
                 gameState = GameState.UNIT_SELECTED;
@@ -772,7 +792,7 @@ public class AnimationThread extends Thread {
                         unitSelected.setUnitState(UnitState.MOVE_ANIMATION);
 
                         //unit move
-                        path = unitSelected.getMoveUtil().findPath(moveSprites,unitDestination, unitSelected.getPosition().getX(), unitSelected.getPosition().getY());
+                        path = unitSelected.getMoveUtil().findPath(moveSprites, unitDestination, unitSelected.getPosition().getX(), unitSelected.getPosition().getY());
                         unitDestination = null;
                         gameState = GameState.UNIT_IN_ANIMATION;
 
@@ -788,6 +808,16 @@ public class AnimationThread extends Thread {
             if (enemyUnit != null) {
                 //enemy unit found
                 //fire off Attack Event
+                //set relevant unit in animation
+                //TODO: find out about direction
+                unitDefending = enemyUnit;
+                unitSelected.getAnimation().setCurrentAnimation(AnimationState.FIGHT_LEFT.getValue());
+                unitDefending.getAnimation().setCurrentAnimation(AnimationState.DMG_RIGHT.getValue());
+                //resetting frames
+                unitSelected.getAnimation().setCurrentFrame(0);
+                unitDefending.getAnimation().setCurrentFrame(0);
+
+                gameState = GameState.UNIT_IN_ANIMATION;
 
             }
         }
@@ -800,15 +830,16 @@ public class AnimationThread extends Thread {
 
         if (s.equals(IButtonConstants.attack)) {
             if (gameState != GameState.UNIT_IN_ANIMATION && unitSelected != null) {
+
                 isAttack = true;
                 synchronized (attackSprites) {
                     attackSprites.clear();
                     attackSprites.addAll(unitSelected.getAttackUtil().getUnitAttackTiles(unitSelected, getArmy(false), getArmy(true),
                             resources));
                 }
-                gameState = GameState.UNIT_ATTACK_SELECT;
-
-
+                synchronized (gameState) {
+                    gameState = GameState.UNIT_ATTACK_SELECT;
+                }
             }
         } else if (s.equals(IButtonConstants.item)) {
             // TODO: item logic

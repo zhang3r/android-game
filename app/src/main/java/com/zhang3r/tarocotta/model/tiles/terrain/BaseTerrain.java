@@ -10,6 +10,7 @@ public class BaseTerrain extends Tile {
     private int defense;
     private int movement;
     private int evasion;
+    private int attack;
 
     public BaseTerrain(){}
 
@@ -78,5 +79,13 @@ public class BaseTerrain extends Tile {
     @Override
     public String getDescription() {
         return "base terrain, provides no special abilities";
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
     }
 }

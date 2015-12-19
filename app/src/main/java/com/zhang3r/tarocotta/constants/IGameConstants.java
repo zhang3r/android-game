@@ -23,10 +23,18 @@ public interface IGameConstants {
     }
 
     enum AnimationState{
-        FACELEFT(0),
-        FACERIGHT(1),
-        FACEUP(2),
-        FACEDOWN(3);
+        FACE_LEFT(0),
+        FACE_RIGHT(1),
+        FACE_UP(2),
+        FACE_DOWN(3),
+        FIGHT_LEFT(4),
+        FIGHT_RIGHT(5),
+        FIGHT_UP(6),
+        FIGHT_DOWN(7),
+        DMG_RIGHT(8),
+        DMG_LEFT(9),
+        DMG_UP(10),
+        DMG_DOWN(11);
         private int value;
         private AnimationState(int value){this.value=value;}
 
