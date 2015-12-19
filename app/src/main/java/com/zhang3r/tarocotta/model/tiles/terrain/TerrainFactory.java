@@ -17,7 +17,7 @@ public class TerrainFactory {
         terrains.add(terrain);
     }
 
-    public BaseTerrain getTerrain(int index){
+    public static BaseTerrain getTerrain(int index){
         return terrains.get(index);
     }
     public int getSize(){
