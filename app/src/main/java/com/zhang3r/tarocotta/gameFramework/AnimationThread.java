@@ -374,7 +374,8 @@ public class AnimationThread extends Thread {
             unitSelected.getAnimation().setCurrentAnimation(unitSelected.getAnimation().getCurrentAnimation() & 3);
 
             //TODO: dmg calc
-            //TODO: apply dmg calc
+            AttackEvent ae = new AttackEvent(unitSelected, unitDefending);
+            ae.calcuateDMG();
             //setting unit state
             unitSelected.setUnitState(UnitState.MOVED);
             unitSelected = null;
