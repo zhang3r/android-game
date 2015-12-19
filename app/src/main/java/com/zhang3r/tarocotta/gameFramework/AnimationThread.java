@@ -348,7 +348,8 @@ public class AnimationThread extends Thread {
         if (lastTime > now)
             return;
         //attack sprite
-        updateAttack();
+        if(isAttack)
+            updateAttack();
         //move
         updateMove();
         synchronized (terrainFactory) {
@@ -367,6 +368,8 @@ public class AnimationThread extends Thread {
 
         //after animation
         //dmg calc
+        
+        isAttack=false;
     }
 
     private void updateMove() {
@@ -384,13 +387,13 @@ public class AnimationThread extends Thread {
                 int deltaY=unitDestination.getY()-unitSelected.getPosition().getY();
                 //update direction
                 if(deltaX>0){
-                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACELEFT.getValue());
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_LEFT.getValue());
                 }else if(deltaX<0){
-                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACERIGHT.getValue());
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_RIGHT.getValue());
                 }else if(deltaY>0){
-                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACEUP.getValue());
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_UP.getValue());
                 }else if(deltaY<0){
-                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACEDOWN.getValue());
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_DOWN.getValue());
                 }
 
                 //update unitSelected sprite
@@ -791,7 +794,13 @@ public class AnimationThread extends Thread {
                 //enemy unit found
                 //fire off Attack Event
                 //set relevant unit in animation
-                unitSelected.getAnimation();
+                //TODO: find out about direction
+                unitSelected.getAnimation().setCurrentAnimation(AnimationState.FIGHT_LEFT.getValue());
+                enemyUnit.getAnimation().setCurrentAnimation(AnimationState.DMG_RIGHT.getValue());
+                //resetting frames
+                unitSelected.getAnimation().setCurrentFrame(0);
+                enemyUnit.getAnimation().setCurrentFrame(0);
+
                 gameState = GameState.UNIT_IN_ANIMATION;
 
             }
