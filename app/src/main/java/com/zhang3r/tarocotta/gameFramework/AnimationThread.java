@@ -340,6 +340,7 @@ public class AnimationThread extends Thread {
             synchronized (gameState) {
                 gameState = GameState.NORMAL;
             }
+            attackSprites.clear();
         }
 
     }
