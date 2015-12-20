@@ -92,7 +92,7 @@ public class AnimationThread extends Thread {
     List<Point> path;
 
     // handle to the surface manager object we interact with
-    private SurfaceHolder surfaceHolder;
+    private final SurfaceHolder surfaceHolder;
 
     private Paint textPainter;
 
@@ -122,8 +122,6 @@ public class AnimationThread extends Thread {
         textPainter = new Paint();
         textPainter.setARGB(255, 255, 255, 255);
         textPainter.setTextSize(32);
-
-        enemyArmy = initializeEnemyArmies(1);
         currViewport = new RectF(IAppConstants.AXIS_X_MIN,
                 IAppConstants.AXIS_Y_MIN, -screenWidth, -screenHeight);
         state = TurnState.PLAYER;
@@ -144,9 +142,6 @@ public class AnimationThread extends Thread {
     private Army initializePlayerArmies(int level) {
 
         Army army = Army.create(IGameConstants.PLAYER);
-
-        int xUpper = (GameMap.getGameMap().getGrid().length - 1) / 5;
-        int yUpper = GameMap.getGameMap().getGrid().length - 1;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
@@ -156,38 +151,6 @@ public class AnimationThread extends Thread {
         unit.getStats().setMovePoints(5);
         unit.setPosition(new Point(0, 0));
         army.add(unit);
-        //1 cav
-        //1 archer
-        //2 infantry
-//        BaseUnit unit = InfantryUnit.create(1, "player unit 1", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
-//        unit = new FriendlyUnit(unit);
-//        unit.setSprite(AnimatedSprite.create(infantryBitMap,
-//                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-//                true, unit.getX(), unit.getY()));
-//        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit.getX() + " ," + unit.getY());
-//        army.add(unit);
-//        BaseUnit unit2 = CavalryUnit.create(2, "player unit 2", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
-//        //unit2 = new FriendlyUnit(unit2);
-//        unit2.setSprite(AnimatedSprite.create(cavBitMap,
-//                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-//                true, unit2.getX(), unit2.getY()));
-//        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit2.getX() + " ," + unit2.getY());
-//        army.add(unit2);
-//        BaseUnit unit3 = ArcheryUnit.create(3, "player unit 3", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
-//        unit3 = new FriendlyUnit(unit3);
-//        unit3.setSprite(AnimatedSprite.create(archerBitMap,
-//                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-//                true, unit3.getX(), unit3.getY()));
-//        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit3.getX() + " ," + unit3.getY());
-//        army.add(unit3);
-//
-//        BaseUnit unit4 = InfantryUnit.create(4, "player unit 4", (int) (Math.random() * xUpper), (int) (Math.random() * yUpper));
-//        unit4 = new FriendlyUnit(unit4);
-//        unit4.setSprite(AnimatedSprite.create(infantryBitMap,
-//                IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-//                true, unit4.getX(), unit4.getY()));
-//        Log.d(ILogConstants.DEBUG_TAG, "unit created At: " + unit4.getX() + " ," + unit4.getY());
-//        army.add(unit4);
 
         return army;
 
@@ -197,22 +160,16 @@ public class AnimationThread extends Thread {
     private Army initializeEnemyArmies(int level) {
         //7 infantry
         Army army = Army.create(IGameConstants.ENEMY);
-        int xUpper = (GameMap.getGameMap().getGrid().length - 1) / 5;
-        int xLower = GameMap.getGameMap().getGrid().length - 1 - xUpper;
-        int yUpper = GameMap.getGameMap().getGrid().length - 1;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap baseBitMap = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, true);
-//        for (int i = 0; i <= 7; i++) {
-//            BaseUnit unit = InfantryUnit.create(i, "enemy Infantry unit " + i, ((int) (Math.random() * xUpper) + xLower), (int) (Math.random() * yUpper));
-//            unit = new EnemyUnit(unit);
-//            unit.setSprite(AnimatedSprite.create(baseBitMap,
-//                    IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_WIDTH, 2, 2,
-//                    true, unit.getX(), unit.getY()));
-//            army.add(unit);
-//        }
+        Bitmap testTile = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, false);
+        BaseUnit unit = new BaseUnit(IGameConstants.UnitType.FOOT);
+        unit.setAnimation(AnimatedSprite.create(testTile, IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_HEIGHT, 1, 5, true, 2, 1));
+        unit.getStats().setMovePoints(5);
+        unit.setPosition(new Point(2, 1));
+        army.add(unit);
 
-        army.setUnits(new ArrayList<BaseUnit>());
+
         return army;
 
     }
@@ -257,8 +214,6 @@ public class AnimationThread extends Thread {
         // set the custom dialog components - text, image and button
         TextView text = (TextView) dialog.findViewById(R.id.text);
         text.setText(context.getString(R.string.dialogIntro));
-//        ImageView image = (ImageView) dialog.findViewById(R.id.image);
-//        image.setImageResource(R.mipmap.ic_launcher);
 
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
         dialogButton.setText(context.getString(R.string.dialogOK));
@@ -285,11 +240,12 @@ public class AnimationThread extends Thread {
 
         this.setRunning(true);
         Log.d(ILogConstants.SYSTEM_ERROR_TAG, "Start run is " + run);
+        enemyArmy = initializeEnemyArmies(1);
         playerArmy = initializePlayerArmies(1);
         super.start();
     }
 
-    public Bitmap combineImages(int[][] map, int spriteWidth, int spriteHeight) { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
+    public Bitmap combineImages(int[][] map, int spriteWidth, int spriteHeight) {
 
         int width = spriteWidth * map[0].length;
         int height = spriteHeight * map.length;
@@ -299,8 +255,7 @@ public class AnimationThread extends Thread {
         Canvas comboImage = new Canvas(cs);
         for (int y = 0; y < GameMap.getGameMap().getGrid().length; y++) {
             for (int x = 0; x < GameMap.getGameMap().getGrid()[y].length; x++) {
-                //TODO change to sprite resolver
-                comboImage.drawBitmap(terrainFactory.getTerrain(map[y][x]).getSprite().getAnimation(), x * spriteWidth, y * spriteHeight, null);
+                comboImage.drawBitmap(TerrainFactory.getTerrain(map[y][x]).getSprite().getAnimation(), x * spriteWidth, y * spriteHeight, null);
             }
         }
         return cs;
@@ -330,8 +285,6 @@ public class AnimationThread extends Thread {
             } finally {
                 if (c != null) {
                     surfaceHolder.unlockCanvasAndPost(c);
-                } else {
-                    break;
                 }
             }
         }
@@ -355,12 +308,17 @@ public class AnimationThread extends Thread {
         updateMove();
         synchronized (terrainFactory) {
             for (int i = 0; i < terrainFactory.getSize(); i++) {
-                terrainFactory.getTerrain(i).getSprite().Update(now);
+                TerrainFactory.getTerrain(i).getSprite().Update(now);
             }
         }
         synchronized (playerArmy) {
             for (int i = 0; i < playerArmy.getUnits().size(); i++) {
                 playerArmy.getUnits().get(i).getAnimation().Update(now);
+            }
+        }
+        synchronized (enemyArmy) {
+            for (int i = 0; i < enemyArmy.getUnits().size(); i++) {
+                enemyArmy.getUnits().get(i).getAnimation().Update(now);
             }
         }
     }
@@ -373,7 +331,6 @@ public class AnimationThread extends Thread {
             unitDefending.getAnimation().setCurrentAnimation(unitDefending.getAnimation().getCurrentAnimation() & 3);
             unitSelected.getAnimation().setCurrentAnimation(unitSelected.getAnimation().getCurrentAnimation() & 3);
 
-            //TODO: dmg calc
             AttackEvent ae = new AttackEvent(unitSelected, unitDefending);
             ae.calcuateDMG();
             //setting unit state
@@ -672,15 +629,15 @@ public class AnimationThread extends Thread {
                         currViewport.bottom);
             }
         }
-//        synchronized (enemyArmy) {
-//
-//            for (BaseUnit unit : enemyArmy.getUnits()) {
-//                AnimatedSprite animatedSprite = unit.getSprite();
-//                animatedSprite.draw(canvas, currViewport.left,
-//                        currViewport.top, currViewport.right,
-//                        currViewport.bottom);
-//            }
-//        }
+        synchronized (enemyArmy) {
+
+            for (BaseUnit unit : enemyArmy.getUnits()) {
+                AnimatedSprite animatedSprite = unit.getAnimation();
+                animatedSprite.draw(canvas, currViewport.left,
+                        currViewport.top, currViewport.right,
+                        currViewport.bottom);
+            }
+        }
 
         // sending Unit to ui panel
         MapFragment.getUnitSelected(unitSelected);
@@ -691,11 +648,8 @@ public class AnimationThread extends Thread {
         }
         // TODO send tile info to ui panel
         if (tileSelected >= 0) {
-            {
-                MapFragment.getTerrainSelected(terrainFactory.getTerrain(tileSelected));
+            MapFragment.getTerrainSelected(TerrainFactory.getTerrain(tileSelected));
 
-
-            }
         }
 
     }
@@ -722,12 +676,6 @@ public class AnimationThread extends Thread {
             }
         }
         return null;
-    }
-
-    private int getTile(double xPos, double yPos) {
-        int x = (int) (xPos / IAppConstants.SPRITE_WIDTH);
-        int y = (int) (yPos / IAppConstants.SPRITE_HEIGHT);
-        return GameMap.getGameMap().getGrid()[y][x];
     }
 
     private Army getArmy(boolean reverse) {

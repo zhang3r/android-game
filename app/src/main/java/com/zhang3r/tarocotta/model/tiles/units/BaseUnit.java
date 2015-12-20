@@ -55,6 +55,7 @@ public class BaseUnit{
         this.items = new ArrayList<>();
         this.direction =Direction.LEFT;
         this.moveUtil = new BasicMoveImpl();
+        this.attackUtil = new MeleeAttackImpl();
     }
 
     public Stats getStats() {
