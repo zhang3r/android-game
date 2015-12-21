@@ -737,6 +737,8 @@ public class AnimationThread extends Thread {
 
                     if (gameState == GameState.UNIT_SELECTED) {
                         //if unit needs to move
+                        unitOrigPosX = unitSelected.getPosition().getX();
+                        unitOrigPosY = unitSelected.getPosition().getY();
                         unitDestination = new Point((int) (x / IAppConstants.SPRITE_WIDTH), (int) (y / IAppConstants.SPRITE_HEIGHT));
                         unitSelected.setUnitState(UnitState.MOVE_ANIMATION);
 
@@ -846,27 +848,29 @@ public class AnimationThread extends Thread {
 //                }
 //            }
         } else if (s.equals(IButtonConstants.cancel)) {
-//            if (unitToMove != null) {
-//                if (unitToMove.getState() == UnitState.MOVED) {
-//                    synchronized (unitToMove) {
-//                        if (unitOrigPosX != -1 && unitOrigPosY != -1) {
-//                            unitToMove.setX(unitOrigPosX);
-//                            unitToMove.setY(unitOrigPosY);
-//                            unitToMove.getSprite().setXPos(
-//                                    unitOrigPosX * IAppConstants.SPRITE_WIDTH);
-//                            unitToMove.getSprite().setYPos(
-//                                    unitOrigPosY * IAppConstants.SPRITE_HEIGHT);
-//
-//                            unitToMove.setState(UnitState.NORMAL);
-//                        }
-//                    }
-//                }
-//                synchronized (attackSprites) {
-//                    attackSprites.clear();
-//                }
-//                gameState = GameState.NORMAL;
-//            }
-            // 2. return tile to previous position
+            //unit move
+            if(gameState== GameState.UNIT_SELECTED&& unitSelected!=null&& (unitSelected.getUnitState()==UnitState.SELECTED||unitSelected.getUnitState()== UnitState.MOVED)){
+                synchronized(moveSprites){
+                    moveSprites.clear();
+                }
+                synchronized (unitSelected) {
+                    Point newPos = new Point(unitOrigPosX, unitOrigPosY);
+                    unitSelected.setPosition(newPos);
+                    unitSelected.getAnimation().setPoint(newPos);
+                    unitSelected.getAnimation().setXPos(unitOrigPosX * IAppConstants.SPRITE_WIDTH);
+                    unitSelected.getAnimation().setYPos(unitOrigPosY*IAppConstants.SPRITE_HEIGHT);
+                    unitSelected.setUnitState(UnitState.NORMAL);
+                }
+                gameState = GameState.NORMAL;
+                unitSelected = null;
+            }else if(gameState== GameState.UNIT_ATTACK_SELECT && unitSelected!=null&& unitSelected.getUnitState()==UnitState.MOVED){
+                synchronized (attackSprites){
+                    attackSprites.clear();
+                }
+                gameState = GameState.UNIT_SELECTED;
+                isAttack=false;
+
+            }
         } else if (s.equals(IButtonConstants.endTurn)) {
             if (gameState != GameState.UNIT_IN_ANIMATION) {
                 //clear stuff
