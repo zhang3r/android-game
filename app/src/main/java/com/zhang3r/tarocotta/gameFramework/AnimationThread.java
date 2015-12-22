@@ -380,8 +380,13 @@ public class AnimationThread extends Thread {
                 //update unitSelected position
                 spriteX = unitSelected.getAnimation().getXPos();
                 spriteY = unitSelected.getAnimation().getYPos();
-                unitSelected.getPosition().setX(spriteX / IAppConstants.SPRITE_WIDTH);
-                unitSelected.getPosition().setY(spriteY / IAppConstants.SPRITE_HEIGHT);
+                if(unitSelected.getAnimation().getCurrentAnimation()==AnimationState.FACE_DOWN.getValue()|| unitSelected.getAnimation().getCurrentAnimation()==AnimationState.FACE_RIGHT.getValue()) {
+                    unitSelected.getPosition().setX((int) Math.ceil(spriteX * 1.0 / IAppConstants.SPRITE_WIDTH));
+                    unitSelected.getPosition().setY((int) Math.ceil(spriteY * 1.0 / IAppConstants.SPRITE_HEIGHT));
+                }else{
+                    unitSelected.getPosition().setX(spriteX  / IAppConstants.SPRITE_WIDTH);
+                    unitSelected.getPosition().setY(spriteY  / IAppConstants.SPRITE_HEIGHT);
+                }
 
             } else if (path.isEmpty()) {
                 //finished
