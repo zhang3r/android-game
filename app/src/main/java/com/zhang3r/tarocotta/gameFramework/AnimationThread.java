@@ -326,7 +326,7 @@ public class AnimationThread extends Thread {
     private void updateAttack() {
 
         //after animation
-        if (unitSelected.getAnimation().getCurrentFrame() == unitSelected.getAnimation().getNumFrames()) {
+        if (gameState == GameState.UNIT_IN_ANIMATION && isAttack && unitSelected.getAnimation().getCurrentFrame() == unitSelected.getAnimation().getNumFrames()) {
             //reset unit animation
             unitDefending.getAnimation().setCurrentAnimation(unitDefending.getAnimation().getCurrentAnimation() & 3);
             unitSelected.getAnimation().setCurrentAnimation(unitSelected.getAnimation().getCurrentAnimation() & 3);
@@ -380,12 +380,12 @@ public class AnimationThread extends Thread {
                 //update unitSelected position
                 spriteX = unitSelected.getAnimation().getXPos();
                 spriteY = unitSelected.getAnimation().getYPos();
-                if(unitSelected.getAnimation().getCurrentAnimation()==AnimationState.FACE_DOWN.getValue()|| unitSelected.getAnimation().getCurrentAnimation()==AnimationState.FACE_RIGHT.getValue()) {
+                if (unitSelected.getAnimation().getCurrentAnimation() == AnimationState.FACE_DOWN.getValue() || unitSelected.getAnimation().getCurrentAnimation() == AnimationState.FACE_RIGHT.getValue()) {
                     unitSelected.getPosition().setX((int) Math.ceil(spriteX * 1.0 / IAppConstants.SPRITE_WIDTH));
                     unitSelected.getPosition().setY((int) Math.ceil(spriteY * 1.0 / IAppConstants.SPRITE_HEIGHT));
-                }else{
-                    unitSelected.getPosition().setX(spriteX  / IAppConstants.SPRITE_WIDTH);
-                    unitSelected.getPosition().setY(spriteY  / IAppConstants.SPRITE_HEIGHT);
+                } else {
+                    unitSelected.getPosition().setX(spriteX / IAppConstants.SPRITE_WIDTH);
+                    unitSelected.getPosition().setY(spriteY / IAppConstants.SPRITE_HEIGHT);
                 }
 
             } else if (path.isEmpty()) {
@@ -732,7 +732,7 @@ public class AnimationThread extends Thread {
                 //not a friendly unit
                 if (unit != null) {
                     if (gameState != GameState.UNIT_ATTACK_SELECT) {
-                        if(unitSelected!=null) {
+                        if (unitSelected != null) {
                             unitSelected.setUnitState(UnitState.NORMAL);
                         }
                         moveSprites = new ArrayList<>();
@@ -817,17 +817,17 @@ public class AnimationThread extends Thread {
 //            }
         } else if (s.equals(IButtonConstants.wait)) {
             // wait logic
-            if(unitSelected!=null){
-                synchronized (unitSelected){
+            if (unitSelected != null) {
+                synchronized (unitSelected) {
                     unitSelected.setUnitState(UnitState.WAIT);
                 }
-                unitSelected =null;
+                unitSelected = null;
             }
 
         } else if (s.equals(IButtonConstants.cancel)) {
             //unit move
-            if(gameState== GameState.UNIT_SELECTED&& unitSelected!=null&& (unitSelected.getUnitState()==UnitState.SELECTED||unitSelected.getUnitState()== UnitState.MOVED)){
-                synchronized(moveSprites){
+            if (gameState == GameState.UNIT_SELECTED && unitSelected != null && (unitSelected.getUnitState() == UnitState.SELECTED || unitSelected.getUnitState() == UnitState.MOVED)) {
+                synchronized (moveSprites) {
                     moveSprites.clear();
                 }
                 synchronized (unitSelected) {
@@ -835,64 +835,60 @@ public class AnimationThread extends Thread {
                     unitSelected.setPosition(newPos);
                     unitSelected.getAnimation().setPoint(newPos);
                     unitSelected.getAnimation().setXPos(unitOrigPosX * IAppConstants.SPRITE_WIDTH);
-                    unitSelected.getAnimation().setYPos(unitOrigPosY*IAppConstants.SPRITE_HEIGHT);
+                    unitSelected.getAnimation().setYPos(unitOrigPosY * IAppConstants.SPRITE_HEIGHT);
                     unitSelected.setUnitState(UnitState.NORMAL);
                 }
                 gameState = GameState.NORMAL;
                 unitSelected = null;
-            }else if(gameState== GameState.UNIT_ATTACK_SELECT && unitSelected!=null&& unitSelected.getUnitState()==UnitState.MOVED){
-                synchronized (attackSprites){
+            } else if (gameState == GameState.UNIT_ATTACK_SELECT && unitSelected != null && unitSelected.getUnitState() == UnitState.MOVED) {
+                synchronized (attackSprites) {
                     attackSprites.clear();
                 }
                 gameState = GameState.UNIT_SELECTED;
-                isAttack=false;
+                isAttack = false;
 
             }
         } else if (s.equals(IButtonConstants.endTurn)) {
+
+//                finish unit animations
             if (gameState != GameState.UNIT_IN_ANIMATION) {
-                //clear stuff
-                turns++;
-                //display turn modal
-                //check turns logic
+                if (attackSprites.size() != 0) {
+                    synchronized (attackSprites) {
+                        attackSprites.clear();
+                    }
+                }
+                if (moveSprites.size() != 0) {
+                    synchronized (moveSprites) {
+                        moveSprites.clear();
+                    }
+                }
+                if (unitSelected != null) {
+                    synchronized (unitSelected) {
+                        unitSelected = null;
+                    }
+                }
+
+                // if player has unit in move state they will be waited
+                if (state == TurnState.PLAYER) {
+
+                    state = TurnState.ENEMY;
+                    playerArmy.setEndTurnState();
+                    enemyArmy.resetUnitState();
+                    // reset unit state
+                } else if (state == TurnState.ENEMY) {
+                    state = TurnState.PLAYER;
+                    enemyArmy.setEndTurnState();
+                    // reset unit state
+                    playerArmy.resetUnitState();
+                } else {
+                    Log.d(ILogConstants.SYSTEM_ERROR_TAG,
+                            "things has gone awry please check state and army");
+                }
+                gameState = GameState.NORMAL;
 
 
             }
-//            if (gameState != GameState.UNITINANIMATION) {
-//                if (attackSprites.size() != 0) {
-//                    synchronized (attackSprites) {
-//                        attackSprites.clear();
-//                    }
-//                }
-//                if (moveSprites.size() != 0) {
-//                    synchronized (moveSprites) {
-//                        moveSprites.clear();
-//                    }
-//                }
-//                if (unitToMove != null) {
-//                    synchronized (unitToMove) {
-//                        unitToMove = null;
-//                    }
-//                }
-//
-//                // if player has unit in move state they will be waited
-//                if (state == TurnState.PLAYER) {
-//
-//                    state = TurnState.ENEMY;
-//                    playerArmy.setEndTurnState();
-//                    enemyArmy.resetUnitState();
-//                    // reset unit state
-//                } else if (state == TurnState.ENEMY) {
-//                    state = TurnState.PLAYER;
-//                    enemyArmy.setEndTurnState();
-//                    // reset unit state
-//                    playerArmy.resetUnitState();
-//                } else {
-//                    Log.d(ILogConstants.SYSTEM_ERROR_TAG,
-//                            "things has gone awry please check state and army");
-//                }
-//                gameState = GameState.NORMAL;
-//            }
-//
+
         }
 
     }
