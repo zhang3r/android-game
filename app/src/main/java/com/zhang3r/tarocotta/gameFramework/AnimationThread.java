@@ -334,7 +334,7 @@ public class AnimationThread extends Thread {
             AttackEvent ae = new AttackEvent(unitSelected, unitDefending);
             ae.calcuateDMG();
             //setting unit state
-            unitSelected.setUnitState(UnitState.MOVED);
+            unitSelected.setUnitState(UnitState.WAIT);
             unitSelected = null;
             isAttack = false;
             synchronized (gameState) {
@@ -808,45 +808,13 @@ public class AnimationThread extends Thread {
 //            }
         } else if (s.equals(IButtonConstants.wait)) {
             // wait logic
-//            if (gameState != GameState.UNITINANIMATION) {
-//                if (unitToMove != null && unitToMove.getState() == UnitState.MOVED) {
-//                    synchronized (unitToMove) {
-//
-//                        unitToMove.setState(UnitState.WAIT);
-//                        if (attackSprites.size() != 0) {
-//                            synchronized (attackSprites) {
-//                                attackSprites.clear();
-//                            }
-//                        }
-//
-//                        unitToMove = null;
-//                        Log.d(ILogConstants.DEBUG_TAG, "enemy state is: "
-//                                + enemyArmy.getUnits().size()
-//                                + " player state is :"
-//                                + playerArmy.getUnits().size());
-//
-//                        if (state == TurnState.PLAYER
-//                                && !playerArmy.hasUnmovedUnits()) {
-//                            state = TurnState.ENEMY;
-//                            // set unit moved state
-//                            playerArmy.setEndTurnState();
-//                            // reset unit state
-//                            enemyArmy.resetUnitState();
-//                        } else if (state == TurnState.ENEMY
-//                                && !enemyArmy.hasUnmovedUnits()) {
-//                            state = TurnState.PLAYER;
-//                            enemyArmy.setEndTurnState();
-//                            // reset unit state
-//                            playerArmy.resetUnitState();
-//                        } else {
-//                            Log.d(ILogConstants.SYSTEM_ERROR_TAG,
-//                                    "there are still units unmoved nothing to do");
-//                        }
-//
-//                    }
-//                    gameState = GameState.NORMAL;
-//                }
-//            }
+            if(unitSelected!=null){
+                synchronized (unitSelected){
+                    unitSelected.setUnitState(UnitState.WAIT);
+                }
+                unitSelected =null;
+            }
+
         } else if (s.equals(IButtonConstants.cancel)) {
             //unit move
             if(gameState== GameState.UNIT_SELECTED&& unitSelected!=null&& (unitSelected.getUnitState()==UnitState.SELECTED||unitSelected.getUnitState()== UnitState.MOVED)){
