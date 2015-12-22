@@ -28,8 +28,8 @@ public class AnimatedSprite {
         frameTimer = 0;
         currentFrame = 0;
         currentAnimation=0;
-        xPos = 80;
-        yPos = 200;
+        xPos = 0;
+        yPos = 0;
         dispose = false;
     }
 
@@ -38,8 +38,8 @@ public class AnimatedSprite {
         AnimatedSprite a = new AnimatedSprite();
         a.Initialize(bitmap, height, width, fps, frameCount, loop);
         a.setPoint(new Point(x,y));
-        a.setXPos(x * width);
-        a.setYPos(y * height);
+        a.setXPos(x * a.spriteWidth);
+        a.setYPos(y * a.spriteHeight);
         return a;
     }
 

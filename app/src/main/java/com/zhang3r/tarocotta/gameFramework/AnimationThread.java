@@ -147,9 +147,9 @@ public class AnimationThread extends Thread {
 
         Bitmap testTile = SpriteFactory.getInstance().getUnit(IGameConstants.UnitType.FOOT, false);
         BaseUnit unit = new BaseUnit(IGameConstants.UnitType.FOOT);
-        unit.setAnimation(AnimatedSprite.create(testTile, IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_HEIGHT, 1, 5, true, 0, 0));
+        unit.setAnimation(AnimatedSprite.create(testTile, IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_HEIGHT, 1, 5, true, 1, 1));
         unit.getStats().setMovePoints(5);
-        unit.setPosition(new Point(0, 0));
+        unit.setPosition(new Point(1, 1));
         army.add(unit);
 
         return army;
@@ -348,12 +348,14 @@ public class AnimationThread extends Thread {
     private void updateMove() {
         if (gameState == GameState.UNIT_IN_ANIMATION && unitSelected.getUnitState() == UnitState.MOVE_ANIMATION) {
             //calculate unobstructed path
+
             if (unitDestination != null && unitSelected.getPosition().compareTo(unitDestination) == 0) {
                 unitDestination = null;
             }
             if (unitDestination == null && !path.isEmpty()) {
                 unitDestination = path.remove(0);
-            } else if (unitDestination != null) {
+            }
+            if (unitDestination != null) {
                 //calculate move distance with time
 
                 int deltaX = unitDestination.getX() - unitSelected.getPosition().getX();
@@ -378,8 +380,13 @@ public class AnimationThread extends Thread {
                 //update unitSelected position
                 spriteX = unitSelected.getAnimation().getXPos();
                 spriteY = unitSelected.getAnimation().getYPos();
-                unitSelected.getPosition().setX(spriteX / IAppConstants.SPRITE_WIDTH);
-                unitSelected.getPosition().setY(spriteY / IAppConstants.SPRITE_HEIGHT);
+                if(unitSelected.getAnimation().getCurrentAnimation()==AnimationState.FACE_DOWN.getValue()|| unitSelected.getAnimation().getCurrentAnimation()==AnimationState.FACE_RIGHT.getValue()) {
+                    unitSelected.getPosition().setX((int) Math.ceil(spriteX * 1.0 / IAppConstants.SPRITE_WIDTH));
+                    unitSelected.getPosition().setY((int) Math.ceil(spriteY * 1.0 / IAppConstants.SPRITE_HEIGHT));
+                }else{
+                    unitSelected.getPosition().setX(spriteX  / IAppConstants.SPRITE_WIDTH);
+                    unitSelected.getPosition().setY(spriteY  / IAppConstants.SPRITE_HEIGHT);
+                }
 
             } else if (path.isEmpty()) {
                 //finished
@@ -725,7 +732,9 @@ public class AnimationThread extends Thread {
                 //not a friendly unit
                 if (unit != null) {
                     if (gameState != GameState.UNIT_ATTACK_SELECT) {
-                        unitSelected.setUnitState(UnitState.NORMAL);
+                        if(unitSelected!=null) {
+                            unitSelected.setUnitState(UnitState.NORMAL);
+                        }
                         moveSprites = new ArrayList<>();
                         gameState = GameState.NORMAL;
                         unitSelected = unit;
