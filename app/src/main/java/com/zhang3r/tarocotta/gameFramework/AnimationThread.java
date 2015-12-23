@@ -411,7 +411,7 @@ public class AnimationThread extends Thread {
                     enemyArmy.setEndTurnState();
                     // reset unit state
                     playerArmy.resetUnitState();
-
+                    turns++;
 
             }
         }
