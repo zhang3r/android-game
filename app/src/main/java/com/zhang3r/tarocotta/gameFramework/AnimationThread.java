@@ -851,6 +851,7 @@ public class AnimationThread extends Thread {
         } else if (s.equals(IButtonConstants.endTurn)) {
 
 //                finish unit animations
+            //TODO #50 if there is a unit not moved display warning message
             if (gameState != GameState.UNIT_IN_ANIMATION) {
                 if (attackSprites.size() != 0) {
                     synchronized (attackSprites) {
@@ -880,6 +881,7 @@ public class AnimationThread extends Thread {
                     enemyArmy.setEndTurnState();
                     // reset unit state
                     playerArmy.resetUnitState();
+                    turns++;
                 } else {
                     Log.d(ILogConstants.SYSTEM_ERROR_TAG,
                             "things has gone awry please check state and army");
