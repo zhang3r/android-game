@@ -4,8 +4,20 @@ package com.zhang3r.tarocotta.model.AI;
  * Created by Zhang3r on 5/6/2015.
  */
 
+import android.content.res.Resources;
+import android.util.Log;
+
+import com.zhang3r.tarocotta.bitmaps.AnimatedSprite;
+import com.zhang3r.tarocotta.constants.IAppConstants;
+import com.zhang3r.tarocotta.constants.IGameConstants;
+import com.zhang3r.tarocotta.constants.ILogConstants;
+import com.zhang3r.tarocotta.constants.ResourceConstant;
+import com.zhang3r.tarocotta.model.AttackEvent;
 import com.zhang3r.tarocotta.model.army.Army;
+import com.zhang3r.tarocotta.model.maps.GameMap;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
+
+import java.util.List;
 
 public class ShittyAI implements AI {
     public ShittyAI() {
@@ -13,46 +25,49 @@ public class ShittyAI implements AI {
     }
 
     public void AiMove(Army army, Army enemyArmy) {
-//        for (BaseUnit unit : army.getUnits()) {
-//            //setting unit selected
-//            unit.setUnitSelected(true);
-//            //find closest unit using manhattan distance
-//            BaseUnit shortestUnit = pathFinding(unit, enemyArmy);
-//            if (shortestUnit != null) {
-//                int shortestDistance = calcDistance(unit.getX(), unit.getY(), shortestUnit);
-//                //if closet unit is outside of attack range, move
-//                if (shortestDistance > unit.getMaxAttackRange()) {
-//                    int dX = unit.getX()*IAppConstants.SPRITE_WIDTH;
-//                    int dY = unit.getY()*IAppConstants.SPRITE_WIDTH;
-//                    Log.d(ILogConstants.DEBUG_TAG, "AI "+unit.getUnitId()+" original x:" + dX + " y: " + dY);
-//                    // get valid moves
-//                    List<AnimatedSprite> moveTiles = unit.getUnitMoveTiles(GameMap.getGameMap().getGrid()[0].length, GameMap.getGameMap().getGrid().length, army, enemyArmy, Resources.getSystem());
-//                    for (AnimatedSprite tile : moveTiles) {
-//                        int distance = calcDistance((tile.getXPos() / IAppConstants.SPRITE_WIDTH), (tile.getYPos() / IAppConstants.SPRITE_WIDTH), shortestUnit);
-//                        if (distance < shortestDistance) {
-//                            shortestDistance = distance;
-//                            dX = tile.getXPos() ;
-//                            dY = tile.getYPos() ;
-//
-//                        }
-//                    }
-//                    if (unit.unitMoveUpdate(moveTiles, army, enemyArmy, dX, dY)) {
-//                        Log.d(ILogConstants.DEBUG_TAG, "AI "+unit.getUnitId()+" Move x:" + dX + " y: " + dY);
-//                        unit.getSprite().setXPos(unit.getX() * IAppConstants.SPRITE_WIDTH);
-//                        unit.getSprite().setYPos(unit.getY()*IAppConstants.SPRITE_WIDTH);
-//                        unit.setState(IGameConstants.UnitState.MOVED);
-//                    }
-//                    //update shortest distance
-//                    shortestDistance =calcDistance(unit.getX(), unit.getY(), shortestUnit);
-//                }
-//                //check if enemy is in attack range
-//                // if enemy is in attack range attack
-//                if (shortestDistance <= unit.getMaxAttackRange()) {
-//                    AttackEvent.attack(unit, shortestUnit, army, enemyArmy);
-//                }
-//                unit.setState(IGameConstants.UnitState.WAIT);
-//            }
-//        }
+        for (BaseUnit unit : army.getUnits()) {
+            //setting unit selected
+
+            //find closest unit using manhattan distance
+            BaseUnit shortestUnit = pathFinding(unit, enemyArmy);
+            if (shortestUnit != null) {
+                int shortestDistance = calcDistance(unit.getPosition().getX(), unit.getPosition().getY(), shortestUnit);
+                //if closet unit is outside of attack range, move
+                if (shortestDistance > unit.getStats().getMaxAttackRange()) {
+                    int dX = unit.getPosition().getX()* IAppConstants.SPRITE_WIDTH;
+                    int dY = unit.getPosition().getY()*IAppConstants.SPRITE_WIDTH;
+                    Log.d(ILogConstants.DEBUG_TAG, "AI " + unit.getId() + " original x:" + dX + " y: " + dY);
+                    // get valid moves
+                    List<AnimatedSprite> moveTiles = unit.getMoveUtil().getMoveTiles(unit,army,enemyArmy, ResourceConstant.resources);
+                    for (AnimatedSprite tile : moveTiles) {
+                        int distance = calcDistance((tile.getXPos() / IAppConstants.SPRITE_WIDTH), (tile.getYPos() / IAppConstants.SPRITE_WIDTH), shortestUnit);
+                        if (distance < shortestDistance) {
+                            shortestDistance = distance;
+                            dX = tile.getXPos() ;
+                            dY = tile.getYPos() ;
+
+                        }
+                    }
+                    if (unit.getMoveUtil().unitMoveUpdate(moveTiles, army, enemyArmy, dX, dY)) {
+                        Log.d(ILogConstants.DEBUG_TAG, "AI "+unit.getId()+" Move x:" + dX + " y: " + dY);
+                        unit.getAnimation().setXPos(unit.getPosition().getX() * IAppConstants.SPRITE_WIDTH);
+                        unit.getAnimation().setYPos(unit.getPosition().getY() * IAppConstants.SPRITE_WIDTH);
+                        unit.setPosition(unit.getPosition());
+                        unit.setUnitState(IGameConstants.UnitState.MOVED);
+                    }
+                    //update shortest distance
+                    shortestDistance =calcDistance(unit.getPosition().getX(), unit.getPosition().getY(), shortestUnit);
+                }
+                //check if enemy is in attack range
+                // if enemy is in attack range attack
+                if (shortestDistance <= unit.getStats().getMaxAttackRange()) {
+
+                    AttackEvent ae = new AttackEvent(unit, shortestUnit);
+                    ae.calcuateDMG();
+                }
+                unit.setUnitState(IGameConstants.UnitState.WAIT);
+            }
+        }
         //all units has moved
         //end turn;
 
