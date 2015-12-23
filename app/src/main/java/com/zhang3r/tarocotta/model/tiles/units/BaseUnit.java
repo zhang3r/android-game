@@ -19,8 +19,11 @@ import com.zhang3r.tarocotta.model.tiles.units.Interface.Move;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class BaseUnit{
+
+    private String id;
     private AnimatedSprite animation;
     private Stats stats;
     private List<Integer> items;
@@ -49,6 +52,7 @@ public class BaseUnit{
     }
 
     public BaseUnit(UnitType type){
+        this.id = UUID.randomUUID().toString();
         this.stats = StatsFactoryImpl.createStat(type);
         this.unitState = UnitState.NORMAL;
         this.position = new Point(0,0);
@@ -138,4 +142,12 @@ public class BaseUnit{
     public void setMoveUtil(Move moveUtil) {
         this.moveUtil = moveUtil;
     }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 }
