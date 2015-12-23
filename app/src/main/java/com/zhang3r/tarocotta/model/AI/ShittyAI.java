@@ -60,12 +60,13 @@ public class ShittyAI implements AI {
                 }
                 //check if enemy is in attack range
                 // if enemy is in attack range attack
+                unit.setUnitState(IGameConstants.UnitState.WAIT);
                 if (shortestDistance <= unit.getStats().getMaxAttackRange()) {
 
                     AttackEvent ae = new AttackEvent(unit, shortestUnit);
                     ae.calcuateDMG();
                 }
-                unit.setUnitState(IGameConstants.UnitState.WAIT);
+
             }
         }
         //all units has moved

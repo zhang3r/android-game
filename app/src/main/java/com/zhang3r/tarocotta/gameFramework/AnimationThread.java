@@ -333,7 +333,6 @@ public class AnimationThread extends Thread {
             //reset unit animation
             unitDefending.getAnimation().setCurrentAnimation(unitDefending.getAnimation().getCurrentAnimation() & 3);
             unitSelected.getAnimation().setCurrentAnimation(unitSelected.getAnimation().getCurrentAnimation() & 3);
-
             AttackEvent ae = new AttackEvent(unitSelected, unitDefending);
             ae.calcuateDMG();
             //setting unit state
@@ -749,7 +748,9 @@ public class AnimationThread extends Thread {
                 //resetting frames
                 unitSelected.getAnimation().setCurrentFrame(0);
                 unitDefending.getAnimation().setCurrentFrame(0);
-
+                synchronized (attackSprites){
+                    attackSprites.clear();
+                }
                 gameState = GameState.UNIT_IN_ANIMATION;
 
             }
