@@ -302,6 +302,9 @@ public class AnimationThread extends Thread {
         if (lastTime > now)
             return;
         //attack sprite
+        if(state==TurnState.ENEMY){
+            AI();
+        }
         if (isAttack)
             updateAttack();
         //move
@@ -330,7 +333,6 @@ public class AnimationThread extends Thread {
             //reset unit animation
             unitDefending.getAnimation().setCurrentAnimation(unitDefending.getAnimation().getCurrentAnimation() & 3);
             unitSelected.getAnimation().setCurrentAnimation(unitSelected.getAnimation().getCurrentAnimation() & 3);
-
             AttackEvent ae = new AttackEvent(unitSelected, unitDefending);
             ae.calcuateDMG();
             //setting unit state
@@ -399,52 +401,22 @@ public class AnimationThread extends Thread {
         }
     }
     // animations!!!
+    private void AI(){
+        synchronized (playerArmy) {
+            synchronized (enemyArmy) {
+                /************************************************* AI HOOK UP *******************************************/
 
-//        if (gameState == GameState.UNITINANIMATION) {
+                    shittyAi.AiMove(enemyArmy, playerArmy);
+                    state = TurnState.PLAYER;
+                    enemyArmy.setEndTurnState();
+                    // reset unit state
+                    playerArmy.resetUnitState();
+
+
+            }
+        }
+    }
 //
-//            if (unitToMove.getX() * IAppConstants.SPRITE_WIDTH != unitToMove.getSprite().getXPos() || unitToMove.getY() * IAppConstants.SPRITE_WIDTH != unitToMove.getSprite().getYPos()) {
-//                //move
-//                if (unitToMove.getX() * IAppConstants.SPRITE_WIDTH != unitToMove.getSprite().getXPos()) {
-//                    unitToMove.getSprite().setXPos(unitToMove.getSprite().getXPos() + (dx >> 31 | 1) * IAppConstants.SPRITE_WIDTH / 4);
-//                } else if (unitToMove.getY() * IAppConstants.SPRITE_WIDTH != unitToMove.getSprite().getYPos()) {
-//                    unitToMove.getSprite().setYPos(unitToMove.getSprite().getYPos() + (dy >> 31 | 1) * IAppConstants.SPRITE_WIDTH / 4);
-//                }
-//
-//
-//            } else if (ae != null && unitToMove.getSprite().getCurrentFrame() == 1) {
-//                //animation is still going on do nothing :)
-//
-//
-//            } else {
-//                //animations ended :(
-//                if (battleAnimation.isShowing()) {
-//                    battleAnimation.dismiss();
-//                }
-//                gameState = GameState.UNITSELECTED;
-//
-//            }
-//        synchronized (playerArmy) {
-//            synchronized (enemyArmy) {
-//                /************************************************* AI HOOK UP *******************************************/
-//                if (state == TurnState.ENEMY) {
-//                    shittyAi.AiMove(enemyArmy, playerArmy);
-//                    state = TurnState.PLAYER;
-//                    enemyArmy.setEndTurnState();
-//                    // reset unit state
-//                    playerArmy.resetUnitState();
-//                }
-//                /************************************************* END OF AI ********************************************/
-//                List<BaseUnit> units = new LinkedList<>();
-//                units.addAll(playerArmy.getUnits());
-//                units.addAll(enemyArmy.getUnits());
-//                for (BaseUnit unit : units) {
-//                    AnimatedSprite animatedSprite = unit.getSprite();
-//                    animatedSprite.Update(now);
-//                }
-//
-//
-//            }
-//        }
 //        /*******************************************  END LEVEL CONDITION **************************************/
 //        synchronized (enemyArmy) {
 //
@@ -776,7 +748,9 @@ public class AnimationThread extends Thread {
                 //resetting frames
                 unitSelected.getAnimation().setCurrentFrame(0);
                 unitDefending.getAnimation().setCurrentFrame(0);
-
+                synchronized (attackSprites){
+                    attackSprites.clear();
+                }
                 gameState = GameState.UNIT_IN_ANIMATION;
 
             }
