@@ -15,6 +15,7 @@ import com.zhang3r.tarocotta.constants.ResourceConstant;
 import com.zhang3r.tarocotta.model.AttackEvent;
 import com.zhang3r.tarocotta.model.army.Army;
 import com.zhang3r.tarocotta.model.maps.GameMap;
+import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
 
 import java.util.List;
@@ -48,13 +49,14 @@ public class ShittyAI implements AI {
 
                         }
                     }
-                    if (unit.getMoveUtil().unitMoveUpdate(moveTiles, army, enemyArmy, dX, dY)) {
+
                         Log.d(ILogConstants.DEBUG_TAG, "AI "+unit.getId()+" Move x:" + dX + " y: " + dY);
-                        unit.getAnimation().setXPos(unit.getPosition().getX() * IAppConstants.SPRITE_WIDTH);
-                        unit.getAnimation().setYPos(unit.getPosition().getY() * IAppConstants.SPRITE_WIDTH);
-                        unit.setPosition(unit.getPosition());
+                        unit.getAnimation().setXPos(unit.getPosition().getX() * IAppConstants.SPRITE_WIDTH + dX);
+                        unit.getAnimation().setYPos(unit.getPosition().getY() * IAppConstants.SPRITE_HEIGHT + dY);
+                        unit.getPosition().setX((dX / IAppConstants.SPRITE_WIDTH));
+                        unit.getPosition().setY((dY / IAppConstants.SPRITE_HEIGHT));
                         unit.setUnitState(IGameConstants.UnitState.MOVED);
-                    }
+
                     //update shortest distance
                     shortestDistance =calcDistance(unit.getPosition().getX(), unit.getPosition().getY(), shortestUnit);
                 }

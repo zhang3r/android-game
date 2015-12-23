@@ -69,8 +69,8 @@ public class BasicMoveImpl implements Move {
                     for(Point neighbor: getNeighbors(point)){
 
                         if(!seen.containsKey(neighbor.toString())){
-                            if(neighbor.getX()>=0 && neighbor.getX()<=mapLengthX){
-                                if(neighbor.getY()>=0&& neighbor.getY()<=mapLengthY){
+                            if(neighbor.getX()>=0 && neighbor.getX()<mapLengthX){
+                                if(neighbor.getY()>=0&& neighbor.getY()<mapLengthY){
                                     int costTile = GameMap.getGameMap().getGrid()[neighbor.getX()][neighbor.getY()];
                                     seen.put(neighbor.toString(), cost+costTile);
                                     points.add(neighbor);
@@ -102,7 +102,7 @@ public class BasicMoveImpl implements Move {
     }
 
     /**
-     * return true when we have reached our target
+     * return true when we should move
      *
      * @param spriteList
      * @param playerArmy
@@ -111,7 +111,7 @@ public class BasicMoveImpl implements Move {
      * @param eventY
      * @return
      */
-    public boolean unitMoveUpdate(List<AnimatedSprite> spriteList, Army playerArmy, Army enemyArmy, double eventX, double eventY) {
+    public boolean unitMoveUpdate(List<AnimatedSprite> spriteList, Army playerArmy, Army enemyArmy, double dX, double dY) {
         return false;
     }
 
