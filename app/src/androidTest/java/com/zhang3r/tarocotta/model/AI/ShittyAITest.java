@@ -39,12 +39,14 @@ public class ShittyAITest extends TestCase {
         friendly.getStats().setDefense(0);
         friendly.getStats().setAttack(1);
         friendly.getStats().setHitPoints(5);
+        friendly.getStats().setMaxHP(5);
         friendly.setPosition(new Point(0, 0));
         friendly.setUnitState(IGameConstants.UnitState.NORMAL);
         BaseUnit enemy = new BaseUnit(IGameConstants.UnitType.FOOT);
         enemy.getStats().setDefense(0);
         enemy.getStats().setAttack(10);
         enemy.getStats().setHitPoints(5);
+        enemy.getStats().setMaxHP(5);
         enemy.setPosition(new Point(1, 0));
         enemy.setUnitState(IGameConstants.UnitState.NORMAL);
 
@@ -56,8 +58,10 @@ public class ShittyAITest extends TestCase {
         shittyAI.AiMove(eArmy, fArmy);
         assertNotNull(enemy);
         assertTrue(enemy.getUnitState() == IGameConstants.UnitState.WAIT);
+        assertTrue(enemy.getStats().getHitPoints()==enemy.getStats().getMaxHP());
         assertNotNull(friendly);
         assertTrue(friendly.getUnitState()== IGameConstants.UnitState.DEAD);
+        assertTrue(friendly.getStats().getHitPoints()<=0);
 
 
 
