@@ -1,7 +1,11 @@
 package com.zhang3r.tarocotta.gameFramework;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.MediaPlayer;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -324,6 +329,7 @@ public class AnimationThread extends Thread {
                 enemyArmy.getUnits().get(i).getAnimation().Update(now);
             }
         }
+        checkWinCond();
     }
 
     private void updateAttack() {
@@ -416,86 +422,86 @@ public class AnimationThread extends Thread {
             }
         }
     }
+    private void checkWinCond(){
+        /*******************************************  END LEVEL CONDITION **************************************/
+        synchronized (enemyArmy) {
+
+            if (terminateCondition.isWin(enemyArmy)) {
+                Looper.myLooper().prepare();
+                new AlertDialog.Builder(context)
+                        .setTitle(context.getString(R.string.winTitle))
+                        .setMessage(terminateCondition.getTerminateString())
+                        .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // main menu
+                                dialog.dismiss();
+                                run = false;
+
+                                ((Activity) context).finish();
+                                Looper.myLooper().quitSafely();
+
+                            }
+                        })
+                        .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // play again
+                                dialog.dismiss();
+                                run = false;
+                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
+                                context.startActivity(i);
+                                ((Activity) context).finish();
+                                Looper.myLooper().quit();
+
+
+                            }
+                        })
+
+                        .show();
+                Looper.myLooper().loop();
+            }
+        }
+        synchronized (playerArmy) {
+
+            if (terminateCondition.isLose(playerArmy)) {
+                Looper.myLooper().prepare();
+                new AlertDialog.Builder(context)
+                        .setTitle(context.getString(R.string.loseTitle))
+                        .setMessage(terminateCondition.getTerminateString())
+                        .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                run = false;
+                                dialog.dismiss();
+                                Looper.myLooper().quitSafely();
+                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINMENU");
+                                context.startActivity(i);
+                                ((Activity) context).finish();
+
+
+                            }
+                        })
+                        .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // play again
+                                run = false;
+                                dialog.dismiss();
+
+                                Looper.myLooper().quitSafely();
+                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
+
+                                context.startActivity(i);
+                                ((Activity) context).finish();
+
+
+                            }
+                        })
+
+                        .show();
+                Looper.myLooper().loop();
+            }
+        }
+    }
 //
-//        /*******************************************  END LEVEL CONDITION **************************************/
-//        synchronized (enemyArmy) {
 //
-//            if (terminateCondition.isWin(enemyArmy)) {
-//                Looper.myLooper().prepare();
-//                new AlertDialog.Builder(context)
-//                        .setTitle(context.getString(R.string.winTitle))
-//                        .setMessage(terminateCondition.getTerminateString())
-//                        .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                // main menu
-//                                dialog.dismiss();
-//                                run = false;
-//
-//                                ((Activity) context).finish();
-//                                Looper.myLooper().quitSafely();
-//
-//                            }
-//                        })
-//                        .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                // play again
-//                                dialog.dismiss();
-//                                run = false;
-//                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
-//                                context.startActivity(i);
-//                                ((Activity) context).finish();
-//                                Looper.myLooper().quit();
-//
-//
-//                            }
-//                        })
-//
-//                        .show();
-//                Looper.myLooper().loop();
-//            }
-//        }
-//        synchronized (playerArmy) {
-//
-//            if (terminateCondition.isLose(playerArmy)) {
-//                Looper.myLooper().prepare();
-//                new AlertDialog.Builder(context)
-//                        .setTitle(context.getString(R.string.loseTitle))
-//                        .setMessage(terminateCondition.getTerminateString())
-//                        .setPositiveButton(context.getString(R.string.mainMenu), new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                run = false;
-//                                dialog.dismiss();
-//                                Looper.myLooper().quitSafely();
-//                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINMENU");
-//                                context.startActivity(i);
-//                                ((Activity) context).finish();
-//
-//
-//                            }
-//                        })
-//                        .setNegativeButton(context.getString(R.string.playAgain), new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                // play again
-//                                run = false;
-//                                dialog.dismiss();
-//
-//                                Looper.myLooper().quitSafely();
-//                                Intent i = new Intent("com.zhang3r.onelevelgame.MAINACTIVITY");
-//
-//                                context.startActivity(i);
-//                                ((Activity) context).finish();
-//
-//
-//                            }
-//                        })
-//
-//                        .show();
-//                Looper.myLooper().loop();
-//            }
-//        }
-//
-//        lastTime = now;
-//    }
 
     /**
      * *******************************************************************
