@@ -321,12 +321,16 @@ public class AnimationThread extends Thread {
         }
         synchronized (playerArmy) {
             for (int i = 0; i < playerArmy.getUnits().size(); i++) {
-                playerArmy.getUnits().get(i).getAnimation().Update(now);
+                if(playerArmy.getUnits().get(i).getUnitState()!=UnitState.DEAD) {
+                    playerArmy.getUnits().get(i).getAnimation().Update(now);
+                }
             }
         }
         synchronized (enemyArmy) {
             for (int i = 0; i < enemyArmy.getUnits().size(); i++) {
-                enemyArmy.getUnits().get(i).getAnimation().Update(now);
+                if(enemyArmy.getUnits().get(i).getUnitState()!=UnitState.DEAD) {
+                    enemyArmy.getUnits().get(i).getAnimation().Update(now);
+                }
             }
         }
         checkWinCond();
@@ -609,19 +613,23 @@ public class AnimationThread extends Thread {
         synchronized (playerArmy) {
 
             for (BaseUnit unit : playerArmy.getUnits()) {
-                AnimatedSprite animatedSprite = unit.getAnimation();
-                animatedSprite.draw(canvas, currViewport.left,
-                        currViewport.top, currViewport.right,
-                        currViewport.bottom);
+                if(unit.getUnitState()!=UnitState.DEAD) {
+                    AnimatedSprite animatedSprite = unit.getAnimation();
+                    animatedSprite.draw(canvas, currViewport.left,
+                            currViewport.top, currViewport.right,
+                            currViewport.bottom);
+                }
             }
         }
         synchronized (enemyArmy) {
 
             for (BaseUnit unit : enemyArmy.getUnits()) {
-                AnimatedSprite animatedSprite = unit.getAnimation();
-                animatedSprite.draw(canvas, currViewport.left,
-                        currViewport.top, currViewport.right,
-                        currViewport.bottom);
+                if(unit.getUnitState()!=UnitState.DEAD) {
+                    AnimatedSprite animatedSprite = unit.getAnimation();
+                    animatedSprite.draw(canvas, currViewport.left,
+                            currViewport.top, currViewport.right,
+                            currViewport.bottom);
+                }
             }
         }
 
