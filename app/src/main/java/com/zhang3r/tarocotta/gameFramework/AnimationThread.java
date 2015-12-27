@@ -40,6 +40,7 @@ import com.zhang3r.tarocotta.mapFactory.MapFactoryImpl;
 import com.zhang3r.tarocotta.model.AI.AI;
 import com.zhang3r.tarocotta.model.AI.ShittyAI;
 import com.zhang3r.tarocotta.model.AttackEvent;
+import com.zhang3r.tarocotta.model.ViewTransferDTO;
 import com.zhang3r.tarocotta.model.army.Army;
 import com.zhang3r.tarocotta.model.maps.GameMap;
 import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
@@ -334,6 +335,11 @@ public class AnimationThread extends Thread {
             }
         }
         checkWinCond();
+        sendToUI();
+    }
+
+    private void sendToUI(){
+        ViewTransferDTO dto = new ViewTransferDTO(turns, playerArmy, enemyArmy,terminateCondition, unitSelected,TerrainFactory.getTerrain(tileSelected));
     }
 
     private void updateAttack() {
@@ -504,9 +510,6 @@ public class AnimationThread extends Thread {
             }
         }
     }
-//
-//
-
     /**
      * *******************************************************************
      * ********************* Touch Event Handler ***************************
@@ -632,20 +635,6 @@ public class AnimationThread extends Thread {
                 }
             }
         }
-
-        // sending Unit to ui panel
-        MapFragment.getUnitSelected(unitSelected);
-
-        // sending message to ui panel
-        if (message != null) {
-            MapFragment.getMessageToUi(message);
-        }
-        // TODO send tile info to ui panel
-        if (tileSelected >= 0) {
-            MapFragment.getTerrainSelected(TerrainFactory.getTerrain(tileSelected));
-
-        }
-
     }
 
     // so we can pause the game

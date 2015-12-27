@@ -11,6 +11,7 @@ import com.zhang3r.tarocotta.R;
 import com.zhang3r.tarocotta.constants.ILogConstants;
 import com.zhang3r.tarocotta.fragments.MapFragment;
 import com.zhang3r.tarocotta.fragments.MapUiFragment;
+import com.zhang3r.tarocotta.model.ViewTransferDTO;
 import com.zhang3r.tarocotta.model.tiles.terrain.BaseTerrain;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
 import com.zhang3r.tarocotta.util.SystemUiHider;
@@ -100,11 +101,11 @@ public class FullscreenActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onUnitSelected(BaseUnit unit) {
+    public void onDTOUpdate(ViewTransferDTO dto) {
         MapUiFragment ui = (MapUiFragment) getSupportFragmentManager()
                 .findFragmentByTag("mapUiFragment");
         if (ui != null) {
-            ui.updateUnitSelected(unit);
+            ui.updateUI(dto);
         } else {
             Log.d(ILogConstants.SYSTEM_ERROR_TAG,
                     "fragment not found we are fucked");
@@ -114,33 +115,7 @@ public class FullscreenActivity extends FragmentActivity implements
 
     }
 
-    @Override
-    public void onTerrainSelected(BaseTerrain terrain) {
-        MapUiFragment ui = (MapUiFragment) getSupportFragmentManager()
-                .findFragmentByTag("mapUiFragment");
-        if (ui != null) {
-            ui.updateTerrainSelected(terrain);
-        } else {
-            Log.d(ILogConstants.SYSTEM_ERROR_TAG,
-                    "fragment not found we are fucked");
-        }
 
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void getMessageToUi(String message) {
-        MapUiFragment ui = (MapUiFragment) getSupportFragmentManager()
-                .findFragmentByTag("mapUiFragment");
-        if (ui != null) {
-            ui.updateMessage(message);
-        } else {
-            Log.d(ILogConstants.SYSTEM_ERROR_TAG,
-                    "fragment not found we are fucked");
-        }
-
-    }
 
     @Override
     protected void onPause() {

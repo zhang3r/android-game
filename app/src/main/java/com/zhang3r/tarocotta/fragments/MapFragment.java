@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.zhang3r.tarocotta.R;
 import com.zhang3r.tarocotta.constants.ILogConstants;
+import com.zhang3r.tarocotta.model.ViewTransferDTO;
 import com.zhang3r.tarocotta.model.tiles.terrain.BaseTerrain;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
 import com.zhang3r.tarocotta.views.MapView;
@@ -19,26 +20,17 @@ import com.zhang3r.tarocotta.views.MapView;
  * Activities that contain this fragment must implement the
  * <p/>
  * to handle interaction events.
- * Use the {@link MapFragment#newInstance} factory method to
+ * Use the {@link MapFragment#} factory method to
  * create an instance of this fragment.
  */
 public class MapFragment extends Fragment {
 
     private static OnMapListener mCallback;
 
-    public static void getUnitSelected(BaseUnit unit) {
-        mCallback.onUnitSelected(unit);
-    }
 
-    public static void getTerrainSelected(BaseTerrain terrain) {
-        if (terrain != null && mCallback != null) {
-            mCallback.onTerrainSelected(terrain);
-        }
-    }
-
-    public static void getMessageToUi(String message) {
-        if (message != null && mCallback != null) {
-            mCallback.getMessageToUi(message);
+    public static void onDTOUpdate(ViewTransferDTO dto) {
+        if (dto != null && mCallback != null) {
+            mCallback.onDTOUpdate(dto);
         }
     }
 
@@ -85,11 +77,7 @@ public class MapFragment extends Fragment {
 
     // Container Activity must implement this interface
     public interface OnMapListener {
-        public void onUnitSelected(BaseUnit position);
-
-        public void getMessageToUi(String message);
-
-        void onTerrainSelected(BaseTerrain terrain);
+        public void onDTOUpdate(ViewTransferDTO dto);
     }
 
 
