@@ -43,7 +43,6 @@ public class FullscreenActivity extends FragmentActivity implements
                 .beginTransaction();
         MapFragment mapFragment = new MapFragment();
         MapUiFragment mapUiFragment = new MapUiFragment();
-        mapUiFragment.setMenuVisibility(true);
         fragmentTransaction.add(R.id.fullscreen_content, mapFragment,
                 "mapFragment").add(R.id.fullscreen_content, mapUiFragment,
                 "mapUiFragment").commit();

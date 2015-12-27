@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight=".7"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="2dp"
     android:background="@color/highlighted_text_material_light">
 
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/uifragtop"
-        android:layout_weight=".3">
+        android:layout_weight=".2">
 
         <RelativeLayout
             android:id="@+id/unitInfo"
