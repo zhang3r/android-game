@@ -16,6 +16,7 @@ import com.zhang3r.tarocotta.Gesture.OnSwipeTouchListener;
 import com.zhang3r.tarocotta.R;
 import com.zhang3r.tarocotta.constants.IButtonConstants;
 import com.zhang3r.tarocotta.constants.ILogConstants;
+import com.zhang3r.tarocotta.model.ViewTransferDTO;
 import com.zhang3r.tarocotta.model.tiles.terrain.BaseTerrain;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
 import com.zhang3r.tarocotta.views.MapUiView;
@@ -130,66 +131,13 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
         }
     }
 
-    public void updateUnitSelected(final BaseUnit unit) {
-        // update unit info
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // This code will always run on the UI thread, therefore is safe
-                // to modify UI elements.
-                MapUiView view = (MapUiView) getView()
-                        .findViewById(R.id.uiView);
-//                TextView name = (TextView) view.findViewById(R.id.unitName);
-//                name.setText("Name: " + unit.getName());
-//                TextView hp = (TextView) view.findViewById(R.id.hitPoints);
-//                hp.setText("HP: " + unit.getHitPoints());
+    public void updateUI(final ViewTransferDTO dto) {
+        //TODO
 
-                update(unit, view);
-
-            }
-        });
 
     }
 
-    public void updateMessage(final String message) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // This code will always run on the UI thread, therefore is safe
-                // to modify UI elements.
-                MapUiView view = (MapUiView) getView()
-                        .findViewById(R.id.uiView);
-//                TextView actionText = (TextView) view
-//                        .findViewById(R.id.unitAction);
-//                actionText.setText(message);
-            }
-        });
-    }
 
-    public void updateTerrainSelected(final BaseTerrain terrain) {
-        // update unit info
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // This code will always run on the UI thread, therefore is safe
-                // to modify UI elements.
-                MapUiView view = (MapUiView) getView()
-                        .findViewById(R.id.uiView);
-//                TextView name = (TextView) view.findViewById(R.id.terrainName);
-//                name.setText("terrain Name: " + terrain.getName());
-//                TextView hp = (TextView) view
-//                        .findViewById(R.id.terrainMovement);
-//                hp.setText("Movement hinderance: " + terrain.getMovement());
-//
-//                TextView mp = (TextView) view
-//                        .findViewById(R.id.terrainDefenseBonus);
-//                mp.setText("defensive bonus: " + terrain.getDefense());
-                //update(null, view);
-
-            }
-        });
-
-    }
 
 
 
