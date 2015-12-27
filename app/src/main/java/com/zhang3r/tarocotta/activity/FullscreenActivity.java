@@ -37,14 +37,7 @@ public class FullscreenActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fullscreen);
-        // setContentView(R.layout.activity_fullscreen);
 
-        // Hide both the navigation bar and the status bar.
-        // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-        // a general rule, you should design your app to hide the status bar whenever you
-        // hide the navigation bar.
-
-//        ViewGroup vg = new MapViewGroup(this);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager
                 .beginTransaction();
@@ -52,27 +45,15 @@ public class FullscreenActivity extends FragmentActivity implements
         MapUiFragment mapUiFragment = new MapUiFragment();
         mapUiFragment.setMenuVisibility(true);
         fragmentTransaction.add(R.id.fullscreen_content, mapFragment,
-                "mapFragment");
-        fragmentTransaction.add(R.id.fullscreen_content, mapUiFragment,
+                "mapFragment").add(R.id.fullscreen_content, mapUiFragment,
                 "mapUiFragment").commit();
-        // final View controlsView =
-        // findViewById(R.id.fullscreen_content_controls);
+
         final View contentView = findViewById(R.id.fullscreen_content);
         //DIALOG
-
-
-        // Set up an instance of SystemUiHider to control the system UI for
-        // this activity.
-        contentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE);
-
-        View decorView = getWindow().getDecorView();
-// Hide both the navigation bar and the status bar.
-// SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-// a general rule, you should design your app to hide the status bar whenever you
-// hide the navigation bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        // Hide both the navigation bar and the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+        contentView.setSystemUiVisibility(uiOptions);
     }
 
     @Override
@@ -97,7 +78,6 @@ public class FullscreenActivity extends FragmentActivity implements
             Log.d(ILogConstants.SYSTEM_ERROR_TAG,
                     "fragment not found we are fucked");
         }
-
     }
 
     @Override
@@ -110,9 +90,6 @@ public class FullscreenActivity extends FragmentActivity implements
             Log.d(ILogConstants.SYSTEM_ERROR_TAG,
                     "fragment not found we are fucked");
         }
-
-        // TODO Auto-generated method stub
-
     }
 
 
