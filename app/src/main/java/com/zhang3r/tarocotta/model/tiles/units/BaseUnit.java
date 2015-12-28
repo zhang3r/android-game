@@ -1,14 +1,10 @@
 package com.zhang3r.tarocotta.model.tiles.units;
 
-import android.content.res.Resources;
+import android.graphics.Bitmap;
 
 import com.zhang3r.tarocotta.bitmaps.AnimatedSprite;
-import com.zhang3r.tarocotta.constants.IAppConstants;
-import com.zhang3r.tarocotta.constants.IGameConstants.UnitType;
 import com.zhang3r.tarocotta.constants.IGameConstants.UnitState;
-import com.zhang3r.tarocotta.model.army.Army;
-import com.zhang3r.tarocotta.model.sprite.Tile;
-import com.zhang3r.tarocotta.model.tiles.statsFactory.StatsFactory;
+import com.zhang3r.tarocotta.constants.IGameConstants.UnitType;
 import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Point;
 import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.Stats;
 import com.zhang3r.tarocotta.model.tiles.statsFactory.impl.StatsFactoryImpl;
@@ -21,9 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class BaseUnit{
+public class BaseUnit {
 
     private String id;
+    private Bitmap portrait;
     private AnimatedSprite animation;
     private Stats stats;
     private List<Integer> items;
@@ -33,31 +30,30 @@ public class BaseUnit{
     private String characterDescription;
 
 
-
     private Attack attackUtil;
     private Move moveUtil;
     private Direction direction;
 
-    public enum Direction{
-        UP(3),DOWN(4),LEFT(1),RIGHT(2);
+    public enum Direction {
+        UP(3), DOWN(4), LEFT(1), RIGHT(2);
         private final int mask;
-        private Direction(int mask)
-        {
+
+        private Direction(int mask) {
             this.mask = mask;
         }
-        public int getMask()
-        {
+
+        public int getMask() {
             return mask;
         }
     }
 
-    public BaseUnit(UnitType type){
+    public BaseUnit(UnitType type) {
         this.id = UUID.randomUUID().toString();
         this.stats = StatsFactoryImpl.createStat(type);
         this.unitState = UnitState.NORMAL;
-        this.position = new Point(0,0);
+        this.position = new Point(0, 0);
         this.items = new ArrayList<>();
-        this.direction =Direction.LEFT;
+        this.direction = Direction.LEFT;
         this.moveUtil = new BasicMoveImpl();
         this.attackUtil = new MeleeAttackImpl();
     }
@@ -111,6 +107,7 @@ public class BaseUnit{
     public void setCharacterDescription(String characterDescription) {
         this.characterDescription = characterDescription;
     }
+
     public Attack getAttackUtil() {
         return attackUtil;
     }
@@ -142,6 +139,7 @@ public class BaseUnit{
     public void setMoveUtil(Move moveUtil) {
         this.moveUtil = moveUtil;
     }
+
     public String getId() {
         return id;
     }
@@ -149,5 +147,14 @@ public class BaseUnit{
     public void setId(String id) {
         this.id = id;
     }
+
+    public Bitmap getPortrait() {
+        return portrait;
+    }
+
+    public void setPortrait(Bitmap portrait) {
+        this.portrait = portrait;
+    }
+
 
 }
