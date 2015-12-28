@@ -2,6 +2,7 @@ package com.zhang3r.tarocotta.bitmaps.spriteFactory;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.LruCache;
 
 import com.zhang3r.tarocotta.R;
 import com.zhang3r.tarocotta.constants.IAppConstants;
@@ -13,12 +14,28 @@ import com.zhang3r.tarocotta.constants.ResourceConstant;
  */
 public class SpriteFactory {
     private static SpriteFactory factory;
+    private static LruCache<Integer,Bitmap> spriteCache;
 
     private SpriteFactory(){}
 
     public static SpriteFactory getInstance(){
         if(factory==null){
             factory= new SpriteFactory();
+            // Get max available VM memory, exceeding this amount will throw an
+            // OutOfMemory exception. Stored in kilobytes as LruCache takes an
+            // int in its constructor.
+            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+            // Use 1/8th of the available memory for this memory cache.
+            final int cacheSize = maxMemory / 8;
+            spriteCache = new LruCache<Integer,Bitmap>(cacheSize){
+                @Override
+                protected int sizeOf(Integer key, Bitmap bitmap) {
+                    // The cache size will be measured in kilobytes rather than
+                    // number of items.
+                    return bitmap.getByteCount() / 1024;
+                }
+            };
 
         }
         return factory;
@@ -65,6 +82,9 @@ public class SpriteFactory {
     }
 
     private Bitmap getSprite(int path, int numFrame, int numAnimation){
+        if(spriteCache.get(path)!=null){
+            return spriteCache.get(path);
+        }
         Bitmap pic= BitmapFactory
                 .decodeResource(ResourceConstant.resources, path);
         //TODO change
@@ -72,6 +92,7 @@ public class SpriteFactory {
             pic = Bitmap.createScaledBitmap(pic, numFrame * IAppConstants.SPRITE_WIDTH, numAnimation*IAppConstants.SPRITE_HEIGHT, false);
 
         }
+        spriteCache.put(path,pic);
         return pic;
     }
 
