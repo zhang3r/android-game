@@ -23,4 +23,5 @@
     <string name="winTitle">You Are Victorious</string>
     <string name="descriptionLabel">Description: </string>
     <string name="unitStatus">Status: </string>
+    <string name="turnText">Turn </string>
 </resources>

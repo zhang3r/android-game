@@ -11,6 +11,7 @@ import com.zhang3r.tarocotta.R;
 import com.zhang3r.tarocotta.constants.ILogConstants;
 import com.zhang3r.tarocotta.fragments.MapFragment;
 import com.zhang3r.tarocotta.fragments.MapUiFragment;
+import com.zhang3r.tarocotta.fragments.TurnFragment;
 import com.zhang3r.tarocotta.model.ViewTransferDTO;
 import com.zhang3r.tarocotta.model.tiles.terrain.BaseTerrain;
 import com.zhang3r.tarocotta.model.tiles.units.BaseUnit;
@@ -43,7 +44,8 @@ public class FullscreenActivity extends FragmentActivity implements
                 .beginTransaction();
         MapFragment mapFragment = new MapFragment();
         MapUiFragment mapUiFragment = new MapUiFragment();
-        fragmentTransaction.add(R.id.fullscreen_content, mapFragment,
+        TurnFragment turnFragment = new TurnFragment();
+        fragmentTransaction.add(R.id.fullscreen_content,turnFragment, "turnFragment").add(R.id.fullscreen_content, mapFragment,
                 "mapFragment").add(R.id.fullscreen_content, mapUiFragment,
                 "mapUiFragment").commit();
 
