@@ -14,7 +14,9 @@ import com.zhang3r.tarocotta.model.tiles.units.Interface.Attack;
 import com.zhang3r.tarocotta.model.tiles.units.Interface.Move;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.UUID;
 
 public class BaseUnit {
@@ -56,6 +58,7 @@ public class BaseUnit {
         this.direction = Direction.LEFT;
         this.moveUtil = new BasicMoveImpl();
         this.attackUtil = new MeleeAttackImpl();
+
     }
 
     public Stats getStats() {
