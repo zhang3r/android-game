@@ -34,7 +34,6 @@ import com.zhang3r.tarocotta.constants.IGameConstants.TurnState;
 import com.zhang3r.tarocotta.constants.IGameConstants.UnitState;
 import com.zhang3r.tarocotta.constants.ILogConstants;
 import com.zhang3r.tarocotta.constants.ResourceConstant;
-import com.zhang3r.tarocotta.fragments.MapFragment;
 import com.zhang3r.tarocotta.mapFactory.MapFactory;
 import com.zhang3r.tarocotta.mapFactory.MapFactoryImpl;
 import com.zhang3r.tarocotta.model.AI.AI;
@@ -308,7 +307,7 @@ public class AnimationThread extends Thread {
         if (lastTime > now)
             return;
         //attack sprite
-        if(state==TurnState.ENEMY){
+        if (state == TurnState.ENEMY) {
             AI();
         }
         if (isAttack)
@@ -322,14 +321,14 @@ public class AnimationThread extends Thread {
         }
         synchronized (playerArmy) {
             for (int i = 0; i < playerArmy.getUnits().size(); i++) {
-                if(playerArmy.getUnits().get(i).getUnitState()!=UnitState.DEAD) {
+                if (playerArmy.getUnits().get(i).getUnitState() != UnitState.DEAD) {
                     playerArmy.getUnits().get(i).getAnimation().Update(now);
                 }
             }
         }
         synchronized (enemyArmy) {
             for (int i = 0; i < enemyArmy.getUnits().size(); i++) {
-                if(enemyArmy.getUnits().get(i).getUnitState()!=UnitState.DEAD) {
+                if (enemyArmy.getUnits().get(i).getUnitState() != UnitState.DEAD) {
                     enemyArmy.getUnits().get(i).getAnimation().Update(now);
                 }
             }
@@ -338,8 +337,8 @@ public class AnimationThread extends Thread {
         sendToUI();
     }
 
-    private void sendToUI(){
-        ViewTransferDTO dto = new ViewTransferDTO(turns, playerArmy, enemyArmy,terminateCondition, unitSelected,TerrainFactory.getTerrain(tileSelected));
+    private void sendToUI() {
+        ViewTransferDTO dto = new ViewTransferDTO(turns, playerArmy, enemyArmy, terminateCondition, unitSelected, TerrainFactory.getTerrain(tileSelected));
     }
 
     private void updateAttack() {
@@ -416,23 +415,25 @@ public class AnimationThread extends Thread {
             }
         }
     }
+
     // animations!!!
-    private void AI(){
+    private void AI() {
         synchronized (playerArmy) {
             synchronized (enemyArmy) {
                 /************************************************* AI HOOK UP *******************************************/
 
-                    shittyAi.AiMove(enemyArmy, playerArmy);
-                    state = TurnState.PLAYER;
-                    enemyArmy.setEndTurnState();
-                    // reset unit state
-                    playerArmy.resetUnitState();
-                    turns++;
+                shittyAi.AiMove(enemyArmy, playerArmy);
+                state = TurnState.PLAYER;
+                enemyArmy.setEndTurnState();
+                // reset unit state
+                playerArmy.resetUnitState();
+                turns++;
 
             }
         }
     }
-    private void checkWinCond(){
+
+    private void checkWinCond() {
         /*******************************************  END LEVEL CONDITION **************************************/
         synchronized (enemyArmy) {
 
@@ -510,6 +511,7 @@ public class AnimationThread extends Thread {
             }
         }
     }
+
     /**
      * *******************************************************************
      * ********************* Touch Event Handler ***************************
@@ -537,11 +539,11 @@ public class AnimationThread extends Thread {
         if (currViewport.left - distanceX > 0) {
             currViewport.left = 0;
             currViewport.right = -IAppConstants.VIEW_WIDTH;
-        } else if ((currViewport.right - distanceX) * mScaleFactor <= -1 * mapBackground.getWidth()) {
+        } else if ((currViewport.right - distanceX) / mScaleFactor <= -1 * mapBackground.getWidth()) {
 
 
-            currViewport.right = (int) (-1 * ((GameMap.getGameMap().getGrid()[0].length - 1) * IAppConstants.SPRITE_WIDTH) * mScaleFactor - .3 * screenWidth);
-            currViewport.left = currViewport.right + screenWidth;
+            currViewport.right = -1 * mapBackground.getWidth() / mScaleFactor;
+            currViewport.left = (currViewport.right + IAppConstants.VIEW_WIDTH) / mScaleFactor;
 
         } else {
             currViewport.right -= distanceX;
@@ -551,11 +553,11 @@ public class AnimationThread extends Thread {
         if (currViewport.top - distanceY > 0) {
             currViewport.top = 0;
             currViewport.bottom = -IAppConstants.VIEW_HEIGHT;
-        } else if ((currViewport.bottom - distanceY) * mScaleFactor <= -1 * mapBackground.getHeight()) {
+        } else if ((currViewport.bottom - distanceY) / mScaleFactor <= -1 * mapBackground.getHeight()) {
 
 
-            currViewport.bottom = -1 * mapBackground.getHeight();
-            currViewport.top = (currViewport.bottom + IAppConstants.VIEW_HEIGHT) * mScaleFactor;
+            currViewport.bottom = -1 * mapBackground.getHeight() / mScaleFactor;
+            currViewport.top = (currViewport.bottom + IAppConstants.VIEW_HEIGHT) / mScaleFactor;
 
 
         } else {
@@ -616,7 +618,7 @@ public class AnimationThread extends Thread {
         synchronized (playerArmy) {
 
             for (BaseUnit unit : playerArmy.getUnits()) {
-                if(unit.getUnitState()!=UnitState.DEAD) {
+                if (unit.getUnitState() != UnitState.DEAD) {
                     AnimatedSprite animatedSprite = unit.getAnimation();
                     animatedSprite.draw(canvas, currViewport.left,
                             currViewport.top, currViewport.right,
@@ -627,7 +629,7 @@ public class AnimationThread extends Thread {
         synchronized (enemyArmy) {
 
             for (BaseUnit unit : enemyArmy.getUnits()) {
-                if(unit.getUnitState()!=UnitState.DEAD) {
+                if (unit.getUnitState() != UnitState.DEAD) {
                     AnimatedSprite animatedSprite = unit.getAnimation();
                     animatedSprite.draw(canvas, currViewport.left,
                             currViewport.top, currViewport.right,
@@ -718,23 +720,43 @@ public class AnimationThread extends Thread {
                     }
                 } else {
                     //if terrain
-
+                    //TODO if terrain is within moveTiles
                     if (gameState == GameState.UNIT_SELECTED) {
-                        //if unit needs to move
-                        unitOrigPosX = unitSelected.getPosition().getX();
-                        unitOrigPosY = unitSelected.getPosition().getY();
                         unitDestination = new Point((int) (x / IAppConstants.SPRITE_WIDTH), (int) (y / IAppConstants.SPRITE_HEIGHT));
-                        unitSelected.setUnitState(UnitState.MOVE_ANIMATION);
+                        boolean inMoveSprites = false;
+                        synchronized (moveSprites) {
+                            for (AnimatedSprite moveTile : moveSprites) {
+                                if (moveTile.getPoint().compareTo(unitDestination) == 0) {
+                                    inMoveSprites = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (inMoveSprites) {
+                            //if unit needs to move
+                            unitOrigPosX = unitSelected.getPosition().getX();
+                            unitOrigPosY = unitSelected.getPosition().getY();
 
-                        //unit move
-                        path = unitSelected.getMoveUtil().findPath(moveSprites, unitDestination, unitSelected.getPosition().getX(), unitSelected.getPosition().getY());
-                        unitDestination = null;
-                        gameState = GameState.UNIT_IN_ANIMATION;
+                            unitSelected.setUnitState(UnitState.MOVE_ANIMATION);
+
+                            //unit move
+                            path = unitSelected.getMoveUtil().findPath(moveSprites, unitDestination, unitSelected.getPosition().getX(), unitSelected.getPosition().getY());
+                            unitDestination = null;
+                            gameState = GameState.UNIT_IN_ANIMATION;
 
 
-                    } else {
-                        //terrain info
-
+                        } else {
+                            //terrain info
+                            //clear move
+                            synchronized (unitSelected) {
+                                synchronized (moveSprites) {
+                                    gameState = GameState.NORMAL;
+                                    moveSprites.clear();
+                                    unitSelected.setUnitState(UnitState.NORMAL);
+                                    unitSelected = null;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -751,7 +773,7 @@ public class AnimationThread extends Thread {
                 //resetting frames
                 unitSelected.getAnimation().setCurrentFrame(0);
                 unitDefending.getAnimation().setCurrentFrame(0);
-                synchronized (attackSprites){
+                synchronized (attackSprites) {
                     attackSprites.clear();
                 }
                 gameState = GameState.UNIT_IN_ANIMATION;
