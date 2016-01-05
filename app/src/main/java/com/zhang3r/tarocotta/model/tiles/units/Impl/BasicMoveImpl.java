@@ -107,8 +107,6 @@ public class BasicMoveImpl implements Move {
      * @param spriteList
      * @param playerArmy
      * @param enemyArmy
-     * @param eventX
-     * @param eventY
      * @return
      */
     public boolean unitMoveUpdate(List<AnimatedSprite> spriteList, Army playerArmy, Army enemyArmy, double dX, double dY) {
