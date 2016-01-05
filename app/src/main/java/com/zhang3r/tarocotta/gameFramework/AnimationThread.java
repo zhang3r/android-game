@@ -720,28 +720,43 @@ public class AnimationThread extends Thread {
                     }
                 } else {
                     //if terrain
-
+                    //TODO if terrain is within moveTiles
                     if (gameState == GameState.UNIT_SELECTED) {
-                        //if unit needs to move
-                        unitOrigPosX = unitSelected.getPosition().getX();
-                        unitOrigPosY = unitSelected.getPosition().getY();
                         unitDestination = new Point((int) (x / IAppConstants.SPRITE_WIDTH), (int) (y / IAppConstants.SPRITE_HEIGHT));
-                        unitSelected.setUnitState(UnitState.MOVE_ANIMATION);
+                        boolean inMoveSprites = false;
+                        synchronized (moveSprites) {
+                            for (AnimatedSprite moveTile : moveSprites) {
+                                if (moveTile.getPoint().compareTo(unitDestination) == 0) {
+                                    inMoveSprites = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (inMoveSprites) {
+                            //if unit needs to move
+                            unitOrigPosX = unitSelected.getPosition().getX();
+                            unitOrigPosY = unitSelected.getPosition().getY();
 
-                        //unit move
-                        path = unitSelected.getMoveUtil().findPath(moveSprites, unitDestination, unitSelected.getPosition().getX(), unitSelected.getPosition().getY());
-                        unitDestination = null;
-                        gameState = GameState.UNIT_IN_ANIMATION;
+                            unitSelected.setUnitState(UnitState.MOVE_ANIMATION);
+
+                            //unit move
+                            path = unitSelected.getMoveUtil().findPath(moveSprites, unitDestination, unitSelected.getPosition().getX(), unitSelected.getPosition().getY());
+                            unitDestination = null;
+                            gameState = GameState.UNIT_IN_ANIMATION;
 
 
-                    } else {
-                        //terrain info
-                        //clear move
-                        gameState = GameState.NORMAL;
-                        moveSprites.clear();
-                        unitSelected = null;
-
-
+                        } else {
+                            //terrain info
+                            //clear move
+                            synchronized (unitSelected) {
+                                synchronized (moveSprites) {
+                                    gameState = GameState.NORMAL;
+                                    moveSprites.clear();
+                                    unitSelected.setUnitState(UnitState.NORMAL);
+                                    unitSelected = null;
+                                }
+                            }
+                        }
                     }
                 }
             }
