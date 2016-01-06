@@ -8,345 +8,70 @@
     android:padding="2dp"
     android:background="@color/highlighted_text_material_light">
 
-    <ViewFlipper
-        android:id="@+id/viewFlipper"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/uifragtop"
-        android:layout_weight=".2">
+        android:orientation="horizontal"
+        android:weightSum="1">
 
-        <RelativeLayout
-            android:id="@+id/unitInfo"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            >
-
-
-            <TextView
-                android:id="@+id/unitName"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-
-                android:text="Unit Name"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                />
-            <!-- TODO get profile image -->
-            <ImageView
-                android:id="@+id/unitImage"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="left"
-                android:padding="5dp"
-                android:background="#000"
-                android:contentDescription="@string/app_name"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_below="@+id/unitName"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                android:id="@+id/unitStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/unitStatus"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/unitName"
-                android:layout_toRightOf="@+id/unitImage" />
-            <TextView
-                android:id="@+id/unitStatusText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/unitName"
-                android:layout_toRightOf="@+id/unitType" />
-
-            <TextView
-                android:id="@+id/unitType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/unitType"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/unitStatus"
-                android:layout_toRightOf="@+id/unitImage" />
-            <TextView
-                android:id="@+id/unitTypeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/unitStatus"
-                android:layout_toRightOf="@+id/unitType" />
-            <TextView
-                android:id="@+id/hp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="HP: "
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_below="@+id/unitTypeText"
-                android:layout_toRightOf="@+id/unitImage"
-                android:paddingTop="0dp"/>
-            <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/HPBar"
-                android:layout_below="@+id/unitTypeText"
-                android:layout_toRightOf="@+id/hp"
-                android:paddingTop="5dp"
-                android:paddingLeft="2dp"/>
-            <TextView
-                android:id="@+id/progressBarText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/unitTypeText"
-                android:layout_toRightOf="@+id/hp"
-                android:layout_centerHorizontal="true"
-                android:paddingLeft="15dp"
-                android:paddingTop="5dp"
-                />
-
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="&lt;"
-                android:id="@+id/buttonLeft"
-                android:layout_below="@+id/progressBarText"
-                android:layout_centerVertical="true" />
-
-            <TextView
-                android:id="@+id/attackStat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/attackStatLabel"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_below="@+id/unitImage"
-                android:layout_toRightOf="@+id/buttonLeft"
-                android:paddingLeft="5dp"
-                android:paddingTop="20dp"
-                />
-            <TextView
-                android:id="@+id/attackStatText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_below="@+id/unitImage"
-                android:layout_toRightOf="@+id/attackStat"
-                android:paddingLeft="5dp"
-                android:paddingTop="20dp"
-                />
-
-
-            <TextView
-                android:id="@+id/defenseStat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/defenseStatLabel"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_below="@+id/attackStat"
-                android:layout_toRightOf="@+id/buttonLeft"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"/>
-
-            <TextView
-                android:id="@+id/defenseStatText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_below="@+id/attackStat"
-                android:layout_toRightOf="@+id/defenseStat"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"/>
-
-            <TextView
-                android:id="@+id/attackRangeStat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/attackRangeStatLabel"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_below="@+id/defenseStat"
-                android:layout_toRightOf="@+id/buttonLeft"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp" />
-
-            <TextView
-                android:id="@+id/attackRangeStatText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_below="@+id/defenseStat"
-                android:layout_toRightOf="@+id/attackRangeStat"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp" />
-
-
-
-            <TextView
-                android:id="@+id/movePointStat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/moveStatLabel"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_below="@+id/attackRangeStat"
-                android:layout_toRightOf="@+id/buttonLeft"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"/>
-            <TextView
-                android:id="@+id/movePointStatText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_below="@+id/attackRangeStat"
-                android:layout_toRightOf="@+id/movePointStat"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"/>
-
-
-
-
-
-
-
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="&gt;"
-                android:id="@+id/buttonRight"
-                android:layout_below="@+id/progressBarText"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                />
-            <!-- Add more stats here -->
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/logs"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_column="4"
-            android:layout_weight=".3">
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="&lt;"
-                android:id="@+id/buttonLeft2"
-                android:layout_centerVertical="true" />
-
-
-            <TextView
-                android:id="@+id/descriptionLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/descriptionLabel"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:padding="5dp" />
-            <TextView
-                android:id="@+id/descriptionText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_below="@id/descriptionLabel"
-                android:padding="5dp"/>
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="&gt;"
-                android:id="@+id/buttonRight2"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                />
-
-
-
-            <!-- Add more stats here -->
-
-        </RelativeLayout>
-    </ViewFlipper>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="2dip"
-        android:layout_column="0"
-        android:background="@color/background_floating_material_light" />
-
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/tableLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/uibottom"
-        android:layout_weight=".7">
-        <!-- first row -->
-        <TableRow
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".5"
-            android:padding="5dip">
-
-            <Button
-                android:id="@+id/attack"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:text="@string/attack" />
+                android:text="New Text"
+                android:id="@+id/textView" />
 
-            <Button
-                android:id="@+id/cancel"
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:text="@string/cancel" />
+                android:id="@+id/imageButton" />
 
+        </LinearLayout>
 
-        </TableRow>
-        <!-- second row -->
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow3"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:padding="5dip">
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/textView2" />
 
-            <Button
-                android:id="@+id/wait"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:text="@string/wait" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/textView3" />
 
-            <Button
-                android:id="@+id/endTurn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:text="@string/endTurn" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/attack"
+            android:id="@+id/btn_attack" />
 
-        </TableRow>
-        <!-- just draw a red line -->
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:id="@+id/btn_cancel" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wait"
+            android:id="@+id/btn_wait" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/endTurn"
+            android:id="@+id/btn_endTurn" />
+    </LinearLayout>
 
 
-    </TableLayout>
+
+
 </com.zhang3r.tarocotta.views.MapUiView>
