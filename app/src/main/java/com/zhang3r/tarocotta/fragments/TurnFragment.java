@@ -2,12 +2,14 @@ package com.zhang3r.tarocotta.fragments;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zhang3r.tarocotta.R;
+import com.zhang3r.tarocotta.constants.ILogConstants;
 
 /**
  * Created by Zhang3r on 12/27/2015.
@@ -24,6 +26,7 @@ public class TurnFragment extends Fragment {
     public void updateTurn(int n){
         View view = (View) getView().findViewById(R.id.turnView);
         TextView t = (TextView) view.findViewById(R.id.turnText);
+
         t.setText(getString(R.string.turnText)+n);
     }
 }

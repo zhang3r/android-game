@@ -34,6 +34,7 @@ import com.zhang3r.tarocotta.constants.IGameConstants.TurnState;
 import com.zhang3r.tarocotta.constants.IGameConstants.UnitState;
 import com.zhang3r.tarocotta.constants.ILogConstants;
 import com.zhang3r.tarocotta.constants.ResourceConstant;
+import com.zhang3r.tarocotta.fragments.MapFragment;
 import com.zhang3r.tarocotta.mapFactory.MapFactory;
 import com.zhang3r.tarocotta.mapFactory.MapFactoryImpl;
 import com.zhang3r.tarocotta.model.AI.AI;
@@ -138,7 +139,7 @@ public class AnimationThread extends Thread {
         song.setLooping(true);
         //song.start();
         gameState = GameState.NORMAL;
-        turns = 0;
+        turns = 1;
 
 
     }
@@ -334,11 +335,12 @@ public class AnimationThread extends Thread {
             }
         }
         checkWinCond();
-        sendToUI();
+
     }
 
     private void sendToUI() {
         ViewTransferDTO dto = new ViewTransferDTO(turns, playerArmy, enemyArmy, terminateCondition, unitSelected, TerrainFactory.getTerrain(tileSelected));
+        MapFragment.onDTOUpdate(dto);
     }
 
     private void updateAttack() {
@@ -886,7 +888,8 @@ public class AnimationThread extends Thread {
                             "things has gone awry please check state and army");
                 }
                 gameState = GameState.NORMAL;
-
+                //send data to fragments
+                sendToUI();
 
             }
 
