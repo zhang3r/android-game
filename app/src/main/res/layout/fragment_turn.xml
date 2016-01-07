@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Turn 1"
+        android:text="Turn 0"
         android:textColor="@color/hint_foreground_material_dark"
         android:id="@+id/turnText"
         android:layout_gravity="center_horizontal" />

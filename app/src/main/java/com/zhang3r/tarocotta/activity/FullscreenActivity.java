@@ -85,11 +85,18 @@ public class FullscreenActivity extends FragmentActivity implements
     public void onDTOUpdate(ViewTransferDTO dto) {
         MapUiFragment ui = (MapUiFragment) getSupportFragmentManager()
                 .findFragmentByTag("mapUiFragment");
+        TurnFragment tf = (TurnFragment) getSupportFragmentManager().findFragmentByTag("turnFragment");
+        if(tf != null){
+            tf.updateTurn(dto.getTurn());
+        }else{
+            Log.d(ILogConstants.SYSTEM_ERROR_TAG,
+                    "turn fragment not found we are fucked");
+        }
         if (ui != null) {
             ui.updateUI(dto);
         } else {
             Log.d(ILogConstants.SYSTEM_ERROR_TAG,
-                    "fragment not found we are fucked");
+                    "ui fragment not found we are fucked");
         }
     }
 
