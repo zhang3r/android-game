@@ -30,6 +30,7 @@ public class BaseUnit {
     private UnitState unitState;
     private String unitDescription;
     private String characterDescription;
+    private String unitName;
 
 
     private Attack attackUtil;
@@ -58,6 +59,7 @@ public class BaseUnit {
         this.direction = Direction.LEFT;
         this.moveUtil = new BasicMoveImpl();
         this.attackUtil = new MeleeAttackImpl();
+        this.unitName ="";
 
     }
 
@@ -158,6 +160,15 @@ public class BaseUnit {
     public void setPortrait(Bitmap portrait) {
         this.portrait = portrait;
     }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
 
 
 }

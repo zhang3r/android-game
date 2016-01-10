@@ -132,7 +132,14 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
     }
 
     public void updateUI(final ViewTransferDTO dto) {
-        //TODO
+        BaseUnit selectedUnit = dto.getCurrentlySelectedUnit();
+        BaseTerrain selectedTerrain = dto.getCurrentlySelectedTerrain();
+
+        if(selectedUnit!=null) {
+            update(selectedUnit);
+        }else {
+            update(selectedTerrain);
+        }
 
 
     }
@@ -147,46 +154,26 @@ public class MapUiFragment extends android.support.v4.app.Fragment implements Vi
     }
 
 
-    public void update(final BaseUnit unit, View view){
-        /************************************ LABEL POPULATION **************************************/
-//        TextView attackStatText = (TextView) view.findViewById(R.id.attackStatText);
-//        TextView attackRangeStatText = (TextView) view.findViewById(R.id.attackRangeStatText);
-//        TextView defenseStatText = (TextView) view.findViewById(R.id.defenseStatText);
-//        TextView moveStatText = (TextView) view.findViewById(R.id.movePointStatText);
-//        TextView hpBarText = (TextView) view.findViewById(R.id.progressBarText);
-//        TextView unitName = (TextView) view.findViewById(R.id.unitName);
-//        TextView unitStatus = (TextView) view.findViewById(R.id.unitStatusText);
-//        TextView unitType = (TextView) view.findViewById(R.id.unitTypeText);
-//        ImageView image = (ImageView) view.findViewById(R.id.unitImage);
-//        ProgressBar hpBar = (ProgressBar) view.findViewById(R.id.HPBar);
-//        TextView description = (TextView) view.findViewById(R.id.descriptionText);
-//
-//        if (unit == null){
-//            attackStatText.setText("");
-//            attackRangeStatText.setText("");
-//            defenseStatText.setText("");
-//            moveStatText.setText("");
-//            hpBarText.setText("");
-//            hpBar.setProgress(0);
-//            unitName.setText("");
-//            unitType.setText("");
-//            unitStatus.setText("");
-//            description.setText("");
-//            image.setImageBitmap(null);
-//        }else {
-////            attackStatText.setText("" + unit.getStats().getAttack());
-////            attackRangeStatText.setText("" + unit.getMaxAttackRange());
-////            defenseStatText.setText("" + unit.getDefense());
-////            moveStatText.setText("" + unit.getMovePoints());
-////            hpBarText.setText("" + unit.getHitPoints() + "/" + unit.getMaxHP());
-////            hpBar.setProgress((unit.getHitPoints() * 100) / unit.getMaxHP());
-////            unitName.setText(unit.getName());
-////            image.setImageBitmap(unit.getSprite().getAnimation());
-////            unitType.setText(unit.getUnitType().toString().toLowerCase());
-////            unitStatus.setText(unit.getState().toString().toLowerCase());
-////            description.setText(unit.toString());
-//        }
+    private void update(final BaseUnit unit){
+        if(unit!=null){
+            TextView hp = (TextView) getView().findViewById(R.id.hpText);
+            TextView defense = (TextView) getView().findViewById(R.id.defenseText);
+            TextView name = (TextView) getView().findViewById(R.id.unit_name);
+            hp.setText(getString(R.string.hpStatText)+ unit.getStats().getHitPoints()+"/"+unit.getStats().getMaxHP());
+            defense.setText(getString(R.string.defenseStatText)+ unit.getStats().getDefense());
+            name.setText(unit.getUnitName());
+        }
 
+    }
+    private void update(final BaseTerrain terrain){
+        if(terrain!=null){
+            TextView hp = (TextView) getView().findViewById(R.id.hpText);
+            TextView defense = (TextView) getView().findViewById(R.id.defenseText);
+            TextView name = (TextView) getView().findViewById(R.id.unit_name);
+            hp.setText(getString(R.string.hpStatText));
+            defense.setText(getString(R.string.defenseStatText)+ terrain.getDefense());
+            name.setText(terrain.getName());
+        }
     }
 }
 
