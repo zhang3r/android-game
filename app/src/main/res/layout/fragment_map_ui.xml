@@ -22,13 +22,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView" />
+                android:text=""
+                android:id="@+id/unit_name" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageButton" />
+                android:id="@+id/unit_portait" />
 
         </LinearLayout>
 
@@ -36,15 +36,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/textView2" />
+            android:text="@string/hpStatText"
+            android:id="@+id/hpText" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/textView3" />
+            android:text="@string/defenseStatText"
+            android:id="@+id/defenseText" />
 
         <Button
             android:layout_width="wrap_content"

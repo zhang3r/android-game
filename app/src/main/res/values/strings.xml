@@ -24,4 +24,10 @@
     <string name="descriptionLabel">Description: </string>
     <string name="unitStatus">Status: </string>
     <string name="turnText">Turn </string>
+    <!--stats-->
+    <string name="hpStatText">Hit Point: </string>
+    <string name="attackStatText">Attack: </string>
+    <string name="defenseStatText">Defense: </string>
+    <string name="movePointsStatsText">Move: </string>
+
 </resources>

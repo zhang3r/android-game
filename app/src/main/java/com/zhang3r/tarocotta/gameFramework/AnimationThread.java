@@ -156,6 +156,7 @@ public class AnimationThread extends Thread {
         unit.setAnimation(AnimatedSprite.create(testTile, IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_HEIGHT, 1, 5, true, 1, 1));
         unit.getStats().setMovePoints(5);
         unit.setPosition(new Point(1, 1));
+        unit.setUnitName("PLAYER");
         army.add(unit);
 
         return army;
@@ -173,6 +174,7 @@ public class AnimationThread extends Thread {
         unit.setAnimation(AnimatedSprite.create(testTile, IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_HEIGHT, 1, 5, true, 2, 1));
         unit.getStats().setMovePoints(5);
         unit.setPosition(new Point(2, 1));
+        unit.setUnitName("ENEMY");
         army.add(unit);
 
 
@@ -532,6 +534,7 @@ public class AnimationThread extends Thread {
         } else {
             throw new RuntimeException("invaid turn state");
         }
+        sendToUI();
 
     }
 
@@ -605,16 +608,7 @@ public class AnimationThread extends Thread {
 
             }
         }
-        if (attackSprites != null) {
-            synchronized (attackSprites) {
-                for (AnimatedSprite animatedSprite : attackSprites) {
-                    animatedSprite.draw(canvas, currViewport.left,
-                            currViewport.top, currViewport.right,
-                            currViewport.bottom);
-                }
 
-            }
-        }
         //units
 
         synchronized (playerArmy) {
@@ -637,6 +631,16 @@ public class AnimationThread extends Thread {
                             currViewport.top, currViewport.right,
                             currViewport.bottom);
                 }
+            }
+        }
+        if (attackSprites != null) {
+            synchronized (attackSprites) {
+                for (AnimatedSprite animatedSprite : attackSprites) {
+                    animatedSprite.draw(canvas, currViewport.left,
+                            currViewport.top, currViewport.right,
+                            currViewport.bottom);
+                }
+
             }
         }
     }
@@ -702,6 +706,8 @@ public class AnimationThread extends Thread {
                         moveSprites = unit.getMoveUtil().getMoveTiles(unit, army, enemyArmy, resources);
                         unitSelected = unit;
                     }
+                    unitOrigPosX = unitSelected.getPosition().getX();
+                    unitOrigPosY = unitSelected.getPosition().getY();
 
                 }
 
@@ -798,6 +804,9 @@ public class AnimationThread extends Thread {
                     attackSprites.addAll(unitSelected.getAttackUtil().getUnitAttackTiles(unitSelected, getArmy(false), getArmy(true),
                             resources));
                 }
+                synchronized (moveSprites){
+                    moveSprites.clear();
+                }
                 synchronized (gameState) {
                     gameState = GameState.UNIT_ATTACK_SELECT;
                 }
@@ -830,6 +839,9 @@ public class AnimationThread extends Thread {
             if (gameState == GameState.UNIT_SELECTED && unitSelected != null && (unitSelected.getUnitState() == UnitState.SELECTED || unitSelected.getUnitState() == UnitState.MOVED)) {
                 synchronized (moveSprites) {
                     moveSprites.clear();
+                }
+                synchronized (attackSprites) {
+                    attackSprites.clear();
                 }
                 synchronized (unitSelected) {
                     Point newPos = new Point(unitOrigPosX, unitOrigPosY);
