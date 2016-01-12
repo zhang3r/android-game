@@ -401,6 +401,18 @@ public class AnimationThread extends Thread {
                 //update unitSelected position
                 spriteX = unitSelected.getAnimation().getXPos();
                 spriteY = unitSelected.getAnimation().getYPos();
+                //direction
+                if(spriteX>0) {
+                    unitSelected.getAnimation().setCurrentAnimation(1);
+                }else{
+                    unitSelected.getAnimation().setCurrentAnimation(3);
+                }
+                if(spriteY>0) {
+                    unitSelected.getAnimation().setCurrentAnimation(2);
+                }else{
+                    unitSelected.getAnimation().setCurrentAnimation(4);
+                }
+                //move
                 if (unitSelected.getAnimation().getCurrentAnimation() == AnimationState.FACE_DOWN.getValue() || unitSelected.getAnimation().getCurrentAnimation() == AnimationState.FACE_RIGHT.getValue()) {
                     unitSelected.getPosition().setX((int) Math.ceil(spriteX * 1.0 / IAppConstants.SPRITE_WIDTH));
                     unitSelected.getPosition().setY((int) Math.ceil(spriteY * 1.0 / IAppConstants.SPRITE_HEIGHT));
