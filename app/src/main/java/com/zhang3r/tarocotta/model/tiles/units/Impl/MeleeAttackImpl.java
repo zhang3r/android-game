@@ -41,7 +41,6 @@ public class MeleeAttackImpl implements Attack {
         points.add(new Point(x, y));
         HashMap<String, Integer> seen = new HashMap<>();
         int i = 0;
-
         while (!points.isEmpty() && i <= attackRange) {
             int list_size = points.size();
             while (list_size > 0) {
@@ -77,6 +76,7 @@ public class MeleeAttackImpl implements Attack {
 
             }
         }
+        spriteList.remove(0);//remove origin
         return spriteList;
     }
 }

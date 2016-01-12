@@ -92,7 +92,9 @@ public class SpriteFactory {
             pic = Bitmap.createScaledBitmap(pic, numFrame * IAppConstants.SPRITE_WIDTH, numAnimation*IAppConstants.SPRITE_HEIGHT, false);
 
         }
-        spriteCache.put(path,pic);
+        if(pic!=null) {
+            spriteCache.put(path, pic);
+        }
         return pic;
     }
 
