@@ -52,6 +52,6 @@ public class MeleeAttackImplTest extends TestCase {
         unit.getPosition().setY(10);
         List<AnimatedSprite> attackTiles =  attack.getUnitAttackTiles(unit, army, enemyArmy, resources);
         assertNotNull(attackTiles);
-        assertEquals(5, attackTiles.size());
+        assertEquals(4, attackTiles.size());
     }
 }

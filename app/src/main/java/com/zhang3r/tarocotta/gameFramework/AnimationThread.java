@@ -853,7 +853,7 @@ public class AnimationThread extends Thread {
                 }
                 gameState = GameState.NORMAL;
                 unitSelected = null;
-            } else if (gameState == GameState.UNIT_ATTACK_SELECT && unitSelected != null && unitSelected.getUnitState() == UnitState.MOVED) {
+            } else if (gameState == GameState.UNIT_ATTACK_SELECT && unitSelected != null) {
                 synchronized (attackSprites) {
                     attackSprites.clear();
                 }
