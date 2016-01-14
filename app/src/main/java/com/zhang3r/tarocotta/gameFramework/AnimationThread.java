@@ -382,31 +382,36 @@ public class AnimationThread extends Thread {
                 int deltaX = unitDestination.getX() - unitSelected.getPosition().getX();
                 int deltaY = unitDestination.getY() - unitSelected.getPosition().getY();
                 //update direction
-                if (deltaX > 0) {
+                if (deltaX < 0) {
                     unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_LEFT.getValue());
-                } else if (deltaX < 0) {
+                } else if (deltaX > 0) {
                     unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_RIGHT.getValue());
-                } else if (deltaY > 0) {
-                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_UP.getValue());
                 } else if (deltaY < 0) {
+                    unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_UP.getValue());
+                } else if (deltaY > 0) {
                     unitSelected.getAnimation().setCurrentAnimation(AnimationState.FACE_DOWN.getValue());
                 }
 
                 //update unitSelected sprite
                 int spriteX = unitSelected.getAnimation().getXPos();
                 int spriteY = unitSelected.getAnimation().getYPos();
-
                 unitSelected.getAnimation().setXPos(spriteX + deltaX * IAppConstants.SPRITE_WIDTH / 2);
                 unitSelected.getAnimation().setYPos(spriteY + deltaY * IAppConstants.SPRITE_HEIGHT / 2);
                 //update unitSelected position
                 spriteX = unitSelected.getAnimation().getXPos();
                 spriteY = unitSelected.getAnimation().getYPos();
+
+
+                //move
                 if (unitSelected.getAnimation().getCurrentAnimation() == AnimationState.FACE_DOWN.getValue() || unitSelected.getAnimation().getCurrentAnimation() == AnimationState.FACE_RIGHT.getValue()) {
-                    unitSelected.getPosition().setX((int) Math.ceil(spriteX * 1.0 / IAppConstants.SPRITE_WIDTH));
-                    unitSelected.getPosition().setY((int) Math.ceil(spriteY * 1.0 / IAppConstants.SPRITE_HEIGHT));
-                } else {
+                    //moving right and down
                     unitSelected.getPosition().setX(spriteX / IAppConstants.SPRITE_WIDTH);
                     unitSelected.getPosition().setY(spriteY / IAppConstants.SPRITE_HEIGHT);
+                } else {
+                    //moving left and up
+                    unitSelected.getPosition().setX((int) Math.ceil(spriteX * 1.0 / IAppConstants.SPRITE_WIDTH));
+                    unitSelected.getPosition().setY((int) Math.ceil(spriteY * 1.0 / IAppConstants.SPRITE_HEIGHT));
+
                 }
 
             } else if (path.isEmpty()) {
