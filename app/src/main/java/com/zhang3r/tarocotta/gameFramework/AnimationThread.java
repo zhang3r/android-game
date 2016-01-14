@@ -395,27 +395,20 @@ public class AnimationThread extends Thread {
                 //update unitSelected sprite
                 int spriteX = unitSelected.getAnimation().getXPos();
                 int spriteY = unitSelected.getAnimation().getYPos();
-
+                unitSelected.getAnimation().setXPos(spriteX + deltaX * IAppConstants.SPRITE_WIDTH / 2);
+                unitSelected.getAnimation().setYPos(spriteY + deltaY * IAppConstants.SPRITE_HEIGHT / 2);
+                //update unitSelected position
+                spriteX = unitSelected.getAnimation().getXPos();
+                spriteY = unitSelected.getAnimation().getYPos();
 
 
                 //move
                 if (unitSelected.getAnimation().getCurrentAnimation() == AnimationState.FACE_DOWN.getValue() || unitSelected.getAnimation().getCurrentAnimation() == AnimationState.FACE_RIGHT.getValue()) {
                     //moving right and down
-                    unitSelected.getAnimation().setXPos(spriteX + deltaX * IAppConstants.SPRITE_WIDTH / 2);
-                    unitSelected.getAnimation().setYPos(spriteY + deltaY * IAppConstants.SPRITE_HEIGHT / 2);
-                    //update unitSelected position
-                    spriteX = unitSelected.getAnimation().getXPos();
-                    spriteY = unitSelected.getAnimation().getYPos();
-
                     unitSelected.getPosition().setX(spriteX / IAppConstants.SPRITE_WIDTH);
                     unitSelected.getPosition().setY(spriteY / IAppConstants.SPRITE_HEIGHT);
                 } else {
                     //moving left and up
-                    unitSelected.getAnimation().setXPos(spriteX + (deltaX) * IAppConstants.SPRITE_WIDTH / 2);
-                    unitSelected.getAnimation().setYPos(spriteY + (deltaY) * IAppConstants.SPRITE_HEIGHT / 2);
-                    //update unitSelected position
-                    spriteX = unitSelected.getAnimation().getXPos();
-                    spriteY = unitSelected.getAnimation().getYPos();
                     unitSelected.getPosition().setX((int) Math.ceil(spriteX * 1.0 / IAppConstants.SPRITE_WIDTH));
                     unitSelected.getPosition().setY((int) Math.ceil(spriteY * 1.0 / IAppConstants.SPRITE_HEIGHT));
 
