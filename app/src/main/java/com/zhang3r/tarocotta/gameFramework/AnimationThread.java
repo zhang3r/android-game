@@ -578,7 +578,7 @@ public class AnimationThread extends Thread {
     }
 
     public void doScale(ScaleGestureDetector scaleGestureDetector) {
-
+        //change camera
         mScaleFactor *= scaleGestureDetector.getScaleFactor();
 
         // Don't let the object get too small or too large.
