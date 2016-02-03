@@ -580,7 +580,8 @@ public class AnimationThread extends Thread {
     public void doScale(ScaleGestureDetector scaleGestureDetector) {
         //change camera
         mScaleFactor *= scaleGestureDetector.getScaleFactor();
-
+        //update viewport
+        doScroll(null, null, 1, 1);
         // Don't let the object get too small or too large.
         mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 1.3f));
         Log.d(ILogConstants.DEBUG_TAG, "Scale Factor: " + mScaleFactor);
