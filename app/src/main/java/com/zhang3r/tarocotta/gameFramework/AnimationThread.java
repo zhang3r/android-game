@@ -406,11 +406,11 @@ public class AnimationThread extends Thread {
                 if (unitSelected.getAnimation().getCurrentAnimation() == AnimationState.FACE_DOWN.getValue() || unitSelected.getAnimation().getCurrentAnimation() == AnimationState.FACE_RIGHT.getValue()) {
                     //moving right and down
                     unitSelected.getPosition().setX(spriteX / IAppConstants.SPRITE_WIDTH);
-                    unitSelected.getPosition().setY(spriteY / IAppConstants.SPRITE_HEIGHT);
+                    unitSelected.getPosition().setY((int) Math.ceil(spriteY * 1.0 / IAppConstants.SPRITE_HEIGHT));
                 } else {
                     //moving left and up
                     unitSelected.getPosition().setX((int) Math.ceil(spriteX * 1.0 / IAppConstants.SPRITE_WIDTH));
-                    unitSelected.getPosition().setY((int) Math.ceil(spriteY * 1.0 / IAppConstants.SPRITE_HEIGHT));
+                    unitSelected.getPosition().setY((int) Math.floor(spriteY * 1.0 / IAppConstants.SPRITE_HEIGHT));
 
                 }
 
