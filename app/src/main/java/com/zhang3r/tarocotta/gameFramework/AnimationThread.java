@@ -10,10 +10,12 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.MediaPlayer;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -55,6 +57,7 @@ import com.zhang3r.tarocotta.terminate.TerminateCondition;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AnimationThread extends Thread {
     public MapFactory mapFactory = new MapFactoryImpl();
@@ -94,7 +97,9 @@ public class AnimationThread extends Thread {
     private AttackEvent ae;
     private Bitmap mapBackground;
     private int turns;
+    private volatile long now;
     private Point unitDestination;
+    private volatile boolean turnChange;
     List<Point> path;
 
     // handle to the surface manager object we interact with
@@ -580,8 +585,6 @@ public class AnimationThread extends Thread {
     public void doScale(ScaleGestureDetector scaleGestureDetector) {
         //change camera
         mScaleFactor *= scaleGestureDetector.getScaleFactor();
-        //update viewport
-        doScroll(null, null, 1, 1);
         // Don't let the object get too small or too large.
         mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 1.3f));
         Log.d(ILogConstants.DEBUG_TAG, "Scale Factor: " + mScaleFactor);
@@ -601,6 +604,7 @@ public class AnimationThread extends Thread {
         canvas.save();
         canvas.scale(mScaleFactor, mScaleFactor);
         // terrain
+
 
         canvas.drawBitmap(mapBackground, currViewport.left, currViewport.top, null);
 
@@ -648,6 +652,14 @@ public class AnimationThread extends Thread {
                 }
 
             }
+        }
+        //Log.d(ILogConstants.DEBUG_TAG, ""+(SystemClock.currentThreadTimeMillis()-now));
+        if(turnChange&& System.currentTimeMillis()-now<2000) {
+            canvas.drawARGB(128, 255, 0, 0);
+
+            canvas.drawText("Enemy", currViewport.centerX(), currViewport.centerY(), new Paint());
+        }else if(SystemClock.currentThreadTimeMillis()-now>2000){
+            turnChange=false;
         }
     }
 
@@ -894,12 +906,23 @@ public class AnimationThread extends Thread {
                     state = TurnState.ENEMY;
                     playerArmy.setEndTurnState();
                     enemyArmy.resetUnitState();
+                    turnChange=true;
+
+                    now = System.currentTimeMillis();
+
+                    Log.d(ILogConstants.DEBUG_TAG, ""+(now));
+
+
                     // reset unit state
                 } else if (state == TurnState.ENEMY) {
                     state = TurnState.PLAYER;
                     enemyArmy.setEndTurnState();
                     // reset unit state
                     playerArmy.resetUnitState();
+                    turnChange=true;
+                    now = System.currentTimeMillis();
+
+                    Log.d(ILogConstants.DEBUG_TAG, ""+(now));
                     turns++;
                 } else {
                     Log.d(ILogConstants.SYSTEM_ERROR_TAG,

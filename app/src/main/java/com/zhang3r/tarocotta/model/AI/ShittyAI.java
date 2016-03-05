@@ -51,10 +51,11 @@ public class ShittyAI implements AI {
                     }
 
                         Log.d(ILogConstants.DEBUG_TAG, "AI "+unit.getId()+" Move x:" + dX + " y: " + dY);
-                        unit.getAnimation().setXPos(unit.getPosition().getX() * IAppConstants.SPRITE_WIDTH + dX);
-                        unit.getAnimation().setYPos(unit.getPosition().getY() * IAppConstants.SPRITE_HEIGHT + dY);
                         unit.getPosition().setX((dX / IAppConstants.SPRITE_WIDTH));
                         unit.getPosition().setY((dY / IAppConstants.SPRITE_HEIGHT));
+                        unit.getAnimation().setXPos(unit.getPosition().getX() * IAppConstants.SPRITE_WIDTH);
+                        unit.getAnimation().setYPos(unit.getPosition().getY() * IAppConstants.SPRITE_HEIGHT);
+
                         unit.setUnitState(IGameConstants.UnitState.MOVED);
 
                     //update shortest distance
