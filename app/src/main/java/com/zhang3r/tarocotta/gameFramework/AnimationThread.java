@@ -316,7 +316,10 @@ public class AnimationThread extends Thread {
             return;
         //attack sprite
         if (state == TurnState.ENEMY) {
-            AI();
+            //dont move until turn changed
+            if(!turnChange) {
+                AI();
+            }
         }
         if (isAttack)
             updateAttack();
@@ -442,6 +445,10 @@ public class AnimationThread extends Thread {
                 // reset unit state
                 playerArmy.resetUnitState();
                 turns++;
+                now = System.currentTimeMillis();
+                Log.d(ILogConstants.DEBUG_TAG, "A"+(now));
+                turnChange = true;
+
 
             }
         }
@@ -532,7 +539,9 @@ public class AnimationThread extends Thread {
      * ********************************************************************
      */
     public void doUp(MotionEvent e) {
-
+        if(turnChange){
+            return;
+        }
         if (gameState == GameState.UNIT_IN_ANIMATION) {
             return;
         }
@@ -653,13 +662,25 @@ public class AnimationThread extends Thread {
 
             }
         }
-        //Log.d(ILogConstants.DEBUG_TAG, ""+(SystemClock.currentThreadTimeMillis()-now));
-        if(turnChange&& System.currentTimeMillis()-now<2000) {
-            canvas.drawARGB(128, 255, 0, 0);
+        // Turn Change System
+        if(turnChange) {
+            if (System.currentTimeMillis() - now < 1000) {
+                if (state == TurnState.ENEMY) {
+                    canvas.drawARGB(128, 255, 0, 0);
+                } else {
+                    canvas.drawARGB(128, 0, 0, 255);
+                }
+                Paint p = new Paint();
 
-            canvas.drawText("Enemy", currViewport.centerX(), currViewport.centerY(), new Paint());
-        }else if(SystemClock.currentThreadTimeMillis()-now>2000){
-            turnChange=false;
+                p.setColor(Color.WHITE);
+                p.setTextSize(200);
+                StringBuilder sb = new StringBuilder();
+                sb.append(state == TurnState.ENEMY ? "Enemy" : "Player");
+                sb.append(" Turn");
+                canvas.drawText(sb.toString(), currViewport.left + 200, currViewport.top + 500, p);
+            } else if (System.currentTimeMillis() - now > 1000) {
+                turnChange = false;
+            }
         }
     }
 
@@ -812,6 +833,9 @@ public class AnimationThread extends Thread {
     }
 
     public void buttonEventHandler(String s) {
+        if(turnChange){
+            return;
+        }
 
         if (s.equals(IButtonConstants.attack)) {
             if (gameState != GameState.UNIT_IN_ANIMATION && unitSelected != null) {
@@ -910,7 +934,7 @@ public class AnimationThread extends Thread {
 
                     now = System.currentTimeMillis();
 
-                    Log.d(ILogConstants.DEBUG_TAG, ""+(now));
+                    Log.d(ILogConstants.DEBUG_TAG, "P"+(now));
 
 
                     // reset unit state
@@ -922,7 +946,7 @@ public class AnimationThread extends Thread {
                     turnChange=true;
                     now = System.currentTimeMillis();
 
-                    Log.d(ILogConstants.DEBUG_TAG, ""+(now));
+                    Log.d(ILogConstants.DEBUG_TAG, "E"+(now));
                     turns++;
                 } else {
                     Log.d(ILogConstants.SYSTEM_ERROR_TAG,
