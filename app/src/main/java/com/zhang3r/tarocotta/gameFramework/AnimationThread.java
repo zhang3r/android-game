@@ -15,7 +15,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.MediaPlayer;
 import android.os.Looper;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -427,6 +426,8 @@ public class AnimationThread extends Thread {
                 //set game state
                 gameState = GameState.UNIT_SELECTED;
                 unitSelected.setUnitState(UnitState.MOVED);
+                unitSelected.getAnimation().setXPos(unitSelected.getPosition().getX()* IAppConstants.SPRITE_WIDTH);
+                unitSelected.getAnimation().setYPos(unitSelected.getPosition().getY()* IAppConstants.SPRITE_HEIGHT);
                 //clear movesprite
                 moveSprites.clear();
             }
