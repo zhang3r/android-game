@@ -10,10 +10,12 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.MediaPlayer;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -55,6 +57,7 @@ import com.zhang3r.tarocotta.terminate.TerminateCondition;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AnimationThread extends Thread {
     public MapFactory mapFactory = new MapFactoryImpl();
@@ -94,7 +97,9 @@ public class AnimationThread extends Thread {
     private AttackEvent ae;
     private Bitmap mapBackground;
     private int turns;
+    private volatile long now;
     private Point unitDestination;
+    private volatile boolean turnChange;
     List<Point> path;
 
     // handle to the surface manager object we interact with
@@ -311,7 +316,10 @@ public class AnimationThread extends Thread {
             return;
         //attack sprite
         if (state == TurnState.ENEMY) {
-            AI();
+            //dont move until turn changed
+            if(!turnChange) {
+                AI();
+            }
         }
         if (isAttack)
             updateAttack();
@@ -437,6 +445,10 @@ public class AnimationThread extends Thread {
                 // reset unit state
                 playerArmy.resetUnitState();
                 turns++;
+                now = System.currentTimeMillis();
+                Log.d(ILogConstants.DEBUG_TAG, "A"+(now));
+                turnChange = true;
+
 
             }
         }
@@ -527,7 +539,9 @@ public class AnimationThread extends Thread {
      * ********************************************************************
      */
     public void doUp(MotionEvent e) {
-
+        if(turnChange){
+            return;
+        }
         if (gameState == GameState.UNIT_IN_ANIMATION) {
             return;
         }
@@ -580,8 +594,6 @@ public class AnimationThread extends Thread {
     public void doScale(ScaleGestureDetector scaleGestureDetector) {
         //change camera
         mScaleFactor *= scaleGestureDetector.getScaleFactor();
-        //update viewport
-        doScroll(null, null, 1, 1);
         // Don't let the object get too small or too large.
         mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 1.3f));
         Log.d(ILogConstants.DEBUG_TAG, "Scale Factor: " + mScaleFactor);
@@ -601,6 +613,7 @@ public class AnimationThread extends Thread {
         canvas.save();
         canvas.scale(mScaleFactor, mScaleFactor);
         // terrain
+
 
         canvas.drawBitmap(mapBackground, currViewport.left, currViewport.top, null);
 
@@ -647,6 +660,26 @@ public class AnimationThread extends Thread {
                             currViewport.bottom);
                 }
 
+            }
+        }
+        // Turn Change System
+        if(turnChange) {
+            if (System.currentTimeMillis() - now < 1000) {
+                if (state == TurnState.ENEMY) {
+                    canvas.drawARGB(128, 255, 0, 0);
+                } else {
+                    canvas.drawARGB(128, 0, 0, 255);
+                }
+                Paint p = new Paint();
+
+                p.setColor(Color.WHITE);
+                p.setTextSize(200);
+                StringBuilder sb = new StringBuilder();
+                sb.append(state == TurnState.ENEMY ? "Enemy" : "Player");
+                sb.append(" Turn");
+                canvas.drawText(sb.toString(), currViewport.left + 200, currViewport.top + 500, p);
+            } else if (System.currentTimeMillis() - now > 1000) {
+                turnChange = false;
             }
         }
     }
@@ -800,6 +833,9 @@ public class AnimationThread extends Thread {
     }
 
     public void buttonEventHandler(String s) {
+        if(turnChange){
+            return;
+        }
 
         if (s.equals(IButtonConstants.attack)) {
             if (gameState != GameState.UNIT_IN_ANIMATION && unitSelected != null) {
@@ -894,12 +930,23 @@ public class AnimationThread extends Thread {
                     state = TurnState.ENEMY;
                     playerArmy.setEndTurnState();
                     enemyArmy.resetUnitState();
+                    turnChange=true;
+
+                    now = System.currentTimeMillis();
+
+                    Log.d(ILogConstants.DEBUG_TAG, "P"+(now));
+
+
                     // reset unit state
                 } else if (state == TurnState.ENEMY) {
                     state = TurnState.PLAYER;
                     enemyArmy.setEndTurnState();
                     // reset unit state
                     playerArmy.resetUnitState();
+                    turnChange=true;
+                    now = System.currentTimeMillis();
+
+                    Log.d(ILogConstants.DEBUG_TAG, "E"+(now));
                     turns++;
                 } else {
                     Log.d(ILogConstants.SYSTEM_ERROR_TAG,
