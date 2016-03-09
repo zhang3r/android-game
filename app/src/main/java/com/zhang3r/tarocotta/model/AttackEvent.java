@@ -24,6 +24,8 @@ public class AttackEvent {
         //calculate dmg
         int dmg = attackerDMG(attacker, defender, attackerTerr, defenderTerr);
         int recoil = attackerRecoil(attacker, defender, attackerTerr, defenderTerr);
+        dmg = dmg >0 ? dmg: 1;
+        recoil = recoil>0 ? recoil : 1;
         //apply dmg
         defender.getStats().setHitPoints(defender.getStats().getHitPoints() - dmg);
         if (defender.getStats().getHitPoints() <= 0) {
