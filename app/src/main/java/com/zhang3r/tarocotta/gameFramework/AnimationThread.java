@@ -177,6 +177,7 @@ public class AnimationThread extends Thread {
         BaseUnit unit = new BaseUnit(IGameConstants.UnitType.FOOT);
         unit.setAnimation(AnimatedSprite.create(testTile, IAppConstants.SPRITE_HEIGHT, IAppConstants.SPRITE_HEIGHT, 1, 5, true, 2, 1));
         unit.getStats().setMovePoints(5);
+        unit.getStats().setAttack(40);
         unit.setPosition(new Point(2, 1));
         unit.setUnitName("ENEMY");
         army.add(unit);
@@ -344,7 +345,6 @@ public class AnimationThread extends Thread {
             }
         }
         checkWinCond();
-
     }
 
     private void sendToUI() {
@@ -675,6 +675,7 @@ public class AnimationThread extends Thread {
 
                 p.setColor(Color.WHITE);
                 p.setTextSize(200);
+                //TODO change to more modular
                 StringBuilder sb = new StringBuilder();
                 sb.append(state == TurnState.ENEMY ? "Enemy" : "Player");
                 sb.append(" Turn");
@@ -816,8 +817,10 @@ public class AnimationThread extends Thread {
                 //set relevant unit in animation
                 //TODO: find out about direction
                 unitDefending = enemyUnit;
-                unitSelected.getAnimation().setCurrentAnimation(AnimationState.FIGHT_LEFT.getValue());
-                unitDefending.getAnimation().setCurrentAnimation(AnimationState.DMG_RIGHT.getValue());
+//                unitSelected.getAnimation().setCurrentAnimation(AnimationState.FIGHT_LEFT.getValue());
+//                unitDefending.getAnimation().setCurrentAnimation(AnimationState.DMG_RIGHT.getValue());
+                unitSelected.getAnimation().setCurrentAnimation(2);
+                unitDefending.getAnimation().setCurrentAnimation(2);
                 //resetting frames
                 unitSelected.getAnimation().setCurrentFrame(0);
                 unitDefending.getAnimation().setCurrentFrame(0);
