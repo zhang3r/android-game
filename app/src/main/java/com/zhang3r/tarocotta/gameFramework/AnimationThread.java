@@ -564,7 +564,7 @@ public class AnimationThread extends Thread {
         if (currViewport.left - distanceX > 0) {
             currViewport.left = 0;
             currViewport.right = -IAppConstants.VIEW_WIDTH;
-        } else if ((currViewport.right - distanceX) * mScaleFactor <= -1 * mapBackground.getWidth()/mScaleFactor) {
+        } else if ((currViewport.right - distanceX) * mScaleFactor <= -1 * mapBackground.getWidth()*mScaleFactor) {
 
 
             currViewport.right = -1 * mapBackground.getWidth() * mScaleFactor;
@@ -578,7 +578,7 @@ public class AnimationThread extends Thread {
         if (currViewport.top - distanceY > 0) {
             currViewport.top = 0;
             currViewport.bottom = -IAppConstants.VIEW_HEIGHT;
-        } else if ((currViewport.bottom - distanceY) * mScaleFactor <= -1 * mapBackground.getHeight()/mScaleFactor) {
+        } else if ((currViewport.bottom - distanceY) * mScaleFactor <= -1 * mapBackground.getHeight()*mScaleFactor) {
 
 
             currViewport.bottom = -1 * mapBackground.getHeight() * mScaleFactor;
