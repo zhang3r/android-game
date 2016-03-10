@@ -679,7 +679,7 @@ public class AnimationThread extends Thread {
                 StringBuilder sb = new StringBuilder();
                 sb.append(state == TurnState.ENEMY ? "Enemy" : "Player");
                 sb.append(" Turn");
-                canvas.drawText(sb.toString(), currViewport.left + 200, currViewport.top + 500, p);
+                canvas.drawText(sb.toString(),currViewport.left + Math.abs(Math.abs(currViewport.right - currViewport.left) - p.measureText(sb.toString()))/2, Math.abs(currViewport.top - currViewport.bottom)/2, p);
             } else if (System.currentTimeMillis() - now > 1000) {
                 turnChange = false;
             }
