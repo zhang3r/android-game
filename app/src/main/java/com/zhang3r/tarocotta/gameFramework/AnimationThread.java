@@ -563,31 +563,27 @@ public class AnimationThread extends Thread {
 
         if (currViewport.left - distanceX > 0) {
             currViewport.left = 0;
-            currViewport.right = -IAppConstants.VIEW_WIDTH;
-        } else if ((currViewport.right - distanceX) * mScaleFactor <= -1 * mapBackground.getWidth()*mScaleFactor) {
+            currViewport.right = -screenWidth/mScaleFactor;
+        } else if (currViewport.right - distanceX  <=  -1 * mapBackground.getWidth()) {
 
 
-            currViewport.right = -1 * mapBackground.getWidth() * mScaleFactor;
-            currViewport.left = (currViewport.right + IAppConstants.VIEW_WIDTH) * mScaleFactor;
+            currViewport.right = -1 * mapBackground.getWidth();
+            currViewport.left = (-1 * mapBackground.getWidth() + screenWidth/mScaleFactor);
 
         } else {
-            currViewport.right -= distanceX;
-            currViewport.left -= distanceX;
+            currViewport.right = currViewport.right -  distanceX;
+            currViewport.left = currViewport.left - distanceX;
         }
         // top
         if (currViewport.top - distanceY > 0) {
             currViewport.top = 0;
-            currViewport.bottom = -IAppConstants.VIEW_HEIGHT;
-        } else if ((currViewport.bottom - distanceY) * mScaleFactor <= -1 * mapBackground.getHeight()*mScaleFactor) {
-
-
-            currViewport.bottom = -1 * mapBackground.getHeight() * mScaleFactor;
-            currViewport.top = (currViewport.bottom + IAppConstants.VIEW_HEIGHT) * mScaleFactor;
-
-
+            currViewport.bottom = -screenHeight/mScaleFactor;
+        } else if (currViewport.bottom - distanceY  <=  -1 * mapBackground.getHeight()) {
+            currViewport.bottom = -1 * mapBackground.getHeight();
+            currViewport.top = currViewport.bottom + screenHeight / mScaleFactor ;
         } else {
-            currViewport.bottom -= distanceY;
-            currViewport.top -= distanceY;
+            currViewport.bottom =  currViewport.bottom-distanceY;
+            currViewport.top = currViewport.top-distanceY;
         }
 
     }
