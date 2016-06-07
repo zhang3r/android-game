@@ -15,7 +15,7 @@ import com.zhang3r.tarocotta.constants.ResourceConstant;
 public class SpriteFactory {
     private static SpriteFactory factory;
     private static LruCache<Integer,Bitmap> spriteCache;
-
+   
     private SpriteFactory(){}
 
     public static SpriteFactory getInstance(){
@@ -61,8 +61,10 @@ public class SpriteFactory {
 //                return getSprite(R.drawable.cavalry,2);
 //
 //        }
-
-        return getSprite(R.drawable.test_tile,5,4);
+        if(isEnemy){
+            return getSprite(R.drawable.enemy_unit_sprite,4,2);
+        }
+        return getSprite(R.drawable.unit_sprite,4,2);
     }
     public Bitmap getTerrain(int terrain){
         switch(terrain){
@@ -70,9 +72,9 @@ public class SpriteFactory {
                 return getSprite(R.drawable.grass_tile,1,1);
 
             case 1:
-                return getSprite(R.drawable.tree_tile,1,1);
+                return getSprite(R.drawable.tree,1,1);
             case 2:
-                return getSprite(R.drawable.rock_tile,1,1);
+                return getSprite(R.drawable.rock,1,1);
         }
 
         return null;
@@ -80,7 +82,6 @@ public class SpriteFactory {
     public Bitmap getTiles(boolean isEnemy){
         return getSprite(R.drawable.base_move_tile,1,1);
     }
-
     private Bitmap getSprite(int path, int numFrame, int numAnimation){
         if(spriteCache.get(path)!=null){
             return spriteCache.get(path);
