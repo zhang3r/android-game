@@ -626,7 +626,6 @@ public class AnimationThread extends Thread {
         }
 
         //units
-
         synchronized (playerArmy) {
 
             for (BaseUnit unit : playerArmy.getUnits()) {
